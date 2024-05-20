@@ -1,0 +1,95 @@
+
+ <div class="grid">
+	<div class="col-12">
+		<div class="card" style="height: calc(100vh - 152px)">
+			<p-table #dt1 [value]="food" dataKey="id"  [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="false" [globalFilterFields]="['nome','razao','cnpj']" [scrollable]="true" scrollHeight="flex" [resizableColumns]="true">
+				<ng-template pTemplate="caption">
+					<div class="flex justify-content-between align-items-end flex-column sm:flex-row">
+						<div>
+							<button pButton label="Limpar" class="p-button-outlined" icon="pi pi-filter-slash"
+								(click)="clear(dt1)"></button>
+							<span class="p-input-icon-left ml-1">
+								<i class="pi pi-search"></i>
+								<input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+									placeholder="Pesquisar palavra-chave" class="w-full" />
+							</span>
+						</div>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width: 6rem">
+							<div class="flex justify-content-between align-items-center">
+								Identificador
+								<p-columnFilter type="numeric" field="id" display="menu"
+									placeholder="Pesquisar por identificador"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 20rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Descrição
+								<p-columnFilter type="text" field="razao" display="menu"
+									placeholder="Pesquisar por razão social"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 20rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Carboidrato
+								<p-columnFilter type="text" field="razao" display="menu"
+									placeholder="Pesquisar por razão social"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 20rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Proteina
+								<p-columnFilter type="text" field="razao" display="menu"
+									placeholder="Pesquisar por razão social"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 20rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Gordura
+								<p-columnFilter type="text" field="razao" display="menu"
+									placeholder="Pesquisar por razão social"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 20rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Caloria
+								<p-columnFilter type="text" field="razao" display="menu"
+									placeholder="Pesquisar por razão social"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 20rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Porção
+								<p-columnFilter type="text" field="razao" display="menu"
+									placeholder="Pesquisar por razão social"></p-columnFilter>
+							</div>
+						</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-food>
+					<tr class="cursor-pointer" (click)="navigateToCompanyEdit(category.id)">
+						<td class="text-center">{{food.id}}</td>
+						<td>{{food.descricao}}</td>
+						<td>{{food.proteina}}</td>
+						<td>{{food.carbo}}</td>
+						<td>{{food.gordura}}</td>
+
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">Nenhuma Alimentos encontrado.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="8">Carregando Alimentos. Aguarde.</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+</div> 

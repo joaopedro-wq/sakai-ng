@@ -2,6 +2,7 @@ import { Injectable, effect, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 export interface AppConfig {
+    menuProfilePosition: string;
     inputStyle: string;
     colorScheme: string;
     theme: string;
@@ -11,6 +12,8 @@ export interface AppConfig {
 }
 
 interface LayoutState {
+    anchored: any;
+    sidebarActive: boolean;
     staticMenuDesktopInactive: boolean;
     overlayMenuActive: boolean;
     profileSidebarVisible: boolean;
@@ -30,6 +33,7 @@ export class LayoutService {
         colorScheme: 'light',
         theme: 'lara-light-indigo',
         scale: 14,
+        menuProfilePosition: ''
     };
 
     config = signal<AppConfig>(this._config);
@@ -41,6 +45,8 @@ export class LayoutService {
         configSidebarVisible: false,
         staticMenuMobileActive: false,
         menuHoverActive: false,
+        anchored: undefined,
+        sidebarActive: false
     };
 
     private configUpdate = new Subject<AppConfig>();
