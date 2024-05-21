@@ -2,7 +2,7 @@
  <div class="grid">
 	<div class="col-12">
 		<div class="card" style="height: calc(100vh - 152px)">
-			<p-table #dt1 [value]="food" dataKey="id"  [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="false" [globalFilterFields]="['nome','razao','cnpj']" [scrollable]="true" scrollHeight="flex" [resizableColumns]="true">
+			<p-table #dt1 [value]="food" dataKey="id"  [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="false" [globalFilterFields]="['descricao']" [scrollable]="true" scrollHeight="flex" [resizableColumns]="true">
 				<ng-template pTemplate="caption">
 					<div class="flex justify-content-between align-items-end flex-column sm:flex-row">
 						<div>
@@ -18,51 +18,51 @@
 				</ng-template>
 				<ng-template pTemplate="header">
 					<tr>
-						<th style="width: 6rem">
+						<!-- <th style="width: 6rem">
 							<div class="flex justify-content-between align-items-center">
 								Identificador
 								<p-columnFilter type="numeric" field="id" display="menu"
 									placeholder="Pesquisar por identificador"></p-columnFilter>
 							</div>
-						</th>
-						<th style="min-width: 20rem" pResizableColumn>
+						</th> -->
+						<th style="min-width: 13rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Descrição
 								<p-columnFilter type="text" field="razao" display="menu"
 									placeholder="Pesquisar por razão social"></p-columnFilter>
 							</div>
 						</th>
-						<th style="min-width: 20rem" pResizableColumn>
+						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Carboidrato
 								<p-columnFilter type="text" field="razao" display="menu"
 									placeholder="Pesquisar por razão social"></p-columnFilter>
 							</div>
 						</th>
-						<th style="min-width: 20rem" pResizableColumn>
+						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Proteina
 								<p-columnFilter type="text" field="razao" display="menu"
 									placeholder="Pesquisar por razão social"></p-columnFilter>
 							</div>
 						</th>
-						<th style="min-width: 20rem" pResizableColumn>
+						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Gordura
 								<p-columnFilter type="text" field="razao" display="menu"
 									placeholder="Pesquisar por razão social"></p-columnFilter>
 							</div>
 						</th>
-						<th style="min-width: 20rem" pResizableColumn>
+						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
-								Caloria
+								Caloria (Kcal)
 								<p-columnFilter type="text" field="razao" display="menu"
 									placeholder="Pesquisar por razão social"></p-columnFilter>
 							</div>
 						</th>
-						<th style="min-width: 20rem" pResizableColumn>
+						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
-								Porção
+								Porção (g)
 								<p-columnFilter type="text" field="razao" display="menu"
 									placeholder="Pesquisar por razão social"></p-columnFilter>
 							</div>
@@ -71,13 +71,18 @@
 				</ng-template>
 				<ng-template pTemplate="body" let-food>
 					<tr class="cursor-pointer" (click)="navigateToCompanyEdit(category.id)">
-						<td class="text-center">{{food.id}}</td>
+						<!-- <td class="text-center">{{food.id}}</td> -->
 						<td>{{food.descricao}}</td>
-						<td>{{food.proteina}}</td>
 						<td>{{food.carbo}}</td>
+						<td>{{food.proteina}}</td>
 						<td>{{food.gordura}}</td>
+						<td>{{food.caloria}}</td>
+						<td>{{food.qtd}}</td>
+
+
 
 					</tr>
+
 				</ng-template>
 				<ng-template pTemplate="emptymessage">
 					<tr>
