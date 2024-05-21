@@ -1,29 +1,37 @@
 
 <div class="col-12">
-  <h5>Cadastro Alimento</h5>
-  <div class="card">
-    <form class="p-fluid p-formgrid grid">
+
+  <div class="card" style="margin-top: 2%;">
+
+    <p-card header=" Cadastro Alimento">
+    </p-card>
+  
+    <form class="p-fluid p-formgrid grid" [formGroup]="formFood">
       <div class="field col-12 md:col-6">
         <label htmlFor="descricao">Descrição *</label>
-        <input pInputText id="descricao" type="text"  maxlength="150" />
+        <input pInputText id="descricao" type="text"  maxlength="150" formControlName="descricao"/>
       </div>
-      <div class="field col-12 md:col-6">
+      <div class="field col-12 md:col-3">
+        <label htmlFor="cal">Porção (g) *</label>
+        <p-inputNumber id="cal" mode="decimal" locale="pt-BR" [minFractionDigits]="1" formControlName="qtd"/>
+      </div>
+      <div class="field col-12 md:col-3">
         <label htmlFor="cal">Caloria *</label>
-        <p-inputNumber id="cal" mode="decimal" locale="pt-BR" [minFractionDigits]="1" />
+        <p-inputNumber id="cal" mode="decimal" locale="pt-BR" [minFractionDigits]="1" formControlName="caloria"/>
       </div>
       <div class="field col-12 md:col-4">
         <label htmlFor="gordura">Gordura *</label>
-        <p-inputNumber id="gordura"  mode="decimal" locale="pt-BR" [minFractionDigits]="1" />
+        <p-inputNumber id="gordura"  mode="decimal" locale="pt-BR" [minFractionDigits]="1" formControlName="gordura"/>
 
       </div>
       <div class="field col-12 md:col-4">
         <label htmlFor="carbo">Carboidrato *</label>
-        <p-inputNumber id="carbo"  mode="decimal" locale="pt-BR" [minFractionDigits]="1" />
+        <p-inputNumber id="carbo"  mode="decimal" locale="pt-BR" [minFractionDigits]="1" formControlName="carbo"/>
 
       </div>
       <div class="field col-12 md:col-4">
         <label htmlFor="prot">Proteina *</label>
-        <p-inputNumber id="prot"  mode="decimal" locale="pt-BR" [minFractionDigits]="1" />
+        <p-inputNumber id="prot"  mode="decimal" locale="pt-BR" [minFractionDigits]="1" formControlName="proteina"/>
       </div>
     </form>
   </div>

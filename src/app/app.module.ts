@@ -16,7 +16,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
-    imports: [AppRoutingModule, AppLayoutModule],
+    imports: [AppRoutingModule, AppLayoutModule, ToastModule ],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         DatePipe,

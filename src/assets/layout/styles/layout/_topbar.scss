@@ -20,11 +20,13 @@
         font-weight: 500;
         width: 300px;
         border-radius: 12px;
+        
 
         img {
             height: 2.5rem;
             margin-right: .5rem;
-        }
+            margin-left: 30%;
+             }
 
         &:focus {
             @include focused();

@@ -2,6 +2,7 @@ export interface Alimento {
     id?: number;
     descricao: string;
     proteina: number;
+    caloria: number;
     gordura: number;
     carbo: number;
     qtd: number;

@@ -1,23 +1,31 @@
 .layout-config-button {
-    display: block;
+
+    z-index: 999;
     position: fixed;
+    top: 96%;
+    right: 0;
     width: 3rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    display: block;
+  
+   
     height: 3rem;
     line-height: 3rem;
     background: var(--primary-color);
     color: var(--primary-color-text);
     text-align: center;
-    top: 50%;
-    right: 0;
+   
+   
     margin-top: -1.5rem;
     border-top-left-radius: var(--border-radius);
     border-bottom-left-radius: var(--border-radius);
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+   
     transition: background-color var(--transition-duration);
     overflow: hidden;
     cursor: pointer;
-    z-index: 999;
+    
     box-shadow: -.25rem 0 1rem rgba(0,0,0,.15);
 
     i {

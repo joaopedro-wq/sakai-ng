@@ -47,7 +47,10 @@ export class AppConfigComponent {
         return this.layoutService.config().inputStyle;
     }
     set inputStyle(_val: string) {
-        this.layoutService.config().inputStyle = _val;
+        this.layoutService.config.update((config) => ({
+            ...config,
+            inputStyle: _val,
+        }));
     }
 
     get ripple(): boolean {
@@ -90,10 +93,14 @@ export class AppConfigComponent {
     }
 
     decrementScale() {
-        this.scale--;
+        if (this.scale > this.scales[0]) {
+            this.scale--;
+        }
     }
 
     incrementScale() {
-        this.scale++;
+        if (this.scale < this.scales[this.scales.length - 1]) {
+            this.scale++;
+        }
     }
 }

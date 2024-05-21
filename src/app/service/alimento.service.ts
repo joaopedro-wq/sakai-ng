@@ -70,6 +70,7 @@ export class FoodService {
         keyService: 'AlimentoService',
         buttons: [],
     };
+   
 
     buttonState(action: string, nmButton: string, value: boolean) {
         switch (action) {
@@ -116,7 +117,7 @@ export class FoodService {
         switch (action) {
             case 'salvar':
                 let saveFormFood: Alimento = this.formFood;
-               
+                
                 if (saveFormFood.id) {
                     this.updateFood(saveFormFood).subscribe();
                 } else {
@@ -215,6 +216,7 @@ export class FoodService {
 
     public setformFood(formFood: Alimento) {
         this.formFood = formFood;
+      
     }
 
     confirmDeleteFood() {

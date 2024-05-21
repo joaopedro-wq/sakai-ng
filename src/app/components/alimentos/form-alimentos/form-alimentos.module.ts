@@ -13,6 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SharedModule } from "../../../shared/shared.module";
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
     declarations: [FormAlimentosComponent],
@@ -30,6 +31,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
         ReactiveFormsModule,
         ConfirmDialogModule,
         InputNumberModule,
+        CardModule,
         SharedModule
     ]
 })

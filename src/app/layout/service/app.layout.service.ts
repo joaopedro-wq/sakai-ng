@@ -26,7 +26,7 @@ interface LayoutState {
     providedIn: 'root',
 })
 export class LayoutService {
-    _config: AppConfig = {
+    private _defaultConfig: AppConfig = {
         ripple: false,
         inputStyle: 'outlined',
         menuMode: 'static',
@@ -36,7 +36,7 @@ export class LayoutService {
         menuProfilePosition: ''
     };
 
-    config = signal<AppConfig>(this._config);
+    config = signal<AppConfig>(this.loadConfig());
 
     state: LayoutState = {
         staticMenuDesktopInactive: false,
@@ -65,13 +65,23 @@ export class LayoutService {
             }
             this.changeScale(config.scale);
             this.onConfigUpdate();
+            this.saveConfig(config);
         });
+    }
+
+    private loadConfig(): AppConfig {
+        const config = localStorage.getItem('appConfig');
+        return config ? JSON.parse(config) : this._defaultConfig;
+    }
+
+    private saveConfig(config: AppConfig) {
+        localStorage.setItem('appConfig', JSON.stringify(config));
     }
 
     updateStyle(config: AppConfig) {
         return (
-            config.theme !== this._config.theme ||
-            config.colorScheme !== this._config.colorScheme
+            config.theme !== this._defaultConfig.theme ||
+            config.colorScheme !== this._defaultConfig.colorScheme
         );
     }
 
@@ -120,7 +130,7 @@ export class LayoutService {
     }
 
     onConfigUpdate() {
-        this._config = { ...this.config() };
+        this._defaultConfig = { ...this.config() };
         this.configUpdate.next(this.config());
     }
 
@@ -131,9 +141,9 @@ export class LayoutService {
         const newHref = themeLinkHref
             .split('/')
             .map((el) =>
-                el == this._config.theme
+                el == this._defaultConfig.theme
                     ? (el = config.theme)
-                    : el == `theme-${this._config.colorScheme}`
+                    : el == `theme-${this._defaultConfig.colorScheme}`
                     ? (el = `theme-${config.colorScheme}`)
                     : el
             )
@@ -141,6 +151,7 @@ export class LayoutService {
 
         this.replaceThemeLink(newHref);
     }
+
     replaceThemeLink(href: string) {
         const id = 'theme-css';
         let themeLink = <HTMLLinkElement>document.getElementById(id);

@@ -20,7 +20,7 @@ export class FormRegistroComponent
         private router: Router,
         public foodService: FoodService
     ) {
-        this.foodService.obsLoadFood
+        /* this.foodService.obsLoadFood
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.formFood.patchValue({
@@ -32,7 +32,7 @@ export class FormRegistroComponent
                     qtd: res.qtd,
 
                 });
-            });
+            }); */
 
     }
     

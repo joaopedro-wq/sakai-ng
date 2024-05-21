@@ -60,6 +60,6 @@ export class ListAlimentosComponent implements OnInit, OnDestroy {
     } */
 
     navigateToCompanyEdit(id: number) {
-        this.router.navigate([`/categories/register/${id}`]);
+        this.router.navigate([`/alimentos/registro/${id}`]);
     }
 }
