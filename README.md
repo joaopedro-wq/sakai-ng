@@ -1,27 +1,24 @@
-# Sakai
+## Front-end
+Projeto sobre registro nutricional de alimentos. Crud onde pode cadastrar, editar e excluir alimentos, cadastrar seu registro usuario, tela de login.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4.
+## Back-end
+rotas e tabelas criadas utilizando laravel 11, sistema de autenticacao com token, sistema de exportaçao de planilhas e a base do crud para suportar o front-end
 
-## Development server
+## Tecnologias 
+Projeto em desenvolvimento utilizando tecnlogias PHP Laravel 11 para o back-end, e para o front template do primeNG utilizando Angular 17, para o banco utilizando MYSQL com fork mariaDB.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Requisitos Minimos
+PHP version 8.2
+Composer version 2.6
+Node Version 18.2
+MariaDB Version 10.4.
 
-## Code scaffolding
+## Como utilizar back-end
+CLonar o repositorio do back-end (Vitality-Back) e utilizar comando 'composer install'
+Para criação das tabelas 'php artisan migrate'
+para rodar aplicacao: 'php artisan serve' 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## como utilizar front-end
+CLonar repositorio (sakai) e utilizar comando 'npm install'
+rodar aplicacao: 'ng s'
+buildar aplicacao: 'ng build'
