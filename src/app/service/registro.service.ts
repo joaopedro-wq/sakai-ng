@@ -3,18 +3,18 @@ import { Alimento } from "../api/alimento";
 import { DatePipe } from "@angular/common";
 import { ConfirmationService } from "primeng/api";
 import { BarButtonsService } from "../shared/service/bar-buttons.service";
-import { HttpClient } from "@angular/common/http";
 import { Observable, catchError, tap, throwError } from "rxjs";
 import { Button } from 'src/app/shared/api/button';
 import { BarButton } from "../shared/api/bar-button";
 import { ActionButton } from "../shared/api/action-button";
  import { HttpPersonService } from "./http-person.service"; 
+import { Registro } from "../api/registro";
 
 
 @Injectable({
     providedIn: 'root',
 })
-export class FoodService {
+export class RegisterService {
     private buttonsForm: Array<Button> = [
         {
             title: 'voltar',
@@ -61,13 +61,13 @@ export class FoodService {
             disabled: false,
             class: 'inline-block',
             icon: 'pi pi-plus',
-            routerLink: ['/alimentos/registro'],
+            routerLink: ['/registros/registro'],
             tooltip: '',
         },
     ];
 
     private barButton: BarButton = {
-        keyService: 'AlimentoService',
+        keyService: 'RegisterService',
         buttons: [],
     };
    
@@ -91,22 +91,23 @@ export class FoodService {
         }
     } 
 
-    public foodsList!: Alimento [];
-    private formFood!: Alimento;
-    obsListFoods: EventEmitter<Alimento[]> = new EventEmitter();
-    obsLoadFood: EventEmitter<Alimento> = new EventEmitter();
-    obsSaveFood: EventEmitter<any> = new EventEmitter();
-    obsDeleteFood: EventEmitter<any> = new EventEmitter();
+    public registersList!: Registro [];
+    private formRegister!: Registro;
+    obsListRegister: EventEmitter<Registro[]> = new EventEmitter();
+    obsLoadRegister: EventEmitter<Registro> = new EventEmitter();
+    obsSaveRegister: EventEmitter<any> = new EventEmitter();
+    obsDeleteRegister: EventEmitter<any> = new EventEmitter();
 
     constructor(
         private http: HttpPersonService,
         private barButtonsService: BarButtonsService,
+        private datePipe: DatePipe,
         
         private confirmationService: ConfirmationService
     ) {
        this.barButtonsService.execActionButton.subscribe(
             (res: ActionButton) => {
-                if (res.keyService == 'AlimentoService') {
+                if (res.keyService == 'RegisterService') {
                     this.execActionButton(res.actionButton);
                 }
             }
@@ -116,12 +117,16 @@ export class FoodService {
     execActionButton(action: string) {
         switch (action) {
             case 'salvar':
-                let saveFormFood: Alimento = this.formFood;
-                
+                let saveFormFood: Registro = this.formRegister;
+                saveFormFood.data = this.datePipe.transform(
+                    saveFormFood.data,
+                    'yyyy-MM-dd'
+                )!;
+
                 if (saveFormFood.id) {
-                    this.updateFood(saveFormFood).subscribe();
+                    this.updateRegister(saveFormFood).subscribe();
                 } else {
-                    this.createFood(saveFormFood).subscribe();
+                    this.createRegister(saveFormFood).subscribe();
                 }
                 break;
             case 'excluir':
@@ -142,13 +147,12 @@ export class FoodService {
         this.barButtonsService.startBarraButtons(this.barButton);
     } 
 
-    loadFoods(): Observable<any> {
-        return this.http.get('/api/food').pipe(
+    loadRegisters(): Observable<any> {
+        return this.http.get('/api/registro').pipe(
             tap((res: any) => {
                 if (res.success) {
-                    this.foodsList = res.data;
-                    this.obsListFoods.emit(this.foodsList);
-                    console.log('res',res)
+                    this.registersList = res.data;
+                    this.obsListRegister.emit(this.registersList);
                 }
             }),
             catchError((error: any) => {
@@ -159,12 +163,12 @@ export class FoodService {
     }
     
 
-    loadFood(id: number): Observable<any> {
-        return this.http.get(`/api/food/${id}`).pipe(
+    loadRegister(id: number): Observable<any> {
+        return this.http.get(`/api/registro/${id}`).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
                 if (res.success) {
-                    this.obsLoadFood.emit(res.data);
+                    this.obsLoadRegister.emit(res.data);
                 }
             }),
             catchError((error: any) => {
@@ -174,11 +178,11 @@ export class FoodService {
         );
     }
 
-    createFood(formFood: Alimento): Observable<any> {
-        return this.http.post('/api/food', formFood).pipe(
+    createRegister(formRegister: Registro): Observable<any> {
+        return this.http.post('/api/registro', formRegister).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
-                this.obsSaveFood.emit(res);
+                this.obsSaveRegister.emit(res);
             }),
             catchError((error: any) => {
                 // Trata o erro da requisição e propaga o erro através de um Observable de erro
@@ -187,13 +191,13 @@ export class FoodService {
         );
     }
 
-    updateFood(formFood: Alimento): Observable<any> {
+    updateRegister(formRegister: Registro): Observable<any> {
         return this.http
-            .put(`/api/food/${formFood.id}`, formFood)
+            .put(`/api/registro/${formRegister.id}`, formRegister)
             .pipe(
                 tap((res: any) => {
                     // Executa uma ação quando a requisição for bem-sucedida
-                    this.obsSaveFood.emit(res);
+                    this.obsSaveRegister.emit(res);
                 }),
                 catchError((error: any) => {
                     // Trata o erro da requisição e propaga o erro através de um Observable de erro
@@ -202,11 +206,11 @@ export class FoodService {
             );
     }
 
-    deleteFood(id: number): Observable<any> {
-        return this.http.delete(`/api/food/${id}`).pipe(
+    deleteRegister(id: number): Observable<any> {
+        return this.http.delete(`/api/registro/${id}`).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
-                this.obsDeleteFood.emit(res);
+                this.obsDeleteRegister.emit(res);
             }),
             catchError((error: any) => {
                 // Trata o erro da requisição e propaga o erro através de um Observable de erro
@@ -215,15 +219,16 @@ export class FoodService {
         );
     }
 
-    public setformFood(formFood: Alimento) {
-        this.formFood = formFood;
+    public setformFood(formRegister: Registro) {
+        this.formRegister = formRegister;
+        console.log('this.formRegister',this.formRegister)
       
     }
 
     confirmDeleteFood() {
         this.confirmationService.confirm({
             target: new EventTarget(),
-            message: 'Realmente deseja excluir este Alimento?',
+            message: 'Realmente deseja excluir este Registro?',
             header: 'Confirmação de exclusão',
             icon: 'pi pi-info-circle',
             acceptButtonStyleClass: 'p-button-danger',
@@ -234,8 +239,8 @@ export class FoodService {
             rejectLabel: 'Cancelar',
 
             accept: () => {
-                let foodId: number | undefined = this.formFood.id;
-                if (foodId) this.deleteFood(foodId).subscribe();
+                let foodId: number | undefined = this.formRegister.id;
+                if (foodId) this.deleteRegister(foodId).subscribe();
             },
             reject: () => {},
         });

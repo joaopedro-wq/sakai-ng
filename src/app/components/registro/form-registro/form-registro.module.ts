@@ -13,7 +13,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SharedModule } from '../../../shared/shared.module';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-
+import { CardModule } from 'primeng/card';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 @NgModule({
     declarations: [FormRegistroComponent],
     imports: [
@@ -30,7 +31,8 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
         ReactiveFormsModule,
         ConfirmDialogModule,
         InputNumberModule,
-        SharedModule,
+        AutoCompleteModule,
+        CardModule
     ],
 })
 export class FormRegistroModule {}

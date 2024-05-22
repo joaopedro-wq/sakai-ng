@@ -10,32 +10,34 @@ import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subject, takeUntil } from 'rxjs';
 import { Alimento } from 'src/app/api/alimento';
+import { Registro } from 'src/app/api/registro';
 import { FoodService } from 'src/app/service/alimento.service';
+import { RegisterService } from 'src/app/service/registro.service';
 
 @Component({
-    templateUrl: './list-alimentos.component.html',
+    templateUrl: './list-registros.component.html',
     providers: [ConfirmationService],
 })
-export class ListAlimentosComponent implements OnInit, OnDestroy {
+export class ListRegistrosComponent implements OnInit, OnDestroy {
     @ViewChild('filter') filter!: ElementRef;
 
     private unsubscribe = new Subject<void>();
     food: Alimento[] = [];
-
-    constructor(private router: Router, public foodService: FoodService) {
-        this.foodService.obsListFoods
+    register: Registro[]= [];
+    constructor(
+        private router: Router,
+        public foodService: FoodService,
+        public registerService: RegisterService
+    ) {
+        this.registerService.obsListRegister
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
-                this.food = res;
-              
-              
+                this.register = res;
             });
     }
 
-   
     ngOnInit() {
-         this.foodService.loadButtons('list'); 
-        
+        this.registerService.loadButtons('list');
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -55,11 +57,8 @@ export class ListAlimentosComponent implements OnInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
-    /*  deleteCompany(id: number) {
-        this.categoryService.deleteCategory(id).subscribe(() => {});
-    } */
-
+    
     navigateToCompanyEdit(id: number) {
-        this.router.navigate([`/alimentos/registro/${id}`]);
+        this.router.navigate([`/registros/registro/${id}`]);
     }
 }

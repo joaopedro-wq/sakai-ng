@@ -85,8 +85,7 @@ export class FormAlimentosComponent
     breadcrumbItems: MenuItem[] = [];
     ngOnInit() {
          this.foodService.loadButtons('form');  
-          this.breadcrumbItems = [];
-            this.breadcrumbItems.push({ label: 'Alimentos' }); 
+          
     }
   
 
