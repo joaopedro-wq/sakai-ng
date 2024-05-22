@@ -1,4 +1,4 @@
-<div class="grid">
+<div class="grid" style="margin-top: 1%;">
 	<div class="col-12">
 		<div class="card" style="height: calc(100vh - 152px)">
 			<p-table #dt1 [value]="register" dataKey="id" [rowHover]="true" styleClass="p-datatable-gridlines"
@@ -22,36 +22,36 @@
 						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Descrição
-								<p-columnFilter type="text" field="razao" display="menu"
-									placeholder="Pesquisar por razão social"></p-columnFilter>
+								<p-columnFilter type="text" field="descricao" display="menu"
+									placeholder="Pesquisar por Descrição"></p-columnFilter>
 							</div>
 						</th>
 						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Data
-								<p-columnFilter type="text" field="razao" display="menu"
-									placeholder="Pesquisar por razão social"></p-columnFilter>
+								<p-columnFilter type="text" field="Data" display="menu"
+									placeholder="Pesquisar por Data"></p-columnFilter>
 							</div>
 						</th>
 						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Alimento
-								<p-columnFilter type="text" field="razao" display="menu"
-									placeholder="Pesquisar por razão social"></p-columnFilter>
+								<p-columnFilter type="text" field="Alimento" display="menu"
+									placeholder="Pesquisar por Alimento"></p-columnFilter>
 							</div>
 						</th>
 						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Porção (g)
-								<p-columnFilter type="text" field="razao" display="menu"
-									placeholder="Pesquisar por razão social"></p-columnFilter>
+								<p-columnFilter type="text" field="porcao" display="menu"
+									placeholder="Pesquisar por Porção"></p-columnFilter>
 							</div>
 						</th>
 						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
-								Total Caloria
-								<p-columnFilter type="text" field="razao" display="menu"
-									placeholder="Pesquisar por razão social"></p-columnFilter>
+								Total Caloria (kcal)
+								<p-columnFilter type="text" field="Caloria" display="menu"
+									placeholder="Pesquisar por Caloria"></p-columnFilter>
 							</div>
 						</th>
 					</tr>
@@ -60,10 +60,10 @@
 					<tr class="cursor-pointer" (click)="navigateToCompanyEdit(register.id)">
 						<!-- <td class="text-center">{{food.id}}</td> -->
 						<td>{{register.descricao}}</td>
-						<td>{{register.data}}</td>
-						<td>{{register.idAlimento}}</td>
+						<td>{{register.data | date: 'dd/MM/yyyy'}}</td>
+						<td>{{register.descricao_alimento}}</td>
 						<td>{{register.qtd}}</td>
-						<td>{{register.qtd}}</td>
+						<td>{{register.alimento.caloria}}</td>
 
 
 

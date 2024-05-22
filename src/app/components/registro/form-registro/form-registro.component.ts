@@ -17,12 +17,14 @@ export class FormRegistroComponent
     implements OnInit, OnDestroy
 {
     private unsubscribe = new Subject<void>();
-
+    listFood!: Alimento[];
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
         public foodService: FoodService,
-        public registerService: RegisterService
+        public registerService: RegisterService,
+        private messageService: MessageService,
+
 
     ) {
         this.registerService.obsLoadRegister
@@ -31,43 +33,54 @@ export class FormRegistroComponent
             this.formRegister.patchValue({
                 id: res.id ? res.id : null,
                 descricao: res.descricao,
-                data: res.data,
+                data: new Date(res.data),
                 id_alimento: res.id_alimento,
                 qtd: res.qtd,
-
+                
             });
+            console.log('ress',res)
+        });
+        this.registerService.obsSaveRegister
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((res) => {
+             this.messageService.add({
+                severity: res.success ? 'success' : 'error',
+                summary: res.success ? 'Sucesso' : 'Erro',
+                detail: res.message,
+                
+            });  
+            
+            if (res.success) this.router.navigate(['/registros']);
+        });
+
+        this.registerService.obsDeleteRegister
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((res) => {
+            this.messageService.add({
+                severity: res.success ? 'success' : 'error',
+                summary: res.success ? 'Sucesso' : 'Erro',
+                detail: res.message,
+            });
+            if (res.success) this.router.navigate(['/registros']);
         });
 
         this.foodService.obsListFoods
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.listFood = res;
-               
-            });
 
-            this.registerService.obsSaveRegister
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe((res) => {
-               /*  this.messageService.add({
-                    severity: res.success ? 'success' : 'error',
-                    summary: res.success ? 'Sucesso' : 'Erro',
-                    detail: res.message,
-                    
-                });  */
-                
-                if (res.success) this.router.navigate(['/registros']);
             });
-
     }
     
     public formRegister: FormGroup = this.formBuilder.group({
         id: [null],
         descricao: ['', [Validators.required]],
-        data: [ null, [Validators.required]],
-        id_alimento: [ , [Validators.required]],
+        data: [null , [Validators.required]],
+        id_alimento: ['' , [Validators.required]],
         qtd: [ , [Validators.required]],
     });
-    listFood:Alimento[] = [];
+   
+   
    
     items: any[] | undefined;
     selectedStatus: string = 'active';
@@ -90,7 +103,7 @@ export class FormRegistroComponent
 
   
     ngOnInit() {
-         this.foodService.loadButtons('form');  
+         this.registerService.loadButtons('form');  
           
     }
   
@@ -98,7 +111,7 @@ export class FormRegistroComponent
     ngAfterContentInit(): void {
         this.formRegister.statusChanges.subscribe((res) => {
             if (res === 'INVALID') {
-                this.registerService.buttonState('disabled', 'salvar', false);
+                this.registerService.buttonState('disabled', 'salvar', true);
             } else {
                 this.registerService.buttonState('disabled', 'salvar', false);
             }
@@ -117,6 +130,7 @@ export class FormRegistroComponent
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+       
        
     }
 }

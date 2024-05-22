@@ -24,7 +24,7 @@ export class RegisterService {
             disabled: false,
             class: 'p-button-outlined p-button-plain mr-2',
             icon: 'pi pi-chevron-left',
-            routerLink: ['/alimentos'],
+            routerLink: ['/registros'],
             tooltip: '',
         },
         {
@@ -130,7 +130,8 @@ export class RegisterService {
                 }
                 break;
             case 'excluir':
-                this.confirmDeleteFood();
+                this.confirmDeleteRegister();
+               
                 break;
         }
     }
@@ -221,11 +222,11 @@ export class RegisterService {
 
     public setformFood(formRegister: Registro) {
         this.formRegister = formRegister;
-        console.log('this.formRegister',this.formRegister)
+       
       
     }
 
-    confirmDeleteFood() {
+    confirmDeleteRegister() {
         this.confirmationService.confirm({
             target: new EventTarget(),
             message: 'Realmente deseja excluir este Registro?',
@@ -239,8 +240,8 @@ export class RegisterService {
             rejectLabel: 'Cancelar',
 
             accept: () => {
-                let foodId: number | undefined = this.formRegister.id;
-                if (foodId) this.deleteRegister(foodId).subscribe();
+                let registerId: number | undefined = this.formRegister.id;
+                if (registerId) this.deleteRegister(registerId).subscribe();
             },
             reject: () => {},
         });
