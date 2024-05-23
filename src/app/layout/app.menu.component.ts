@@ -21,9 +21,15 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
+                label: 'Cadastro',
+                items: [
+                    { label: 'Refeição', icon: 'pi pi-server', routerLink: ['/refeicoes'] },
+                ]
+            },
+            {
                 label: 'Registro',
                 items: [
-                    { label: 'Alimentos', icon: 'pi pi-fw pi-apple', routerLink: ['/alimentos'] },
+                    { label: 'Alimentos', icon: 'pi pi-heart', routerLink: ['/alimentos'] },
                     { label: 'Registro Diário', icon: 'pi pi-bars', routerLink: ['/registros'] },
 
 

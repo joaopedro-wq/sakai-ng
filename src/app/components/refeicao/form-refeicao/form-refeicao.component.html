@@ -1,0 +1,18 @@
+
+<div class="col-12">
+
+  <div class="card" style="margin-top: 2%;">
+
+    <p-card header=" Cadastro Refeição">
+    </p-card>
+  
+    <form class="p-fluid p-formgrid grid" [formGroup]="formSnack">
+      <div class="field col-12 md:col-12">
+        <label htmlFor="descricao">Descrição *</label>
+        <input pInputText id="descricao" type="text"  maxlength="150" formControlName="descricao"/>
+      </div>
+    </form>
+  </div>
+</div>
+
+<p-confirmDialog></p-confirmDialog>

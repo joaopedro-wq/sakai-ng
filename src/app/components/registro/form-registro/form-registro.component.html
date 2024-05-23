@@ -8,7 +8,8 @@
     <form class="p-fluid p-formgrid grid" [formGroup]="formRegister">
       <div class="field col-12 md:col-8">
         <label htmlFor="descricao">Nome Refeição *</label>
-        <input pInputText id="descricao" type="text" maxlength="150" formControlName="descricao" />
+      <!--   <input pInputText id="descricao" type="text" maxlength="150" formControlName="descricao" / -->
+        <p-dropdown id="id_refeicao" [options]="listSnackies" optionLabel="descricao" optionValue="id" formControlName="id_refeicao" placeholder="Selecione a refeição"></p-dropdown> 
       </div>
       <div class="field col-12 md:col-4">
         <label htmlFor="cal">Data *</label>
@@ -17,9 +18,9 @@
       <div class="field col-12 md:col-8">
 
         <label htmlFor="gordura">Selecione o Alimento *</label>
-        <p-multiSelect [options]="listFood" placeholder="Selecione o alimento" optionLabel="descricao" display="chip"
-          [showClear]="true" formControlName="id_alimento" />
-        <!--   <p-dropdown id="id_empresa" [options]="listFood" optionLabel="descricao" optionValue="id" formControlName="id_alimento" placeholder="Selecione o alimento"></p-dropdown> -->
+      <!--   <p-multiSelect [options]="listFood" placeholder="Selecione o alimento" optionLabel="descricao" display="chip"
+          [showClear]="true" formControlName="id_alimento" /> -->
+          <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id" formControlName="id_alimento" placeholder="Selecione o alimento"></p-dropdown> 
       </div>
 
       <div class="field col-12 md:col-4">

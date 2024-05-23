@@ -1,20 +1,18 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Alimento } from '../api/alimento';
-import { DatePipe } from '@angular/common';
-import { ConfirmationService } from 'primeng/api';
-import { BarButtonsService } from '../shared/service/bar-buttons.service';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { EventEmitter, Injectable } from "@angular/core";
+import { ConfirmationService } from "primeng/api";
+import { BarButtonsService } from "../shared/service/bar-buttons.service";
+import { Observable, catchError, tap, throwError } from "rxjs";
 import { Button } from 'src/app/shared/api/button';
-import { BarButton } from '../shared/api/bar-button';
-import { ActionButton } from '../shared/api/action-button';
-import { HttpPersonService } from './http-person.service';
-import { Registro } from '../api/registro';
-import { FormArray } from '@angular/forms';
+import { BarButton } from "../shared/api/bar-button";
+import { ActionButton } from "../shared/api/action-button";
+import { HttpPersonService } from "./http-person.service"; 
+import { Refeicao } from "../api/refeicao";
+
 
 @Injectable({
     providedIn: 'root',
 })
-export class RegisterService {
+export class SnackService {
     private buttonsForm: Array<Button> = [
         {
             title: 'voltar',
@@ -24,7 +22,7 @@ export class RegisterService {
             disabled: false,
             class: 'p-button-outlined p-button-plain mr-2',
             icon: 'pi pi-chevron-left',
-            routerLink: ['/registros'],
+            routerLink: ['/refeicoes'],
             tooltip: '',
         },
         {
@@ -49,6 +47,7 @@ export class RegisterService {
             routerLink: [],
             tooltip: '',
         },
+        
     ];
 
     private buttonsList: Array<Button> = [
@@ -60,15 +59,16 @@ export class RegisterService {
             disabled: false,
             class: 'inline-block',
             icon: 'pi pi-plus',
-            routerLink: ['/registros/registro'],
+            routerLink: ['/refeicoes/registro'],
             tooltip: '',
         },
     ];
 
     private barButton: BarButton = {
-        keyService: 'RegisterService',
+        keyService: 'RefeicaoService',
         buttons: [],
     };
+   
 
     buttonState(action: string, nmButton: string, value: boolean) {
         switch (action) {
@@ -87,49 +87,43 @@ export class RegisterService {
                 });
                 break;
         }
-    }
+    } 
 
-    public registersList!: Registro[];
-    private formRegister!: Registro;
-    obsListRegister: EventEmitter<Registro[]> = new EventEmitter();
-    obsLoadRegister: EventEmitter<Registro> = new EventEmitter();
-    obsSaveRegister: EventEmitter<any> = new EventEmitter();
-    obsDeleteRegister: EventEmitter<any> = new EventEmitter();
+    public snacksList!: Refeicao [];
+    private formSnack!: Refeicao;
+    obsListSnacks: EventEmitter<Refeicao[]> = new EventEmitter();
+    obsLoadSnack: EventEmitter<Refeicao> = new EventEmitter();
+    obsSaveSnack: EventEmitter<any> = new EventEmitter();
+    obsDeleteSnack: EventEmitter<any> = new EventEmitter();
 
     constructor(
         private http: HttpPersonService,
         private barButtonsService: BarButtonsService,
-        private datePipe: DatePipe,
-
+        
         private confirmationService: ConfirmationService
     ) {
-        this.barButtonsService.execActionButton.subscribe(
+       this.barButtonsService.execActionButton.subscribe(
             (res: ActionButton) => {
-                if (res.keyService == 'RegisterService') {
+                if (res.keyService == 'RefeicaoService') {
                     this.execActionButton(res.actionButton);
                 }
             }
-        );
+        ); 
     }
 
     execActionButton(action: string) {
         switch (action) {
             case 'salvar':
-                let saveFormFood: Registro = this.formRegister;
-                saveFormFood.data = this.datePipe.transform(
-                    saveFormFood.data,
-                    'yyyy-MM-dd'
-                )!;
-
-                if (saveFormFood.id) {
-                    this.updateRegister(saveFormFood).subscribe();
+                let saveFormSnack: Refeicao = this.formSnack;
+                
+                if (saveFormSnack.id) {
+                    this.updateSnack(saveFormSnack).subscribe();
                 } else {
-                    this.createRegister(saveFormFood).subscribe();
+                    this.createSnack(saveFormSnack).subscribe();
                 }
                 break;
             case 'excluir':
-                this.confirmDeleteRegister();
-
+                this.confirmDeleteSnack();
                 break;
         }
     }
@@ -139,32 +133,36 @@ export class RegisterService {
             this.barButton.buttons = this.buttonsForm;
         } else if (nmListButtons == 'list') {
             this.barButton.buttons = this.buttonsList;
+           
+            
         }
 
         this.barButtonsService.startBarraButtons(this.barButton);
-    }
+    } 
 
-    loadRegisters(): Observable<any> {
-        return this.http.get('/api/registro').pipe(
+    loadSnackies(): Observable<any> {
+        return this.http.get('/api/refeicao').pipe(
             tap((res: any) => {
                 if (res.success) {
-                    this.registersList = res.data;
-                    this.obsListRegister.emit(this.registersList);
+                    this.snacksList = res.data;
+                    this.obsListSnacks.emit(this.snacksList);
+        
                 }
             }),
             catchError((error: any) => {
-                console.error('Error ssss:', error);
+                console.error('Error:', error);
                 return throwError(() => new Error(error.message || error));
             })
         );
     }
+    
 
-    loadRegister(id: number): Observable<any> {
-        return this.http.get(`/api/registro/${id}`).pipe(
+    loadSnack(id: number): Observable<any> {
+        return this.http.get(`/api/refeicao/${id}`).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
                 if (res.success) {
-                    this.obsLoadRegister.emit(res.data);
+                    this.obsLoadSnack.emit(res.data);
                 }
             }),
             catchError((error: any) => {
@@ -174,12 +172,11 @@ export class RegisterService {
         );
     }
 
-    createRegister(formRegister: Registro): Observable<any> {
-        console.log('formRegister', formRegister);
-        return this.http.post('/api/registro', formRegister).pipe(
+    createSnack(formSnack: Refeicao): Observable<any> {
+        return this.http.post('/api/refeicao', formSnack).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
-                this.obsSaveRegister.emit(res);
+                this.obsSaveSnack.emit(res);
             }),
             catchError((error: any) => {
                 // Trata o erro da requisição e propaga o erro através de um Observable de erro
@@ -188,13 +185,13 @@ export class RegisterService {
         );
     }
 
-    updateRegister(formRegister: Registro): Observable<any> {
+    updateSnack(formSnack: Refeicao): Observable<any> {
         return this.http
-            .put(`/api/registro/${formRegister.id}`, formRegister)
+            .put(`/api/refeicao/${formSnack.id}`, formSnack)
             .pipe(
                 tap((res: any) => {
                     // Executa uma ação quando a requisição for bem-sucedida
-                    this.obsSaveRegister.emit(res);
+                    this.obsSaveSnack.emit(res);
                 }),
                 catchError((error: any) => {
                     // Trata o erro da requisição e propaga o erro através de um Observable de erro
@@ -203,11 +200,11 @@ export class RegisterService {
             );
     }
 
-    deleteRegister(id: number): Observable<any> {
-        return this.http.delete(`/api/registro/${id}`).pipe(
+    deleteSnack(id: number): Observable<any> {
+        return this.http.delete(`/api/refeicao/${id}`).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
-                this.obsDeleteRegister.emit(res);
+                this.obsDeleteSnack.emit(res);
             }),
             catchError((error: any) => {
                 // Trata o erro da requisição e propaga o erro através de um Observable de erro
@@ -216,15 +213,15 @@ export class RegisterService {
         );
     }
 
-    public setformFood(formRegister: Registro) {
-        this.formRegister = formRegister;
-        console.log('this.formRegister', this.formRegister);
+    public setformSnack(formSnack: Refeicao) {
+        this.formSnack = formSnack;
+      
     }
 
-    confirmDeleteRegister() {
+    confirmDeleteSnack() {
         this.confirmationService.confirm({
             target: new EventTarget(),
-            message: 'Realmente deseja excluir este Registro?',
+            message: 'Realmente deseja excluir esta Refeição?',
             header: 'Confirmação de exclusão',
             icon: 'pi pi-info-circle',
             acceptButtonStyleClass: 'p-button-danger',
@@ -235,8 +232,8 @@ export class RegisterService {
             rejectLabel: 'Cancelar',
 
             accept: () => {
-                let registerId: number | undefined = this.formRegister.id;
-                if (registerId) this.deleteRegister(registerId).subscribe();
+                let snackId: number | undefined = this.formSnack.id;
+                if (snackId) this.deleteSnack(snackId).subscribe();
             },
             reject: () => {},
         });

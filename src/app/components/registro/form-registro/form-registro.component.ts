@@ -1,112 +1,96 @@
 import { AfterContentInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { Subject, takeUntil } from 'rxjs';
 import { Alimento } from 'src/app/api/alimento';
+import { Refeicao } from 'src/app/api/refeicao';
 import { FoodService } from 'src/app/service/alimento.service';
+import { SnackService } from 'src/app/service/refeicao.service';
 import { RegisterService } from 'src/app/service/registro.service';
-
 
 @Component({
     templateUrl: './form-registro.component.html',
     providers: [],
 })
-export class FormRegistroComponent
-    implements OnInit, OnDestroy
-{
+export class FormRegistroComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();
-    listFood!: Alimento[];
+    listFoodies!: Alimento[];
+    listSnackies!: Refeicao[];
+
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
         public foodService: FoodService,
         public registerService: RegisterService,
         private messageService: MessageService,
-
-
+        public snackService: SnackService
     ) {
         this.registerService.obsLoadRegister
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-            this.formRegister.patchValue({
-                id: res.id ? res.id : null,
-                descricao: res.descricao,
-                data: new Date(res.data),
-                id_alimento: res.id_alimento,
-                qtd: res.qtd,
-                
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.formRegister.patchValue({
+                    id: res.id ? res.id : null,
+                    data: new Date(res.data),
+                    id_alimento: res.id_alimento,
+                    id_refeicao: res.id_refeicao,
+                    qtd: res.qtd,
+                });
             });
-            console.log('ress',res)
-        });
         this.registerService.obsSaveRegister
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-             this.messageService.add({
-                severity: res.success ? 'success' : 'error',
-                summary: res.success ? 'Sucesso' : 'Erro',
-                detail: res.message,
-                
-            });  
-            
-            if (res.success) this.router.navigate(['/registros']);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.messageService.add({
+                    severity: res.success ? 'success' : 'error',
+                    summary: res.success ? 'Sucesso' : 'Erro',
+                    detail: res.message,
+                });
+
+                if (res.success) this.router.navigate(['/registros']);
+            });
 
         this.registerService.obsDeleteRegister
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-            this.messageService.add({
-                severity: res.success ? 'success' : 'error',
-                summary: res.success ? 'Sucesso' : 'Erro',
-                detail: res.message,
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.messageService.add({
+                    severity: res.success ? 'success' : 'error',
+                    summary: res.success ? 'Sucesso' : 'Erro',
+                    detail: res.message,
+                });
+                if (res.success) this.router.navigate(['/registros']);
             });
-            if (res.success) this.router.navigate(['/registros']);
-        });
 
         this.foodService.obsListFoods
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
-                this.listFood = res;
+                this.listFoodies = res;
+            });
 
+        this.snackService.obsListSnacks
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.listSnackies = res;
             });
     }
-    
+
     public formRegister: FormGroup = this.formBuilder.group({
         id: [null],
-        descricao: ['', [Validators.required]],
-        data: [null , [Validators.required]],
-        id_alimento: ['' , [Validators.required]],
-        qtd: [ , [Validators.required]],
+        data: [null, [Validators.required]],
+        id_alimento: [],
+        id_refeicao: ['', [Validators.required]],
+        qtd: [],
     });
-   
-   
-   
-    items: any[] | undefined;
-    selectedStatus: string = 'active';
-    filteredItems: any[] | undefined;
-    
-    filterItems(event: AutoCompleteCompleteEvent) {
-        //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
-        let filtered: any[] = [];
-        let query = event.query;
 
-        for (let i = 0; i < (this.items as any[]).length; i++) {
-            let item = (this.items as any[])[i];
-            if (item.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(item);
-            }
-        }
-
-        this.filteredItems = filtered;
-    }
-
-  
     ngOnInit() {
-         this.registerService.loadButtons('form');  
-          
+        this.registerService.loadButtons('form');
     }
-  
 
     ngAfterContentInit(): void {
         this.formRegister.statusChanges.subscribe((res) => {
@@ -123,14 +107,11 @@ export class FormRegistroComponent
             } else {
                 this.registerService.buttonState('visible', 'excluir', false);
             }
-
             this.registerService.setformFood(res);
         });
-    }   
+    }
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
-       
-       
     }
 }

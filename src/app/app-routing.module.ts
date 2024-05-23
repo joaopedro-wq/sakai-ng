@@ -19,6 +19,14 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                                 ).then((m) => m.DashboardModule),
                         },
                         {
+                            path: 'refeicoes',
+                            data: { breadcrumb: 'Refeição' },
+                            loadChildren: () =>
+                                import(
+                                    './components/refeicao/refeicao.module'
+                                ).then((m) => m.RefeicaoModule),
+                        },
+                        {
                             path: 'alimentos',
                             data: { breadcrumb: 'Alimentos' },
                             loadChildren: () =>
@@ -34,9 +42,6 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                                     './components/registro/registro.module'
                                 ).then((m) => m.RegistroModule),
                         },
-
-
-                        
 
                         {
                             path: 'uikit',
