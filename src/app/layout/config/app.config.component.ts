@@ -86,11 +86,13 @@ export class AppConfigComponent {
     onConfigButtonClick() {
         this.layoutService.showConfigSidebar();
     }
-
+    selectedTheme: string = '';
     changeTheme(theme: string, colorScheme: string) {
         this.theme = theme;
+        this.selectedTheme = theme;
         this.colorScheme = colorScheme;
-    }
+        
+      }
 
     decrementScale() {
         if (this.scale > this.scales[0]) {
