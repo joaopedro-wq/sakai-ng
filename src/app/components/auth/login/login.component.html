@@ -8,12 +8,11 @@
                 </div>
                 <div class="mt-4">
                     <h1 class="m-0 text-primary font-semibold text-4xl">
-                        VItality PLUS!
+                        Bem vindo!
                     </h1>
-                    <span class="block text-700 mt-2">Por favor, preencha suas credenciais para entrar no Vitality PLUS</span>
                 </div>
             </div>
-            <form class="flex flex-column gap-3 mt-6">
+            <form class="flex flex-column gap-3 mt-6" [formGroup]="formLogin">
                 <p-inputGroup>
                     <p-inputGroupAddon>
                         <i class="pi pi-user"></i>
@@ -26,10 +25,10 @@
                     </p-inputGroupAddon>
                     <input type="password" pInputText formControlName="password" placeholder="Senha" />
                 </p-inputGroup>
-                <span class="block mt-2" style="color: red;"></span>
-                <button pButton pRipple class="w-full valueCenterButton">
-                    <label>ENTRAR</label>
-                   <!--  <i  class="pi pi-spin pi-spinner" style="font-size: 2rem"></i> -->
+                <span class="block mt-2" style="color: red;">{{messageInvalid}}</span>
+                <button pButton pRipple class="w-full valueCenterButton" (click)="sendLogin()" [disabled]="formLogin.invalid">
+                    <label *ngIf="!loading">ENTRAR</label>
+                    <i *ngIf="loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
                 </button>
 
                 <button pButton pRipple class="p-button-text text-primary-500" label="ESQUECEU SUA SENHA?"
@@ -41,8 +40,8 @@
     <div [style.background]="
             'url(assets/layout/images/pages/accessDenied-bg.jpg)'
         " class="hidden lg:flex flex-1 align-items-center justify-content-center bg-cover">
-        <img src="../../../../assets/layout/images/OficialLogo1.png" alt="" style="width: 650px; height: auto;" />
+      <img src="../../../../assets/layout/images/OficialLogo1.png" alt="" style="width: 650px; height: auto;" />
     </div>
 </div>
 
-
+<app-config [minimal]="true"></app-config>

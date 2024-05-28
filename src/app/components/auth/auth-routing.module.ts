@@ -1,13 +1,41 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+    {
+        path: 'login',
+        loadChildren: () =>
+            import('./login/login.module').then((m) => m.LoginModule),
+    },
+    {
+        path: 'register',
+        loadChildren: () =>
+            import('./register/register.module').then(
+                (m) => m.RegisterModule
+            ),
+    },
+    {
+        path: 'password-reset/:token',
+        loadChildren: () =>
+            import('./newpassword/newpassword.module').then(
+                (m) => m.NewPasswordModule
+            ),
+    },
+    {
+        path: 'forgotpassword',
+        loadChildren: () =>
+            import('./forgotpassword/forgotpassword.module').then(
+                (m) => m.ForgotPasswordModule
+            ),
+    },
+    {
+        path: 'redefine-password',
+        loadChildren: ()=> import('./redefine-password/redefine-password.module').then( m => m.RedefinePasswordModule),
+    }
+];
 
 @NgModule({
-    imports: [RouterModule.forChild([
-        { path: 'error', loadChildren: () => import('./error/error.module').then(m => m.ErrorModule) },
-        { path: 'access', loadChildren: () => import('./access/access.module').then(m => m.AccessModule) },
-        { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
-        { path: '**', redirectTo: '/notfound' }
-    ])],
-    exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class AuthRoutingModule { }
+export class AuthRoutingModule {}

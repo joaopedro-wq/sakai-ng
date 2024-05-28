@@ -1,29 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginRoutingModule } from './login-routing.module';
-import { LoginComponent } from './login.component';
-import { InputTextModule } from 'primeng/inputtext';
+import { ForgotPasswordRoutingModule } from './forgotpassword-routing.module';
+import { ForgotPasswordComponent } from './forgotpassword.component';
 import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AppConfigModule } from 'src/app/layout/config/config.module';
+
 @NgModule({
     imports: [
         CommonModule,
-        LoginRoutingModule,
         ButtonModule,
         InputTextModule,
-        CheckboxModule,
-        FormsModule,
-        ReactiveFormsModule,
+        ForgotPasswordRoutingModule,
         AppConfigModule,
         RippleModule,
         InputGroupModule,
-        InputGroupAddonModule,
+		InputGroupAddonModule,
+        ReactiveFormsModule,
+        
     ],
-    declarations: [LoginComponent],
+    declarations: [ForgotPasswordComponent]
 })
-export class LoginModule {}
+export class ForgotPasswordModule { }

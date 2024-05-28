@@ -1,29 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginRoutingModule } from './login-routing.module';
-import { LoginComponent } from './login.component';
-import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { RegisterRoutingModule } from './register-routing.module';
+import { RegisterComponent } from './register.component';
 import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RippleModule } from 'primeng/ripple';
+import { InputTextModule } from 'primeng/inputtext';
+import { CheckboxModule } from 'primeng/checkbox';
+import { PasswordModule } from 'primeng/password';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { AppConfigModule } from 'src/app/layout/config/config.module';
 @NgModule({
     imports: [
         CommonModule,
-        LoginRoutingModule,
+        RegisterRoutingModule,
+        FormsModule,
         ButtonModule,
+        RippleModule,
         InputTextModule,
         CheckboxModule,
-        FormsModule,
-        ReactiveFormsModule,
         AppConfigModule,
         RippleModule,
+        PasswordModule,
         InputGroupModule,
-        InputGroupAddonModule,
+		InputGroupAddonModule
     ],
-    declarations: [LoginComponent],
+    declarations: [RegisterComponent]
 })
-export class LoginModule {}
+export class RegisterModule { }

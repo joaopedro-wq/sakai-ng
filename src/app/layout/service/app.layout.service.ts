@@ -20,6 +20,8 @@ interface LayoutState {
     configSidebarVisible: boolean;
     staticMenuMobileActive: boolean;
     menuHoverActive: boolean;
+    topbarMenuActive: boolean;
+
 }
 
 @Injectable({
@@ -46,8 +48,10 @@ export class LayoutService {
         staticMenuMobileActive: false,
         menuHoverActive: false,
         anchored: undefined,
-        sidebarActive: false
+        sidebarActive: false,
+        topbarMenuActive: false
     };
+    private topbarMenuOpen = new Subject<any>();
 
     private configUpdate = new Subject<AppConfig>();
 
@@ -106,6 +110,12 @@ export class LayoutService {
         }
     }
 
+    onTopbarMenuToggle() {
+        this.state.topbarMenuActive = !this.state.topbarMenuActive;
+        if (this.state.topbarMenuActive) {
+            this.topbarMenuOpen.next(null);
+        }
+    }
     showProfileSidebar() {
         this.state.profileSidebarVisible = !this.state.profileSidebarVisible;
         if (this.state.profileSidebarVisible) {

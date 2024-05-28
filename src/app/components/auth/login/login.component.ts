@@ -1,23 +1,52 @@
-import { Component } from '@angular/core';
-import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/service/auth.service';
+
 
 @Component({
-    selector: 'app-login',
     templateUrl: './login.component.html',
-    styles: [`
-        :host ::ng-deep .pi-eye,
-        :host ::ng-deep .pi-eye-slash {
-            transform:scale(1.6);
-            margin-right: 1rem;
-            color: var(--primary-color) !important;
+    styles: `
+        .valueCenterButton{
+            justify-content: center;
         }
-    `]
+    `
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
+    rememberMe: boolean = false;
+    messageInvalid: string = "";
+    loading: boolean = false;
 
-    valCheck: string[] = ['remember'];
+    constructor(
+        private formBuilder: FormBuilder,
+        private authService: AuthService,
+        private router: Router
+    ) {}
 
-    password!: string;
+    ngOnInit(): void {
+        this.loading = false;
+        this.authService.getCrsfToken().subscribe();
+    }
 
-    constructor(public layoutService: LayoutService) { }
+    public formLogin: FormGroup = this.formBuilder.group({
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        rememberMe: [false],
+    });
+
+    public sendLogin() {
+        if(this.formLogin.valid){
+            this.loading = true;
+            this.authService.login(this.formLogin.value).subscribe({
+                /* next: (resp) => {
+                    this.loading = false;
+                    resp.first_access ? this.router.navigate(['/auth/redefine-password']) : this.router.navigate(['/']);
+                }, */
+                error: (error) => {
+                    this.loading = false;
+                    this.messageInvalid = error.message;
+                }
+            });
+        }
+    }
 }

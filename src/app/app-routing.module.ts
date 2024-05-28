@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
 
+
 @NgModule({
     imports: [
         RouterModule.forRoot(
@@ -51,6 +52,7 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                         import('./components/auth/auth.module').then(
                             (m) => m.AuthModule
                         ),
+                         /* canActivate: [unauthGuard], */ 
                 },
                 
                 { path: 'notfound', component: NotfoundComponent },
