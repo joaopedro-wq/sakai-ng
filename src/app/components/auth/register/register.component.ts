@@ -12,7 +12,7 @@ export class RegisterComponent implements OnInit{
     constructor( private formBuilder: FormBuilder, private authService: AuthService ) {}
 
     ngOnInit(): void {
-        this.authService.getCrsfToken().subscribe();
+       
     }
 
     public formLogin: FormGroup = this.formBuilder.group({

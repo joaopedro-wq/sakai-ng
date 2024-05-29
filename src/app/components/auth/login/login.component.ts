@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit{
 
     ngOnInit(): void {
         this.loading = false;
-        this.authService.getCrsfToken().subscribe();
+        
     }
 
     public formLogin: FormGroup = this.formBuilder.group({
@@ -38,10 +38,6 @@ export class LoginComponent implements OnInit{
         if(this.formLogin.valid){
             this.loading = true;
             this.authService.login(this.formLogin.value).subscribe({
-                /* next: (resp) => {
-                    this.loading = false;
-                    resp.first_access ? this.router.navigate(['/auth/redefine-password']) : this.router.navigate(['/']);
-                }, */
                 error: (error) => {
                     this.loading = false;
                     this.messageInvalid = error.message;

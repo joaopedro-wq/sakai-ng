@@ -8,24 +8,30 @@
     <form class="p-fluid p-formgrid grid" [formGroup]="formRegister">
       <div class="field col-12 md:col-8">
         <label htmlFor="descricao">Nome Refeição *</label>
-      <!--   <input pInputText id="descricao" type="text" maxlength="150" formControlName="descricao" / -->
-        <p-dropdown id="id_refeicao" [options]="listSnackies" optionLabel="descricao" optionValue="id" formControlName="id_refeicao" placeholder="Selecione a refeição"></p-dropdown> 
+        <p-dropdown id="id_refeicao" [options]="listSnackies" optionLabel="descricao" optionValue="id"
+          formControlName="id_refeicao" placeholder="Selecione a refeição"></p-dropdown>
       </div>
       <div class="field col-12 md:col-4">
         <label htmlFor="cal">Data *</label>
         <p-calendar [showIcon]="true" inputId="data_termino" formControlName="data" dateFormat="dd/mm/yy"></p-calendar>
       </div>
-      <div class="field col-12 md:col-8">
-
+      <div class="field col-12 md:col-6" formArrayName="id_alimento">
+        @for(alimentos of formRegister.value.id_alimento; track i; let i=$index){
         <label htmlFor="gordura">Selecione o Alimento *</label>
-      <!--   <p-multiSelect [options]="listFood" placeholder="Selecione o alimento" optionLabel="descricao" display="chip"
-          [showClear]="true" formControlName="id_alimento" /> -->
-          <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id" formControlName="id_alimento" placeholder="Selecione o alimento"></p-dropdown> 
+        <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
+          [formControlName]="i" placeholder="Selecione o alimento"></p-dropdown>
+        }
       </div>
-
-      <div class="field col-12 md:col-4">
+      <div class="field col-12 md:col-4" formArrayName="qtd">
+        @for(quantidade of formRegister.value.qtd; track i; let i=$index){
         <label htmlFor="prot"> Porção *</label>
-        <p-inputNumber id="prot" mode="decimal" locale="pt-BR" [minFractionDigits]="1" formControlName="qtd" />
+        <p-inputNumber id="prot" mode="decimal" locale="pt-BR" [minFractionDigits]="1" [formControlName]="i" />
+        }
+      </div>
+     
+      <div class="field col-12 md:col-2">
+        <label htmlFor="prot"> Adicionar </label> 
+        <p-button  label="Add" icon="pi pi-plus" (click)="addFood()"/>
       </div>
     </form>
   </div>

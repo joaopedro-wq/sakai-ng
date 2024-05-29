@@ -32,7 +32,7 @@ export class ValidatorCustomService {
         return null;
     }
 
-    endDateValidator(startDateField: string, endDateField: string) {
+ /*    endDateValidator(startDateField: string, endDateField: string) {
         return (control: AbstractControl): ValidationErrors | null => {
             if (!control) {
                 return null;
@@ -60,5 +60,17 @@ export class ValidatorCustomService {
             return { valueLessThanZero: true };
         }
         return null;
-    }
+    } */
+
+    arrayFromIdValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (value !== null && value !== undefined) {
+          // Transforma o valor em um array de inteiros
+          const intArray = [parseInt(value, 10)];
+          console.log('Array de inteiros:', intArray); // Apenas para depuração
+          // Aqui você pode armazenar ou usar o array conforme necessário
+          return { arrayResult: intArray }; // Retorna o array no objeto de erros de validação (se necessário)
+        }
+        return null; // Retorna nulo se não houver erro
+      }
 }

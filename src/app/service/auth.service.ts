@@ -18,10 +18,6 @@ export class AuthService {
 
     constructor(private router: Router, private http: HttpPersonService) {}
 
-    getCrsfToken(){
-        return this.http.get('sanctum/csrf-cookie')
-    }
-
     login(formLogin: Login): Observable<any> {
         return this.http.post('login', formLogin).pipe( tap((res: any) => {
             // Executa uma ação quando a requisição for bem-sucedida

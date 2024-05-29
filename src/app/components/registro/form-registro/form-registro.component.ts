@@ -1,9 +1,11 @@
 import { AfterContentInit, Component, OnDestroy, OnInit } from '@angular/core';
 import {
+    AbstractControl,
     FormArray,
     FormBuilder,
     FormControl,
     FormGroup,
+    ValidationErrors,
     Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -24,6 +26,7 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();
     listFoodies!: Alimento[];
     listSnackies!: Refeicao[];
+qtd: any;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -83,11 +86,33 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
     public formRegister: FormGroup = this.formBuilder.group({
         id: [null],
         data: [null, [Validators.required]],
-        id_alimento: [],
         id_refeicao: ['', [Validators.required]],
-        qtd: [],
-    });
+        id_alimento: new FormArray([new FormControl()]),
+        qtd: new FormArray([new FormControl()]),
+    },
 
+);
+    public validarArray(array : number){
+        const qtd = this.formRegister.get('qtd') as FormArray;
+        const AddArray = new FormControl(array)
+        qtd.push(AddArray);
+    }
+    public validarArrayQtd(array : number){
+        const id_alimento = this.formRegister.get('id_alimento') as FormArray;
+        const AddArray = new FormControl(array)
+        id_alimento.push(AddArray);
+    }
+    createFormControl(): FormControl {
+        return new FormControl(null, Validators.required);
+    }
+
+    addFood(): void {
+        const alimentos = this.formRegister.get('id_alimento') as FormArray;
+        const qtd = this.formRegister.get('qtd') as FormArray;
+        alimentos.push(this.createFormControl());
+        qtd.push(this.createFormControl());
+    }
+   
     ngOnInit() {
         this.registerService.loadButtons('form');
     }
