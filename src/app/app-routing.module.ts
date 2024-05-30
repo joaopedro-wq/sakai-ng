@@ -43,8 +43,17 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                                     './components/registro/registro.module'
                                 ).then((m) => m.RegistroModule),
                         },
+                        {
+                            path: 'relatorio',
+                            data: { breadcrumb: 'Relatório' },
+                            loadChildren: () =>
+                                import(
+                                    './components/relatorio/relatorio.module'
+                                ).then((m) => m.RelatorioModule),
+                        },
                         
                     ],
+                    
                 },
                 {
                     path: 'auth',

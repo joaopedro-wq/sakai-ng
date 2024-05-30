@@ -17,24 +17,45 @@
       </div>
       <div class="field col-12 md:col-6" formArrayName="id_alimento">
         @for(alimentos of formRegister.value.id_alimento; track i; let i=$index){
-        <label htmlFor="gordura">Selecione o Alimento *</label>
-        <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
-          [formControlName]="i" placeholder="Selecione o alimento"></p-dropdown>
+        <div [ngClass]="{'field-spacing': i > 0}">
+          <label *ngIf="i === 0" htmlFor="gordura">Selecione o Alimento *</label>
+          <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
+            [formControlName]="i" placeholder="Selecione o alimento"></p-dropdown>
+        </div>
         }
       </div>
-      <div class="field col-12 md:col-4" formArrayName="qtd">
+
+      <div class="field col-12 md:col-4" formArrayName="qtd" >
         @for(quantidade of formRegister.value.qtd; track i; let i=$index){
-        <label htmlFor="prot"> Porção *</label>
-        <p-inputNumber id="prot" mode="decimal" locale="pt-BR" [minFractionDigits]="1" [formControlName]="i" />
+        <div [ngClass]="{'field-spacing': i > 0}">
+          <label  *ngIf="i === 0" htmlFor="prot"> Porção (g) *</label>
+          <p-inputNumber id="prot" mode="decimal" locale="pt-BR" [minFractionDigits]="1" [formControlName]="i" placeholder="Quantidade gramas"/>
+        </div>
         }
       </div>
      
       <div class="field col-12 md:col-2">
-        <label htmlFor="prot"> Adicionar </label> 
-        <p-button  label="Add" icon="pi pi-plus" (click)="addFood()"/>
+        <div class="field-spacing">
+          <p-button label="Adicionar" icon="pi pi-plus" (click)="addFood()"/>
+        </div>
+        <div class="field-spacing">
+          @for(alimentos of formRegister.value.id_alimento; track i; let i=$index){
+            <div lass="field-spacing">
+                <p-button  *ngIf="i > 0" label="Remover" icon="pi pi-minus" (click)="removeFood(i)" ></p-button>
+            </div>
+            }
+    
+        </div>
       </div>
     </form>
   </div>
 </div>
 
 <p-confirmDialog></p-confirmDialog>
+
+<style>
+  .field-spacing {
+  margin-top: 1rem; 
+}
+
+</style>

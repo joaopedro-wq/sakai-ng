@@ -35,6 +35,13 @@ export class AppMenuComponent implements OnInit {
 
                 ]
             },
+            {
+                label: 'Relatório',
+                items: [
+                    { label: 'Relatório Alimentação', icon: 'pi pi-chart-line', routerLink: ['/relatorio'] },
+                    
+                ]
+            },
             
         ];
     }

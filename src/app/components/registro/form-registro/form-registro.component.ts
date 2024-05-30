@@ -41,10 +41,10 @@ qtd: any;
             .subscribe((res) => {
                 this.formRegister.patchValue({
                     id: res.id ? res.id : null,
-                    data: new Date(res.data),
-                    id_alimento: res.id_alimento,
                     id_refeicao: res.id_refeicao,
-                    qtd: res.qtd,
+                    data: new Date(res.data),
+                    id_alimento: new Array(res.id_alimento),
+                    qtd: new Array(res.qtd),
                 });
             });
         this.registerService.obsSaveRegister
@@ -106,12 +106,24 @@ qtd: any;
         return new FormControl(null, Validators.required);
     }
 
+  
+    removeFood(index: number): void {
+        const alimentos = this.formRegister.get('id_alimento') as FormArray;
+        const qtd = this.formRegister.get('qtd') as FormArray;
+        if (alimentos.length > 1 && qtd.length > 1) { // Ensure there's always at least one field
+          alimentos.removeAt(index);
+          qtd.removeAt(index);
+        }
+      }
+
     addFood(): void {
         const alimentos = this.formRegister.get('id_alimento') as FormArray;
         const qtd = this.formRegister.get('qtd') as FormArray;
-        alimentos.push(this.createFormControl());
-        qtd.push(this.createFormControl());
-    }
+      
+        alimentos.push(new FormControl(null, Validators.required));
+        qtd.push(new FormControl(null, Validators.required));
+      }
+      
    
     ngOnInit() {
         this.registerService.loadButtons('form');

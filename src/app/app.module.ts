@@ -8,11 +8,14 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpTokenInterceptor } from './interceptors/http-token.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
     imports: [AppRoutingModule, AppLayoutModule, ToastModule ],
     providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
         { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         DatePipe,

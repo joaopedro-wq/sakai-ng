@@ -64,6 +64,19 @@ export class RegisterService {
             tooltip: '',
         },
     ];
+    private buttonsDashboard: Array<Button> = [
+        {
+            title: 'Opcao',
+            label: 'Opções',
+            id: 'Alimento_Opcao',
+            visible: true,
+            disabled: false,
+            class: 'inline-block',
+            icon: 'pi pi-cog',
+            routerLink: [],
+            tooltip: '',
+        },
+    ];
 
     private barButton: BarButton = {
         keyService: 'RegisterService',
@@ -139,6 +152,8 @@ export class RegisterService {
             this.barButton.buttons = this.buttonsForm;
         } else if (nmListButtons == 'list') {
             this.barButton.buttons = this.buttonsList;
+        } else if(nmListButtons == 'dashboard'){
+            this.barButton.buttons = this.buttonsDashboard;
         }
 
         this.barButtonsService.startBarraButtons(this.barButton);
