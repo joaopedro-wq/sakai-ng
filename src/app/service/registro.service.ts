@@ -67,15 +67,16 @@ export class RegisterService {
     private buttonsDashboard: Array<Button> = [
         {
             title: 'Opcao',
-            label: 'Opções',
+            label: 'Filtro',
             id: 'Alimento_Opcao',
             visible: true,
             disabled: false,
             class: 'inline-block',
-            icon: 'pi pi-cog',
+            icon: 'pi pi-filter',
             routerLink: [],
             tooltip: '',
         },
+       
     ];
 
     private barButton: BarButton = {
@@ -142,10 +143,15 @@ export class RegisterService {
                 break;
             case 'excluir':
                 this.confirmDeleteRegister();
+                break;
+            case 'Opcao':
+            this.modalOptions = true;
 
                 break;
         }
     }
+   
+    modalOptions: boolean = false;
 
     loadButtons(nmListButtons: string) {
         if (nmListButtons == 'form') {
@@ -154,6 +160,7 @@ export class RegisterService {
             this.barButton.buttons = this.buttonsList;
         } else if(nmListButtons == 'dashboard'){
             this.barButton.buttons = this.buttonsDashboard;
+            
         }
 
         this.barButtonsService.startBarraButtons(this.barButton);
@@ -168,7 +175,7 @@ export class RegisterService {
                 }
             }),
             catchError((error: any) => {
-                console.error('Error ssss:', error);
+                console.error('Error :', error);
                 return throwError(() => new Error(error.message || error));
             })
         );
@@ -190,7 +197,7 @@ export class RegisterService {
     }
 
     createRegister(formRegister: Registro): Observable<any> {
-        console.log('formRegister', formRegister);
+        
         return this.http.post('/api/registro', formRegister).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida

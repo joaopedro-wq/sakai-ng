@@ -11,7 +11,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { SharedModule } from '../../../shared/shared.module';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { CardModule } from 'primeng/card';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -36,7 +36,8 @@ import { ChartModule } from 'primeng/chart';
         AutoCompleteModule,
         CardModule,
         MultiSelectModule,
-        ChartModule
+        ChartModule,
+        RadioButtonModule
     ],
 })
 export class DashboardRelatorioModule {}

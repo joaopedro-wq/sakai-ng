@@ -4,9 +4,71 @@
         <div class="card"> 
             <p-card header="Relatório de Alimentação">
             </p-card>
-            <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+          
+            <div class="card" *ngIf="showAlimentoChart">
+                <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+            </div>
+            
+            <div class="card" *ngIf="showRefeicaoChart">
+                <p-chart type="line" [data]="data" [options]="options" />
+            </div>
 
         </div>
+
+
+        
     </div>
 </div>
 
+
+
+
+<p-dialog 
+    header="Opções de Gráficos" 
+    [modal]="true"
+    [(visible)]="registerService.modalOptions" 
+    [position]="position" 
+    [style]="{ width: '35rem' }">
+    
+        <span class="p-text-secondary block mb-5">
+            Tipo de gráficos: 
+        </span>
+        <div class="flex align-items-center gap-3 mb-5">
+            <div class="field-radiobutton">
+                <p-radioButton name="menuMode" value="static"  inputId="mode1"  [(ngModel)]="selectedOption"></p-radioButton>
+                <label for="mode1">Alimento</label>
+            </div>
+            <div class="field-radiobutton">
+                <p-radioButton name="menuMode" value="overlay" inputId="mode2"  [(ngModel)]="selectedOption"></p-radioButton>
+                <label for="mode2">Refeição</label>
+            </div>
+        </div>
+
+        <form [formGroup]="filtroForm">
+            <span class="p-text-secondary block mb-5">
+                Filtrar o gráfico por data
+            </span>
+            <div class="flex align-items-center gap-3 mb-5">
+                <div class="field col-6">
+                    <label for="data" class="font-semibold w-6rem">
+                        Data inicio:
+                    </label>
+                    <br>
+                    <p-calendar formControlName="data" placeholder="dd/mm/aa" appendTo="body" [showIcon]="true" inputId="data_termino" dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+
+                <div class="field col-6">
+                    <label for="data" class="font-semibold w-6rem">
+                        Data Fim:
+                    </label>
+                    <br>
+                    <p-calendar placeholder="dd/mm/aa" formControlName="dataFim" appendTo="body" [showIcon]="true" inputId="data_termino" dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+            </div>
+        </form>
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Cancelar" severity="secondary" (click)="cancelarOptions()" />
+            <p-button label="Confirmar" (click)="confirmarOptions()" />
+        </div>
+   
+</p-dialog>
