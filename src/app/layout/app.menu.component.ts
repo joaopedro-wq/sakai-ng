@@ -24,6 +24,8 @@ export class AppMenuComponent implements OnInit {
                 label: 'Cadastro',
                 items: [
                     { label: 'Refeição', icon: 'pi pi-server', routerLink: ['/refeicoes'] },
+                    { label: 'Dieta', icon: 'pi pi-file', routerLink: ['/refeicoes'] },
+
                 ]
             },
             {

@@ -39,13 +39,16 @@ qtd: any;
         this.registerService.obsLoadRegister
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
+              
+             
                 this.formRegister.patchValue({
                     id: res.id ? res.id : null,
                     id_refeicao: res.id_refeicao,
                     data: new Date(res.data),
-                    id_alimento: new Array(res.id_alimento),
-                    qtd: new Array(res.qtd),
+                    id_alimento:  res.id_alimento ? [res.id_alimento] : [],
+                    qtd: res.qtd ? [res.qtd] : [],
                 });
+               
             });
         this.registerService.obsSaveRegister
             .pipe(takeUntil(this.unsubscribe))
@@ -87,21 +90,28 @@ qtd: any;
         id: [null],
         data: [null, [Validators.required]],
         id_refeicao: ['', [Validators.required]],
-        id_alimento: new FormArray([new FormControl()]),
+        id_alimento: new FormArray( [new FormControl()]),
         qtd: new FormArray([new FormControl()]),
     },
 
 );
-    public validarArray(array : number){
-        const qtd = this.formRegister.get('qtd') as FormArray;
-        const AddArray = new FormControl(array)
-        qtd.push(AddArray);
+  
+filteredFoodies!: Alimento[];
+filterFood(event: AutoCompleteCompleteEvent) {
+    let filtered: Alimento[] = [];
+    let query = event.query.toLowerCase();
+
+    for (let i = 0; i < this.listFoodies.length; i++) {
+        let food = this.listFoodies[i];
+        if (food.descricao.toLowerCase().indexOf(query) == 0) {
+            filtered.push(food);
+        }
     }
-    public validarArrayQtd(array : number){
-        const id_alimento = this.formRegister.get('id_alimento') as FormArray;
-        const AddArray = new FormControl(array)
-        id_alimento.push(AddArray);
-    }
+    this.filteredFoodies = filtered;
+    console.log('this.filteredFoodies',this.filteredFoodies)
+}
+
+
     createFormControl(): FormControl {
         return new FormControl(null, Validators.required);
     }
