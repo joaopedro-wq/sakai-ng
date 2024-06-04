@@ -28,6 +28,15 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                                 ).then((m) => m.RefeicaoModule),
                         },
                         {
+                            path: 'dietas',
+                            data: { breadcrumb: 'Dieta' },
+                            loadChildren: () =>
+                                import(
+                                    './components/dieta/dieta.module'
+                                ).then((m) => m.DietaModule),
+                        },
+                        
+                        {
                             path: 'alimentos',
                             data: { breadcrumb: 'Alimentos' },
                             loadChildren: () =>

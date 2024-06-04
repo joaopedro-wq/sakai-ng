@@ -1,0 +1,71 @@
+
+ <div class="grid" style="margin-top: 1%;">
+	<div class="col-12">
+		<div class="card" style="height: calc(100vh - 152px)">
+			<p-table #dt1 [value]="diet" dataKey="id"  [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="false" [globalFilterFields]="['descricao']" [scrollable]="true" scrollHeight="flex" [resizableColumns]="true">
+				<ng-template pTemplate="caption">
+					<div class="flex justify-content-between align-items-end flex-column sm:flex-row">
+						<div>
+							<button pButton label="Limpar" class="p-button-outlined" icon="pi pi-filter-slash"
+								(click)="clear(dt1)"></button>
+							<span class="p-input-icon-left ml-1">
+								<i class="pi pi-search"></i>
+								<input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+									placeholder="Pesquisar palavra-chave" class="w-full" />
+							</span>
+						</div>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="min-width: 10rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Descrição
+								<p-columnFilter type="text" field="descricao" display="menu"
+									placeholder="Pesquisar por Descrição"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 10rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Alimentos
+								<p-columnFilter type="text" field="Alimentos" display="menu"
+									placeholder="Pesquisar por Alimentos"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 10rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Refeição
+								<p-columnFilter type="text" field="refeicao" display="menu"
+									placeholder="Pesquisar Refeição"></p-columnFilter>
+							</div>
+						</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-diet>
+					<tr class="cursor-pointer" (click)="navigateToCompanyEdit(diet.id)">
+				
+						<td>{{diet.descricao}}</td>
+
+						<ng-container *ngFor="let alimento of diet.alimentos">
+							{{ alimento.descricao }}<br><br>
+						</ng-container>
+						
+						<td>{{diet.refeicao.descricao}}</td>
+						
+					</tr>
+
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">Nenhuma Dieta encontrada.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="8">Carregando Dieta. Aguarde.</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+</div> 
