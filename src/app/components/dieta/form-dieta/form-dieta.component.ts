@@ -9,6 +9,7 @@ import { DietService } from 'src/app/service/dieta.service';
 import { Refeicao } from 'src/app/api/refeicao';
 import { Alimento } from 'src/app/api/alimento';
 import { SnackService } from 'src/app/service/refeicao.service';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 
 
 @Component({
@@ -94,6 +95,20 @@ export class FormDietaComponent
             });
 
     }
+    filteredFoodies!: Alimento[];
+    filterFood(event: AutoCompleteCompleteEvent) {
+        let filtered: Alimento[] = [];
+        let query = event.query.toLowerCase();
+
+        for (let i = 0; i < this.listFoodies.length; i++) {
+            let food = this.listFoodies[i];
+            if (food.descricao.toLowerCase().indexOf(query) == 0) {
+                filtered.push(food);
+            }
+        }
+        this.filteredFoodies = filtered;
+    }
+
     
     public formDiet: FormGroup = this.formBuilder.group({
         id: [null],

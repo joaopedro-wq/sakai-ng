@@ -6,46 +6,57 @@
     </p-card>
 
     <form class="p-fluid p-formgrid grid" [formGroup]="formRegister">
-      <div class="field col-12 md:col-8">
+      <div class="field col-12 md:col-5">
+        <label htmlFor="descricao">Dieta </label>
+        <p-dropdown id="id_refeicao" [options]="diet" optionLabel="descricao" optionValue="id"
+          formControlName="id_dieta" placeholder="Selecione a dieta" (onChange)="onDietChange($event)"></p-dropdown>
+      </div>
+
+      <div class="field col-12 md:col-4">
         <label htmlFor="descricao">Nome Refeição *</label>
         <p-dropdown id="id_refeicao" [options]="listSnackies" optionLabel="descricao" optionValue="id"
           formControlName="id_refeicao" placeholder="Selecione a refeição"></p-dropdown>
       </div>
-      <div class="field col-12 md:col-4">
+      
+      <div class="field col-12 md:col-3">
         <label htmlFor="cal">Data *</label>
         <p-calendar [showIcon]="true" inputId="data_termino" formControlName="data" dateFormat="dd/mm/yy"></p-calendar>
       </div>
-      <div class="field col-12 md:col-6" formArrayName="id_alimento">
+      <div class="field col-12 md:col-5" formArrayName="id_alimento">
         @for(alimentos of formRegister.value.id_alimento; track i; let i=$index){
         <div [ngClass]="{'field-spacing': i > 0}">
           <label *ngIf="i === 0" htmlFor="gordura">Selecione o Alimento *</label>
+          <!-- <p-autoComplete [formControlName]="i" [dropdown]="true" [suggestions]="filteredFoodies"
+            (completeMethod)="filterFood($event)" field="descricao" /> -->
 
-          <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
+           <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
             [formControlName]="i" placeholder="Selecione o alimento"></p-dropdown>
         </div>
         }
       </div>
 
-      <div class="field col-12 md:col-4" formArrayName="qtd" >
+      <div class="field col-12 md:col-4" formArrayName="qtd">
         @for(quantidade of formRegister.value.qtd; track i; let i=$index){
         <div [ngClass]="{'field-spacing': i > 0}">
-          <label  *ngIf="i === 0" htmlFor="prot"> Porção (g) *</label>
-          <p-inputNumber id="prot" mode="decimal" locale="pt-BR" [minFractionDigits]="1" [formControlName]="i" placeholder="Quantidade gramas"/>
+          <label *ngIf="i === 0" htmlFor="prot"> Porção (g) *</label>
+          <p-inputNumber id="prot" mode="decimal" locale="pt-BR" [minFractionDigits]="1" [formControlName]="i"
+            placeholder="Quantidade gramas" />
         </div>
         }
       </div>
-     
+
       <div class="field col-12 md:col-2">
         <div class="field-spacing">
-          <p-button label="Adicionar" icon="pi pi-plus" (click)="addFood()"/>
+          <p-button label="Adicionar" icon="pi pi-plus" outlined="true" (click)="addFood()" />
         </div>
         <div class="field-spacing">
           @for(alimentos of formRegister.value.id_alimento; track i; let i=$index){
-            <div lass="field-spacing">
-                <p-button  *ngIf="i > 0" label="Remover" icon="pi pi-minus" (click)="removeFood(i)" ></p-button>
-            </div>
-            }
-    
+          <div class="field-spacing">
+            <p-button *ngIf="i > 0" label="Remover" icon="pi pi-minus" outlined="true" severity="danger"
+              (click)="removeFood(i)"></p-button>
+          </div>
+          }
+
         </div>
       </div>
     </form>
@@ -56,7 +67,6 @@
 
 <style>
   .field-spacing {
-  margin-top: 1rem; 
-}
-
+    margin-top: 1rem;
+  }
 </style>

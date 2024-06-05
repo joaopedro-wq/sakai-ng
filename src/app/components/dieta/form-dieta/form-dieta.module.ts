@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
     declarations: [FormDietaComponent],
@@ -29,6 +30,8 @@ import { CardModule } from 'primeng/card';
         ConfirmDialogModule,
         InputNumberModule,
         CardModule,
+        AutoCompleteModule,
+
         
     ]
 })

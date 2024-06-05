@@ -25,18 +25,19 @@
 									placeholder="Pesquisar por Descrição"></p-columnFilter>
 							</div>
 						</th>
-						<th style="min-width: 10rem" pResizableColumn>
-							<div class="flex justify-content-between align-items-center">
-								Alimentos
-								<p-columnFilter type="text" field="Alimentos" display="menu"
-									placeholder="Pesquisar por Alimentos"></p-columnFilter>
-							</div>
-						</th>
+					
 						<th style="min-width: 10rem" pResizableColumn>
 							<div class="flex justify-content-between align-items-center">
 								Refeição
 								<p-columnFilter type="text" field="refeicao" display="menu"
 									placeholder="Pesquisar Refeição"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 10rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Alimentos
+								<p-columnFilter type="text" field="Alimentos" display="menu"
+									placeholder="Pesquisar por Alimentos"></p-columnFilter>
 							</div>
 						</th>
 					</tr>
@@ -45,12 +46,12 @@
 					<tr class="cursor-pointer" (click)="navigateToCompanyEdit(diet.id)">
 				
 						<td>{{diet.descricao}}</td>
-
-						<ng-container *ngFor="let alimento of diet.alimentos">
-							{{ alimento.descricao }}<br><br>
-						</ng-container>
 						
 						<td>{{diet.refeicao.descricao}}</td>
+
+						<ng-container *ngFor="let alimento of diet.alimentos">
+							<br>{{ alimento.descricao }}<br><br>
+						</ng-container>
 						
 					</tr>
 

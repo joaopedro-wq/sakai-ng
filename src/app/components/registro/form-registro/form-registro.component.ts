@@ -13,8 +13,10 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { Subject, takeUntil } from 'rxjs';
 import { Alimento } from 'src/app/api/alimento';
+import { Dieta } from 'src/app/api/dieta';
 import { Refeicao } from 'src/app/api/refeicao';
 import { FoodService } from 'src/app/service/alimento.service';
+import { DietService } from 'src/app/service/dieta.service';
 import { SnackService } from 'src/app/service/refeicao.service';
 import { RegisterService } from 'src/app/service/registro.service';
 
@@ -26,7 +28,9 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();
     listFoodies!: Alimento[];
     listSnackies!: Refeicao[];
-qtd: any;
+    diet: Dieta[] = [];
+
+    qtd: any;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -34,21 +38,19 @@ qtd: any;
         public foodService: FoodService,
         public registerService: RegisterService,
         private messageService: MessageService,
-        public snackService: SnackService
+        public snackService: SnackService,
+        public dietService: DietService
     ) {
         this.registerService.obsLoadRegister
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
-              
-             
                 this.formRegister.patchValue({
                     id: res.id ? res.id : null,
                     id_refeicao: res.id_refeicao,
                     data: new Date(res.data),
-                    id_alimento:  res.id_alimento ? [res.id_alimento] : [],
+                    id_alimento: res.id_alimento ? [res.id_alimento] : [],
                     qtd: res.qtd ? [res.qtd] : [],
                 });
-               
             });
         this.registerService.obsSaveRegister
             .pipe(takeUntil(this.unsubscribe))
@@ -84,57 +86,63 @@ qtd: any;
             .subscribe((res) => {
                 this.listSnackies = res;
             });
+
+            this.dietService.obsListDiet
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.diet = res;
+              
+              
+            });
     }
 
     public formRegister: FormGroup = this.formBuilder.group({
         id: [null],
         data: [null, [Validators.required]],
         id_refeicao: ['', [Validators.required]],
-        id_alimento: new FormArray( [new FormControl()]),
+        id_alimento: new FormArray([new FormControl()]),
         qtd: new FormArray([new FormControl()]),
-    },
+        id_dieta: ['', [Validators.required]],
 
-);
-  
-filteredFoodies!: Alimento[];
-filterFood(event: AutoCompleteCompleteEvent) {
-    let filtered: Alimento[] = [];
-    let query = event.query.toLowerCase();
+        
+    });
 
-    for (let i = 0; i < this.listFoodies.length; i++) {
-        let food = this.listFoodies[i];
-        if (food.descricao.toLowerCase().indexOf(query) == 0) {
-            filtered.push(food);
+    filteredFoodies!: Alimento[];
+    filterFood(event: AutoCompleteCompleteEvent) {
+        let filtered: Alimento[] = [];
+        let query = event.query.toLowerCase();
+
+        for (let i = 0; i < this.listFoodies.length; i++) {
+            let food = this.listFoodies[i];
+            if (food.descricao.toLowerCase().indexOf(query) == 0) {
+                filtered.push(food);
+            }
         }
+        this.filteredFoodies = filtered;
     }
-    this.filteredFoodies = filtered;
-    console.log('this.filteredFoodies',this.filteredFoodies)
-}
-
 
     createFormControl(): FormControl {
         return new FormControl(null, Validators.required);
     }
 
-  
     removeFood(index: number): void {
         const alimentos = this.formRegister.get('id_alimento') as FormArray;
         const qtd = this.formRegister.get('qtd') as FormArray;
-        if (alimentos.length > 1 && qtd.length > 1) { // Ensure there's always at least one field
-          alimentos.removeAt(index);
-          qtd.removeAt(index);
+        if (alimentos.length > 1 && qtd.length > 1) {
+            // Ensure there's always at least one field
+            alimentos.removeAt(index);
+            qtd.removeAt(index);
         }
-      }
+    }
 
     addFood(): void {
         const alimentos = this.formRegister.get('id_alimento') as FormArray;
         const qtd = this.formRegister.get('qtd') as FormArray;
-      
+
         alimentos.push(new FormControl(null, Validators.required));
         qtd.push(new FormControl(null, Validators.required));
-      }
-      
-   
+    }
+
     ngOnInit() {
         this.registerService.loadButtons('form');
     }
@@ -161,4 +169,42 @@ filterFood(event: AutoCompleteCompleteEvent) {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
+
+    onDietChange(event: any): void {
+        const selectedDiet = this.diet.find(d => d.id === event.value);
+        if (selectedDiet) {
+          this.formRegister.patchValue({
+            id_refeicao: selectedDiet.id_refeicao,
+            id_alimento: selectedDiet.alimentos ?  selectedDiet.alimentos.map(alimento => alimento.id) : [],
+            qtd: selectedDiet.alimentos ?  selectedDiet.alimentos.map(alimento => alimento.qtd) : []
+
+
+            
+          });
+    
+         
+         
+
+        /*   if (res.alimentos && res.alimentos.length > 0) {
+              res.alimentos.forEach(alimento => {
+                  alimentosArray.push(new FormControl(alimento.id, Validators.required));
+              });
+          } else {
+              alimentosArray.push(new FormControl(null, Validators.required));
+          }
+ */
+
+          const alimentosArray = this.formRegister.get('id_alimento') as FormArray;
+          const qtdArray = this.formRegister.get('qtd') as FormArray;
+
+          alimentosArray.clear(); 
+          qtdArray.clear(); 
+
+          selectedDiet.alimentos.forEach((alimento: any) => {
+            alimentosArray.push(new FormControl(alimento.id, Validators.required));
+            qtdArray.push(new FormControl(alimento.qtd, Validators.required));
+
+          });
+        }
+      }
 }

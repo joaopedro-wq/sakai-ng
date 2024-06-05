@@ -22,8 +22,10 @@
         <div [ngClass]="{'field-spacing': i > 0}">
           <label *ngIf="i === 0" htmlFor="gordura">Selecione o Alimento *</label>
 
-          <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
-            [formControlName]="i" placeholder="Selecione o alimento"></p-dropdown>
+         <!--  <p-autoComplete [formControlName]="i" [dropdown]="true" [suggestions]="filteredFoodies"
+          (completeMethod)="filterFood($event)" field="descricao" placeholder="Selecione o alimento" /> -->
+           <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
+            [formControlName]="i" placeholder="Selecione o alimento"></p-dropdown> 
         </div>
         }
       </div>

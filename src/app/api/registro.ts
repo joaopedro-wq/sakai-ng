@@ -4,6 +4,8 @@ export interface Registro {
     qtd: number | [];
     id_alimento: number | [];
     id_refeicao: number;
+    id_dieta?: number;
+
     created_at?: Date;
     updated_at?: Date;
     descricao_alimento?: string | null;
