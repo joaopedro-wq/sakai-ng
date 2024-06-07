@@ -60,6 +60,15 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                                     './components/relatorio/relatorio.module'
                                 ).then((m) => m.RelatorioModule),
                         },
+
+                        {
+                            path: 'profile',
+                            data: { breadcrumb: 'Perfil' },
+                            loadChildren: () =>
+                                import('./components/profile/profile.module').then(
+                                    (m) => m.ProfileModule
+                                ),
+                        },
                         
                     ],
                     

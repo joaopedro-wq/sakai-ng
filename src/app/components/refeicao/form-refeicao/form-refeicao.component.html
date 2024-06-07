@@ -1,16 +1,24 @@
-
 <div class="col-12">
 
   <div class="card" style="margin-top: 2%;">
 
     <p-card header=" Cadastro Refeição">
     </p-card>
-  
+
     <form class="p-fluid p-formgrid grid" [formGroup]="formSnack">
-      <div class="field col-12 md:col-12">
+      <div class="field col-12 md:col-8">
         <label htmlFor="descricao">Descrição *</label>
-        <input pInputText id="descricao" type="text"  maxlength="150" formControlName="descricao"/>
+        <input pInputText id="descricao" type="text" maxlength="150" formControlName="descricao" placeholder="Descrição Refeição" />
       </div>
+      <div class="field col-12 md:col-4">
+        <label htmlFor="descricao">Horario *</label>
+
+      <p-calendar [iconDisplay]="'input'" [showIcon]="true" [timeOnly]="true" placeholder="00:00:00" inputId="templatedisplay" formControlName="horario">
+        <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack" >
+          <i class="pi pi-stopwatch pointer-events-none" (click)="clickCallBack($event)"></i>
+        </ng-template>
+      </p-calendar>
+    </div>
     </form>
   </div>
 </div>

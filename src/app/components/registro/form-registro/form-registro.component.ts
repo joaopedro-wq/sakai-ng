@@ -29,7 +29,8 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
     listFoodies!: Alimento[];
     listSnackies!: Refeicao[];
     diet: Dieta[] = [];
-
+    position: string = 'top';
+    checked: boolean = false;
     qtd: any;
 
     constructor(
@@ -87,12 +88,10 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
                 this.listSnackies = res;
             });
 
-            this.dietService.obsListDiet
+        this.dietService.obsListDiet
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.diet = res;
-              
-              
             });
     }
 
@@ -100,11 +99,9 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
         id: [null],
         data: [null, [Validators.required]],
         id_refeicao: ['', [Validators.required]],
-        id_alimento: new FormArray([new FormControl()]),
+        id_alimento: new FormArray([new FormControl(Validators.required)]),
         qtd: new FormArray([new FormControl()]),
-        id_dieta: ['', [Validators.required]],
-
-        
+        /* id_dieta: [''], */
     });
 
     filteredFoodies!: Alimento[];
@@ -171,40 +168,40 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
     }
 
     onDietChange(event: any): void {
-        const selectedDiet = this.diet.find(d => d.id === event.value);
+        const selectedDiet = this.diet.find((d) => d.id === event.value);
         if (selectedDiet) {
-          this.formRegister.patchValue({
-            id_refeicao: selectedDiet.id_refeicao,
-            id_alimento: selectedDiet.alimentos ?  selectedDiet.alimentos.map(alimento => alimento.id) : [],
-            qtd: selectedDiet.alimentos ?  selectedDiet.alimentos.map(alimento => alimento.qtd) : []
+            this.formRegister.patchValue({
+                id_refeicao: selectedDiet.id_refeicao,
+                id_alimento: selectedDiet.alimentos
+                    ? selectedDiet.alimentos.map((alimento) => alimento.id)
+                    : [],
+                qtd: selectedDiet.alimentos
+                    ? selectedDiet.alimentos.map((alimento) => alimento.qtd)
+                    : [],
+            });
 
+            const alimentosArray = this.formRegister.get(
+                'id_alimento'
+            ) as FormArray;
+            const qtdArray = this.formRegister.get('qtd') as FormArray;
 
-            
-          });
-    
-         
-         
+            alimentosArray.clear();
+            qtdArray.clear();
 
-        /*   if (res.alimentos && res.alimentos.length > 0) {
-              res.alimentos.forEach(alimento => {
-                  alimentosArray.push(new FormControl(alimento.id, Validators.required));
-              });
-          } else {
-              alimentosArray.push(new FormControl(null, Validators.required));
-          }
- */
-
-          const alimentosArray = this.formRegister.get('id_alimento') as FormArray;
-          const qtdArray = this.formRegister.get('qtd') as FormArray;
-
-          alimentosArray.clear(); 
-          qtdArray.clear(); 
-
-          selectedDiet.alimentos.forEach((alimento: any) => {
-            alimentosArray.push(new FormControl(alimento.id, Validators.required));
-            qtdArray.push(new FormControl(alimento.qtd, Validators.required));
-
-          });
+            selectedDiet.alimentos.forEach((alimento: any) => {
+                alimentosArray.push(
+                    new FormControl(alimento.id, Validators.required)
+                );
+                qtdArray.push(
+                    new FormControl(alimento.qtd, Validators.required)
+                );
+            });
         }
-      }
+    }
+
+    fecharModal(){
+        this.registerService.modalFIlter = false;
+        this.registerService.loadButtons('form');
+
+    }
 }

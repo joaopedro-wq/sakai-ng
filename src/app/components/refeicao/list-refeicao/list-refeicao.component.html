@@ -32,12 +32,21 @@
 									placeholder="Pesquisar por Descrição"></p-columnFilter>
 							</div>
 						</th>
+						<th style="min-width: 10rem" pResizableColumn>
+							<div class="flex justify-content-between align-items-center">
+								Horario
+								<p-columnFilter type="text" field="descricao" display="menu"
+									placeholder="Pesquisar por Descrição"></p-columnFilter>
+							</div>
+						</th>
 					</tr>
 				</ng-template>
 				<ng-template pTemplate="body" let-snack>
 					<tr class="cursor-pointer" (click)="navigateToCompanyEdit(snack.id)">
 						<td class="text-center">{{snack.id}}</td>
 						<td>{{snack.descricao}}</td>
+						<td>{{ formatarHorario(snack.horario) }}</td>
+
 					</tr>
 
 				</ng-template>

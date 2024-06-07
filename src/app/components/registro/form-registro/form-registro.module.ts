@@ -16,6 +16,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { CardModule } from 'primeng/card';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { InputSwitchModule } from 'primeng/inputswitch';
 @NgModule({
     declarations: [FormRegistroComponent],
     imports: [
@@ -34,7 +35,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
         InputNumberModule,
         AutoCompleteModule,
         CardModule,
-        MultiSelectModule
+        MultiSelectModule,
+        InputSwitchModule
     ],
 })
 export class FormRegistroModule {}

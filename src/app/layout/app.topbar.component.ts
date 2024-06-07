@@ -44,4 +44,13 @@ export class AppTopBarComponent {
     onLogout() {
         this.authService.logout().subscribe();
     }
+
+    get getUserAvatar(): string {
+        /* if (this.authService.loggedUser && this.authService.loggedUser.avatar) {
+            return 'http://127.0.0.1:8000' + this.authService.loggedUser.avatar;
+        } else {
+            return 'assets/contents/images/default-profile.png';
+        } */
+        return 'assets/default-profile.png';
+    }
 }

@@ -49,6 +49,17 @@ export class RegisterService {
             routerLink: [],
             tooltip: '',
         },
+        {
+            title: 'filtro',
+            label: 'Dieta',
+            id: 'Alimento_Opcao',
+            visible: true,
+            disabled: false,
+            class: 'p-button-outlined mr-2',
+            icon: 'pi pi-eye',
+            routerLink: [],
+            tooltip: '',
+        },
     ];
 
     private buttonsList: Array<Button> = [
@@ -100,6 +111,7 @@ export class RegisterService {
                     }
                 });
                 break;
+            
         }
     }
 
@@ -146,13 +158,17 @@ export class RegisterService {
                 break;
             case 'Opcao':
             this.modalOptions = true;
-
                 break;
+                case 'filtro':
+            this.modalFIlter = true;
+
+                    break
+
         }
     }
    
     modalOptions: boolean = false;
-
+    modalFIlter: boolean = false;
     loadButtons(nmListButtons: string) {
         if (nmListButtons == 'form') {
             this.barButton.buttons = this.buttonsForm;

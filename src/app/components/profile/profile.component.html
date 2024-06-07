@@ -1,0 +1,49 @@
+<div class="col-12">
+  <div class="card">
+    <form class="p-fluid p-formgrid grid" [formGroup]="formProfile">
+      <div class="col-8 col-offset-2 md:col-4 md:col-offset-0">
+        <img [src]="getUserAvatar()" alt="Avatar" class="col" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 50%;" >
+        <div class="flex justify-content-center items-center gap-2 mt-2">
+          <p-fileUpload mode="basic" name="avatar" accept="image/*" [maxFileSize]="1000000" [url]="getUrlToUpload()" [auto]="true" chooseLabel="Carregar foto" method="post" (onUpload)="authService.getLoggedUserWithToken().subscribe()"></p-fileUpload>
+          <button class="w-auto" pButton pRipple label="Excluir foto" icon="pi pi-trash" (click)="confirmDeleteUserProfilePic()" [disabled]="!formProfile.get('avatar')?.value"></button>
+        </div>
+      </div>
+      <div class="col-12 md:col">
+        <div class="field col-12 md:col-12">
+          <label htmlFor="name">Nome</label>
+          <input pInputText id="name" type="text" formControlName="name" />
+        </div>
+        <div class="field col-12 md:col-12">
+          <label htmlFor="email">Email</label>
+          <input pInputText id="email" type="text" formControlName="email" />
+        </div>
+        <div class="field col-12 md:col-12">
+          <label htmlFor="data_nascimento">Data de nascimento</label>
+          <p-calendar [showIcon]="true" inputId="data_nascimento" formControlName="data_nascimento" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<p-dialog [(visible)]="profileService.showModalChangePassword" (onHide)="formUserPassword.reset()" [style]="{width: '450px'}" header="Alteração de senha" [modal]="true" class="p-fluid">
+  <ng-template pTemplate="content">
+    <form [formGroup]="formUserPassword">
+      <div class="field">
+        <label htmlFor="password">Nova senha</label>
+        <p-password id="password" placeholder="Senha" [toggleMask]="true" [feedback]="true" promptLabel="Digite uma senha" weakLabel="Fraca" mediumLabel="Média" strongLabel="Forte" formControlName="password"></p-password>
+      </div>
+      <div class="field">
+        <label htmlFor="password_confirmation">Confirmação de nova senha</label>
+        <p-password id="password_confirmation" placeholder="Confirme a senha" [toggleMask]="true" [feedback]="false" formControlName="password_confirmation"></p-password>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-outlined" (click)="profileService.toggleModalChangePassword()"></button>
+    <button pButton pRipple label="Salvar" icon="pi pi-save" class="p-button-success" (click)="saveUserPassword()" [disabled]="!formUserPassword.valid"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

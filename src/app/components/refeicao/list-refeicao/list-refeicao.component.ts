@@ -33,6 +33,9 @@ export class ListRefeicaoComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.snackService.loadButtons('list');
     }
+    formatarHorario(horario: string): string {
+        return horario.slice(0, 5); 
+      }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal(

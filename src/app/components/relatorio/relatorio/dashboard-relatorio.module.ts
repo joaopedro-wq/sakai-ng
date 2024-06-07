@@ -17,6 +17,7 @@ import { CardModule } from 'primeng/card';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ChartModule } from 'primeng/chart';
+import { InputSwitchModule } from 'primeng/inputswitch';
 @NgModule({
     declarations: [DashboardRelatorioComponent],
     imports: [
@@ -37,7 +38,10 @@ import { ChartModule } from 'primeng/chart';
         CardModule,
         MultiSelectModule,
         ChartModule,
-        RadioButtonModule
+        
+        RadioButtonModule,
+        InputSwitchModule
+        
     ],
 })
 export class DashboardRelatorioModule {}

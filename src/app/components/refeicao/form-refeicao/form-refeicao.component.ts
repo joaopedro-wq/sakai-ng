@@ -27,7 +27,7 @@ export class FormRefeicaoComponent
                 this.formSnack.patchValue({
                     id: res.id ? res.id : null,
                     descricao: res.descricao,
-                
+                    horario: new Date(res.horario),
                 });
             });
 
@@ -60,6 +60,8 @@ export class FormRefeicaoComponent
     public formSnack: FormGroup = this.formBuilder.group({
         id: [null],
         descricao: ['', [Validators.required]],
+        horario: ['', [Validators.required]],
+
         
     });
 

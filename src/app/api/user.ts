@@ -7,5 +7,8 @@ export interface User {
     email_verified_at?: Date | null;
     created_at?: Date;
     updated_at?: Date;
+    data_nascimento: Date | string;
+    avatar?: string | null;
+
   
 }
