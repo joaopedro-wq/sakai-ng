@@ -10,7 +10,7 @@ import { ListDietaComponent } from './list-dieta.component';
 import { ListDietaRoutingModule } from './list-dieta-routing.module';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
-
+import { CardModule } from 'primeng/card';
 
 @NgModule({
     declarations: [ListDietaComponent],
@@ -25,6 +25,7 @@ import { CalendarModule } from 'primeng/calendar';
         DropdownModule,
         DialogModule,
         CalendarModule,
+        CardModule
     ]
 })
 export class ListDietaModule { }
