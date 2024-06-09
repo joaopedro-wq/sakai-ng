@@ -27,15 +27,11 @@ export class ListDietaComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.diet = res;
-              
-              
             });
     }
 
-   
     ngOnInit() {
-         this.dietService.loadButtons('list'); 
-        
+        this.dietService.loadButtons('list');
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -54,8 +50,6 @@ export class ListDietaComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
- 
 
     navigateToCompanyEdit(id: number) {
         this.router.navigate([`/dietas/registro/${id}`]);

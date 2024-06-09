@@ -148,7 +148,7 @@ export class FoodService {
                 if (res.success) {
                     this.foodsList = res.data;
                     this.obsListFoods.emit(this.foodsList);
-                    console.log('res',res)
+                   
                 }
             }),
             catchError((error: any) => {

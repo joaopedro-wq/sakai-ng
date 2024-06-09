@@ -1,5 +1,11 @@
 import { AfterContentInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
@@ -11,14 +17,11 @@ import { Alimento } from 'src/app/api/alimento';
 import { SnackService } from 'src/app/service/refeicao.service';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 
-
 @Component({
     templateUrl: './form-dieta.component.html',
     providers: [],
 })
-export class FormDietaComponent
-    implements OnInit, OnDestroy
-{
+export class FormDietaComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();
     listFoodies!: Alimento[];
     listSnackies!: Refeicao[];
@@ -29,48 +32,48 @@ export class FormDietaComponent
         public foodService: FoodService,
         public dietService: DietService,
         public snackService: SnackService
-
-
-        
     ) {
-   
         this.dietService.obsLoadDiet
-    .pipe(takeUntil(this.unsubscribe))
-    .subscribe((res) => {
-        this.formDiet.patchValue({
-            id: res.id ? res.id : null,
-            descricao: res.descricao,
-            id_refeicao: res.id_refeicao,
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.formDiet.patchValue({
+                    id: res.id ? res.id : null,
+                    descricao: res.descricao,
+                    id_refeicao: res.id_refeicao,
+                });
 
-        const alimentosArray = this.formDiet.get('alimentos') as FormArray;
-        alimentosArray.clear();
+                const alimentosArray = this.formDiet.get(
+                    'alimentos'
+                ) as FormArray;
+                alimentosArray.clear();
 
-        if (res.alimentos && res.alimentos.length > 0) {
-            res.alimentos.forEach(alimento => {
-                alimentosArray.push(this.createAlimentoGroup(alimento.id, alimento.pivot.qtd));
+                if (res.alimentos && res.alimentos.length > 0) {
+                    res.alimentos.forEach((alimento) => {
+                        alimentosArray.push(
+                            this.createAlimentoGroup(
+                                alimento.id,
+                                alimento.pivot.qtd
+                            )
+                        );
+                    });
+                } else {
+                    alimentosArray.push(this.createAlimentoGroup());
+                }
             });
-        } else {
-            alimentosArray.push(this.createAlimentoGroup());
-        }
-    });
 
-
-
-            this.dietService.obsSaveDiet
+        this.dietService.obsSaveDiet
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.messageService.add({
                     severity: res.success ? 'success' : 'error',
                     summary: res.success ? 'Sucesso' : 'Erro',
                     detail: res.message,
-                    
-                }); 
-                
+                });
+
                 if (res.success) this.router.navigate(['/dietas']);
             });
 
-            this.dietService.obsDeleteDiet
+        this.dietService.obsDeleteDiet
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.messageService.add({
@@ -81,7 +84,7 @@ export class FormDietaComponent
                 if (res.success) this.router.navigate(['/dietas']);
             });
 
-            this.foodService.obsListFoods
+        this.foodService.obsListFoods
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.listFoodies = res;
@@ -92,7 +95,6 @@ export class FormDietaComponent
             .subscribe((res) => {
                 this.listSnackies = res;
             });
-
     }
     filteredFoodies!: Alimento[];
     filterFood(event: AutoCompleteCompleteEvent) {
@@ -107,7 +109,7 @@ export class FormDietaComponent
         }
         this.filteredFoodies = filtered;
     }
-   
+
     public formDiet: FormGroup = this.formBuilder.group({
         id: [null],
         descricao: ['', [Validators.required]],
@@ -118,7 +120,7 @@ export class FormDietaComponent
     createAlimentoGroup(id: number = null, qtd: number = null): FormGroup {
         return this.formBuilder.group({
             id: [id, Validators.required],
-            qtd: [qtd, [Validators.required, Validators.min(1)]]
+            qtd: [qtd, [Validators.required, Validators.min(1)]],
         });
     }
     get alimentos(): FormArray {
@@ -126,22 +128,20 @@ export class FormDietaComponent
     }
     removeFood(index: number): void {
         const alimentos = this.formDiet.get('alimentos') as FormArray;
-       
-        if (alimentos.length > 1) { 
-          alimentos.removeAt(index);
-        }
-      }
 
-      addFood(): void {
+        if (alimentos.length > 1) {
+            alimentos.removeAt(index);
+        }
+    }
+
+    addFood(): void {
         const alimentos = this.alimentos;
         alimentos.push(this.createAlimentoGroup());
     }
-    
+
     ngOnInit() {
-         this.dietService.loadButtons('form');  
-          
+        this.dietService.loadButtons('form');
     }
-  
 
     ngAfterContentInit(): void {
         this.formDiet.statusChanges.subscribe((res) => {
@@ -161,10 +161,9 @@ export class FormDietaComponent
 
             this.dietService.setformDiet(res);
         });
-    }   
+    }
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
-       
     }
 }

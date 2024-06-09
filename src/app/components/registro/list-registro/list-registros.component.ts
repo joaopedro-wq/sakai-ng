@@ -62,6 +62,13 @@ export class ListRegistrosComponent implements OnInit, OnDestroy {
         this.router.navigate([`/registros/registro/${id}`]);
     }
 
-
+    getAlimentosDescription(alimentos: any[]): string {
+        const descriptions = alimentos.map(alimento => alimento.descricao);
+        const descriptionsWithBreaks = descriptions.map(desc => desc + '<br>');
+        return descriptionsWithBreaks.join('');
+    }
+    
+    
+    
 
 }

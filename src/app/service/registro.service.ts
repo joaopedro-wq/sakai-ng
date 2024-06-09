@@ -256,7 +256,7 @@ export class RegisterService {
 
     public setformFood(formRegister: Registro) {
         this.formRegister = formRegister;
-        console.log('this.formRegister', this.formRegister);
+       
     }
 
     confirmDeleteRegister() {

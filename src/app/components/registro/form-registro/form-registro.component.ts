@@ -49,10 +49,26 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
                     id: res.id ? res.id : null,
                     id_refeicao: res.id_refeicao,
                     data: new Date(res.data),
-                    id_alimento: res.id_alimento ? [res.id_alimento] : [],
-                    qtd: res.qtd ? [res.qtd] : [],
                 });
+                const alimentosArray = this.formRegister.get(
+                    'alimentos'
+                ) as FormArray;
+                alimentosArray.clear();
+                
+                if (res.alimentos && res.alimentos.length > 0) {
+                    res.alimentos.forEach((alimento) => {
+                        alimentosArray.push(
+                            this.createAlimentoGroup(
+                                alimento.id,
+                                alimento.pivot.qtd
+                            )
+                        );
+                    });
+                } else {
+                    alimentosArray.push(this.createAlimentoGroup());
+                }
             });
+
         this.registerService.obsSaveRegister
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
@@ -99,23 +115,35 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
         id: [null],
         data: [null, [Validators.required]],
         id_refeicao: ['', [Validators.required]],
-        id_alimento: new FormArray([new FormControl(Validators.required)]),
-        qtd: new FormArray([new FormControl()]),
-        /* id_dieta: [''], */
+        alimentos: this.formBuilder.array([this.createAlimentoGroup()]),
     });
 
-    filteredFoodies!: Alimento[];
-    filterFood(event: AutoCompleteCompleteEvent) {
-        let filtered: Alimento[] = [];
-        let query = event.query.toLowerCase();
+    createAlimentoGroup(id: number = null, qtd: number = null): FormGroup {
+        return this.formBuilder.group({
+            id: [id, Validators.required],
+            qtd: [qtd, [Validators.required, Validators.min(1)]],
+        });
+    }
 
-        for (let i = 0; i < this.listFoodies.length; i++) {
-            let food = this.listFoodies[i];
-            if (food.descricao.toLowerCase().indexOf(query) == 0) {
-                filtered.push(food);
-            }
+    onDietChange(event: any): void {
+       
+        const selectedDiet = this.diet.find((d) => d.id === event.value);
+        
+        if (selectedDiet) {
+            this.formRegister.patchValue({
+                id_refeicao: selectedDiet.id_refeicao,
+            });
+            const alimentosArray = this.formRegister.get(
+                'alimentos'
+            ) as FormArray;
+            alimentosArray.clear();
+
+            selectedDiet.alimentos.forEach((alimento: any) => {
+                alimentosArray.push(
+                    this.createAlimentoGroup(alimento.id, alimento.pivot.qtd)
+                );
+            });
         }
-        this.filteredFoodies = filtered;
     }
 
     createFormControl(): FormControl {
@@ -133,11 +161,8 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
     }
 
     addFood(): void {
-        const alimentos = this.formRegister.get('id_alimento') as FormArray;
-        const qtd = this.formRegister.get('qtd') as FormArray;
-
-        alimentos.push(new FormControl(null, Validators.required));
-        qtd.push(new FormControl(null, Validators.required));
+        const alimentos = this.alimentos;
+        alimentos.push(this.createAlimentoGroup());
     }
 
     ngOnInit() {
@@ -167,41 +192,12 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
-    onDietChange(event: any): void {
-        const selectedDiet = this.diet.find((d) => d.id === event.value);
-        if (selectedDiet) {
-            this.formRegister.patchValue({
-                id_refeicao: selectedDiet.id_refeicao,
-                id_alimento: selectedDiet.alimentos
-                    ? selectedDiet.alimentos.map((alimento) => alimento.id)
-                    : [],
-                qtd: selectedDiet.alimentos
-                    ? selectedDiet.alimentos.map((alimento) => alimento.pivot.qtd)
-                    : [],
-            });
-
-            const alimentosArray = this.formRegister.get(
-                'id_alimento'
-            ) as FormArray;
-            const qtdArray = this.formRegister.get('qtd') as FormArray;
-
-            alimentosArray.clear();
-            qtdArray.clear();
-
-            selectedDiet.alimentos.forEach((alimento: any) => {
-                alimentosArray.push(
-                    new FormControl(alimento.id, Validators.required)
-                );
-                qtdArray.push(
-                    new FormControl(alimento.pivot.qtd, Validators.required)
-                );
-            });
-        }
+    get alimentos(): FormArray {
+        return this.formRegister.get('alimentos') as FormArray;
     }
 
-    fecharModal(){
+    fecharModal() {
         this.registerService.modalFIlter = false;
         this.registerService.loadButtons('form');
-
     }
 }

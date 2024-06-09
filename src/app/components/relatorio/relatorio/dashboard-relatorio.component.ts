@@ -120,11 +120,20 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
             
         } else {
             this.labelsGraficos = this.register.map((item: any) => this.formatDate(item.data));
-            this.registroProteina = this.register.map((item: any) => item.alimento.proteina);
-            this.registroCarbo = this.register.map((item: any) => item.alimento.carbo);
-            this.registroGordura = this.register.map((item: any) => item.alimento.gordura);
-            this.nomeALimento = this.register.map((item: any) => item.descricao_alimento);
-            this.registroCaloria = this.register.map((item: any) => item.alimento.caloria);
+            console.log('this.labelsGraficos',this.labelsGraficos)
+            this.registroProteina = this.register.map((item: any) => item.nutrientes_totais.proteina);
+            
+
+            this.registroCarbo = this.register.map((item: any) => item.nutrientes_totais.carbo);
+            this.registroGordura = this.register.map((item: any) => item.nutrientes_totais.gordura);
+            
+            this.nomeALimento = this.register.map((item: any) => {
+                return item.alimentos.map((alimento: any) => alimento.descricao);
+            });
+            
+           
+            this.registroCaloria = this.register.map((item: any) =>item.nutrientes_totais.caloria);
+            
             this.labelsDescricao_refeicao = this.register.map((item: any) => item.descricao_refeicao);
             this.setupChartLine();
             this.setupChart();
@@ -263,7 +272,7 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
         this.basicData = {
-            labels: this.nomeALimento,
+            labels: this.labelsGraficos,
                     datasets: [
                         {
                             type: 'bar',

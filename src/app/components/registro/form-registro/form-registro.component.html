@@ -1,61 +1,76 @@
 <div class="col-12">
   <div class="card">
-
-
-    <p-card header="Registro Diário">
-    </p-card>
+    <p-card header="Registro Diário"></p-card>
 
     <form class="p-fluid p-formgrid grid" [formGroup]="formRegister">
-  
       <div class="field col-12 md:col-8">
         <label htmlFor="descricao">Nome Refeição *</label>
         <p-dropdown id="id_refeicao" [options]="listSnackies" optionLabel="descricao" optionValue="id"
           formControlName="id_refeicao" placeholder="Selecione a refeição"></p-dropdown>
       </div>
-      
+
       <div class="field col-12 md:col-3">
         <label htmlFor="cal">Data *</label>
-        <p-calendar [showIcon]="true" inputId="data_termino" formControlName="data" dateFormat="dd/mm/yy"></p-calendar>
-      </div>
-      <div class="field col-12 md:col-5" formArrayName="id_alimento">
-        @for(alimentos of formRegister.value.id_alimento; track i; let i=$index){
-        <div [ngClass]="{'field-spacing': i > 0}">
-          <label *ngIf="i === 0" htmlFor="gordura">Selecione o Alimento *</label>
-        
-
-           <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
-            [formControlName]="i" placeholder="Selecione o alimento" [filter]="true"></p-dropdown>
-        </div>
-        }
+        <p-calendar [showIcon]="true" inputId="data" formControlName="data" dateFormat="dd/mm/yy"></p-calendar>
       </div>
 
-      <div class="field col-12 md:col-4" formArrayName="qtd">
-        @for(quantidade of formRegister.value.qtd; track i; let i=$index){
-        <div [ngClass]="{'field-spacing': i > 0}">
-          <label *ngIf="i === 0" htmlFor="prot"> Porção (g) *</label>
-          <p-inputNumber id="prot" mode="decimal" locale="pt-BR" [minFractionDigits]="1" [formControlName]="i"
-            placeholder="Quantidade gramas" />
-        </div>
-        }
+      <div class="field col-12 md:col-8" formArrayName="alimentos">
+        <ng-container *ngFor="let alimento of alimentos.controls; let i=index">
+          <div [formGroupName]="i" [ngClass]="{'field-spacing': i > 0}">
+            <label *ngIf="i === 0" htmlFor="alimento">Selecione o Alimento *</label>
+            <p-dropdown id="alimento" [options]="listFoodies" optionLabel="descricao" optionValue="id"
+              formControlName="id" placeholder="Selecione o alimento" [filter]="true"></p-dropdown>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="field col-12 md:col-2" formArrayName="alimentos">
+        <ng-container *ngFor="let alimento of alimentos.controls; let i=index">
+          <div [formGroupName]="i" [ngClass]="{'field-spacing': i > 0}">
+            <label *ngIf="i === 0" htmlFor="qtd">Quantidade (g)</label>
+            <input pInputText id="qtd" type="number" formControlName="qtd" />
+          </div>
+        </ng-container>
       </div>
 
       <div class="field col-12 md:col-2">
         <div class="field-spacing">
-          <p-button label="Adicionar" icon="pi pi-plus" outlined="true" (click)="addFood()" />
+          <p-button label="Adicionar" icon="pi pi-plus" (click)="addFood()" outlined="true"></p-button>
         </div>
         <div class="field-spacing">
-          @for(alimentos of formRegister.value.id_alimento; track i; let i=$index){
-          <div class="field-spacing">
-            <p-button *ngIf="i > 0" label="Remover" icon="pi pi-minus" outlined="true" severity="danger"
-              (click)="removeFood(i)"></p-button>
-          </div>
-          }
-
+          <ng-container *ngFor="let alimento of alimentos.controls; let i=index">
+            <div class="field-spacing">
+              <p-button *ngIf="i > 0" label="Remover" icon="pi pi-minus" (click)="removeFood(i)" outlined="true"
+                severity="danger"></p-button>
+            </div>
+          </ng-container>
         </div>
       </div>
     </form>
   </div>
 </div>
+
+<p-dialog header="Dieta" [modal]="true" [(visible)]="registerService.modalFIlter" [position]="position"
+  [style]="{ width: '35rem' }">
+
+  <span class="p-text-secondary block mb-5">
+    Selecione sua Dieta:
+  </span>
+  <form class="p-fluid p-formgrid grid" [formGroup]="formRegister">
+    <div class="field col-12 md:col-12">
+      <label htmlFor="descricao">Dieta </label>
+      <p-dropdown id="id_refeicao" [options]="diet" optionLabel="descricao" optionValue="id" formControlName="id_dieta"
+        placeholder="Selecione a dieta" appendTo="body" (onChange)="onDietChange($event)"></p-dropdown>
+    </div>
+  </form>
+  <div class="flex justify-content-end gap-2">
+    <p-button label="Cancelar" (click)=" fecharModal()" severity="secondary" />
+    <p-button label="Confirmar" (click)=" fecharModal()" />
+  </div>
+
+</p-dialog>
+
+
 
 <p-confirmDialog></p-confirmDialog>
 
@@ -64,27 +79,3 @@
     margin-top: 1rem;
   }
 </style>
-
-<p-dialog 
-    header="Dieta" 
-    [modal]="true"
-    [(visible)]="registerService.modalFIlter" 
-    [position]="position" 
-    [style]="{ width: '35rem' }">
-    
-        <span class="p-text-secondary block mb-5">
-            Selecione sua Dieta: 
-        </span>
-        <form class="p-fluid p-formgrid grid" [formGroup]="formRegister">
-          <div class="field col-12 md:col-12">
-            <label htmlFor="descricao">Dieta </label>
-            <p-dropdown id="id_refeicao" [options]="diet" optionLabel="descricao" optionValue="id"
-              formControlName="id_dieta" placeholder="Selecione a dieta" appendTo="body" (onChange)="onDietChange($event)"></p-dropdown>
-          </div>
-        </form>
-        <div class="flex justify-content-end gap-2">
-            <p-button label="Cancelar" (click)=" fecharModal()" severity="secondary"  />
-            <p-button label="Confirmar"  (click)=" fecharModal()"/>
-        </div>
-   
-</p-dialog>

@@ -1,8 +1,11 @@
+import { Alimento } from "./alimento";
+
 export interface Registro {
     id?: number;
     data: Date | string;
     qtd: number | [];
-    id_alimento: number | [];
+    alimentos: Alimento[];
+
     id_refeicao: number;
     id_dieta?: number;
 
