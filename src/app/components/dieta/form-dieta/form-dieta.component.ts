@@ -33,29 +33,28 @@ export class FormDietaComponent
 
         
     ) {
-
+   
         this.dietService.obsLoadDiet
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-            this.formDiet.patchValue({
-                id: res.id ? res.id : null,
-                descricao: res.descricao,
-                id_refeicao: res.id_refeicao,
-                alimentos: res.alimentos ? res.alimentos.map(alimento => alimento.id) : []
-
-            });
-            const alimentosArray = this.formDiet.get('alimentos') as FormArray;
-                alimentosArray.clear(); 
-
-                if (res.alimentos && res.alimentos.length > 0) {
-                    res.alimentos.forEach(alimento => {
-                        alimentosArray.push(new FormControl(alimento.id, Validators.required));
-                    });
-                } else {
-                    alimentosArray.push(new FormControl(null, Validators.required));
-                }
-           
+    .pipe(takeUntil(this.unsubscribe))
+    .subscribe((res) => {
+        this.formDiet.patchValue({
+            id: res.id ? res.id : null,
+            descricao: res.descricao,
+            id_refeicao: res.id_refeicao,
         });
+
+        const alimentosArray = this.formDiet.get('alimentos') as FormArray;
+        alimentosArray.clear();
+
+        if (res.alimentos && res.alimentos.length > 0) {
+            res.alimentos.forEach(alimento => {
+                alimentosArray.push(this.createAlimentoGroup(alimento.id, alimento.pivot.qtd));
+            });
+        } else {
+            alimentosArray.push(this.createAlimentoGroup());
+        }
+    });
+
 
 
             this.dietService.obsSaveDiet
@@ -108,15 +107,23 @@ export class FormDietaComponent
         }
         this.filteredFoodies = filtered;
     }
-
-    
+   
     public formDiet: FormGroup = this.formBuilder.group({
         id: [null],
         descricao: ['', [Validators.required]],
         id_refeicao: ['', [Validators.required]],
-        alimentos: new FormArray( [new FormControl()]),
+        alimentos: this.formBuilder.array([this.createAlimentoGroup()]),
     });
 
+    createAlimentoGroup(id: number = null, qtd: number = null): FormGroup {
+        return this.formBuilder.group({
+            id: [id, Validators.required],
+            qtd: [qtd, [Validators.required, Validators.min(1)]]
+        });
+    }
+    get alimentos(): FormArray {
+        return this.formDiet.get('alimentos') as FormArray;
+    }
     removeFood(index: number): void {
         const alimentos = this.formDiet.get('alimentos') as FormArray;
        
@@ -125,12 +132,11 @@ export class FormDietaComponent
         }
       }
 
-    addFood(): void {
-        const alimentos = this.formDiet.get('alimentos') as FormArray;
-
-        alimentos.push(new FormControl(null, Validators.required));
-      
-      }
+      addFood(): void {
+        const alimentos = this.alimentos;
+        alimentos.push(this.createAlimentoGroup());
+    }
+    
     ngOnInit() {
          this.dietService.loadButtons('form');  
           

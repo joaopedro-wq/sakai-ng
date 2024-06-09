@@ -9,6 +9,6 @@ export interface Dieta {
     updated_at?: Date;
     descricao_alimento?: string | null;
     descricao_refeicao?: string | null;
-    
+     
     
 }

@@ -1,3 +1,5 @@
+import { Pivot } from "./pivot";
+
 export interface Alimento {
     id?: number;
     descricao: string;
@@ -8,4 +10,5 @@ export interface Alimento {
     qtd: number;
     created_at?: Date;
     updated_at?: Date;
+    pivot?: Pivot;
 }

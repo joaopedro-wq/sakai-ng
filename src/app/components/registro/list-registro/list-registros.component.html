@@ -1,6 +1,6 @@
 <div class="grid" style="margin-top: 1%;">
 	<ng-container *ngFor="let register of register">
-	  <p-card (click)="navigateToCompanyEdit(register.id)" class="diet-card">
+	  <p-card (click)="navigateToCompanyEdit(register.id)" header="{{register.descricao_refeicao}}" subheader="{{register.descricao_alimento }}" class="diet-card">
 		<ng-template pTemplate="header">
 		  <div *ngIf="register.descricao_refeicao == 'Default'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
 			<div class="overlay"></div>
@@ -23,8 +23,7 @@
 		</ng-template>
   
 		<div class="card-content">
-		  <p><strong>Refeição:</strong> {{ register.descricao_refeicao }}</p>
-		  <p><strong>Alimentos:</strong> {{ register.descricao_alimento }}</p>
+
 		  <p><strong>Data:</strong> {{ register.data | date: 'dd/MM/yyyy' }}</p>
 		  <p><strong>Porção:</strong> {{register.qtd}} (g)</p>
 		  <p><strong>Calorias:</strong> {{register.alimento.caloria | number:'1.3-3'}} (Kcal) </p>

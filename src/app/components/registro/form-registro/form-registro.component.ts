@@ -176,7 +176,7 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
                     ? selectedDiet.alimentos.map((alimento) => alimento.id)
                     : [],
                 qtd: selectedDiet.alimentos
-                    ? selectedDiet.alimentos.map((alimento) => alimento.qtd)
+                    ? selectedDiet.alimentos.map((alimento) => alimento.pivot.qtd)
                     : [],
             });
 
@@ -193,7 +193,7 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
                     new FormControl(alimento.id, Validators.required)
                 );
                 qtdArray.push(
-                    new FormControl(alimento.qtd, Validators.required)
+                    new FormControl(alimento.pivot.qtd, Validators.required)
                 );
             });
         }

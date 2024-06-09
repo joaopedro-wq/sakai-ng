@@ -61,4 +61,7 @@ export class ListRegistrosComponent implements OnInit, OnDestroy {
     navigateToCompanyEdit(id: number) {
         this.router.navigate([`/registros/registro/${id}`]);
     }
+
+
+
 }

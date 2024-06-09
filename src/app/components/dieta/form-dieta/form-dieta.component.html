@@ -1,50 +1,55 @@
 <div class="col-12">
   <div class="card">
+      <p-card header="Cadastro Dieta"></p-card>
 
+      <form class="p-fluid p-formgrid grid" [formGroup]="formDiet">
+          <div class="field col-12 md:col-6">
+              <label htmlFor="descricao">Descrição Dieta *</label>
+              <input pInputText id="descricao" type="text" maxlength="150" formControlName="descricao"/>
+          </div>
 
-    <p-card header="Cadastro Dieta">
-    </p-card>
+          <div class="field col-12 md:col-6">
+              <label htmlFor="descricao">Nome Refeição *</label>
+              <p-dropdown id="id_refeicao" [options]="listSnackies" optionLabel="descricao" optionValue="id"
+                  formControlName="id_refeicao" placeholder="Selecione a refeição"></p-dropdown>
+          </div>
 
-    <form class="p-fluid p-formgrid grid" [formGroup]="formDiet">
-      <div class="field col-12 md:col-6">
-        <label htmlFor="descricao">Descrição Dieta *</label>
-        <input pInputText id="descricao" type="text"  maxlength="150" formControlName="descricao"/>
-      </div>
-
-      <div class="field col-12 md:col-6">
-        <label htmlFor="descricao">Nome Refeição *</label>
-        <p-dropdown id="id_refeicao" [options]="listSnackies" optionLabel="descricao" optionValue="id"
-          formControlName="id_refeicao" placeholder="Selecione a refeição"></p-dropdown>
-      </div>
-
-      <div class="field col-12 md:col-8" formArrayName="alimentos">
-        @for(alimentos of formDiet.value.alimentos; track i; let i=$index){
-        <div [ngClass]="{'field-spacing': i > 0}">
-          <label *ngIf="i === 0" htmlFor="gordura">Selecione o Alimento *</label>
-
-         <!--  <p-autoComplete [formControlName]="i" [dropdown]="true" [suggestions]="filteredFoodies"
-          (completeMethod)="filterFood($event)" field="descricao" placeholder="Selecione o alimento" /> -->
-           <p-dropdown id="id_empresa" [options]="listFoodies" optionLabel="descricao" optionValue="id"
-            [formControlName]="i" placeholder="Selecione o alimento"></p-dropdown> 
+          <div class="field col-12 md:col-8" formArrayName="alimentos">
+            <ng-container *ngFor="let alimento of alimentos.controls; let i=index">
+                <div [formGroupName]="i" [ngClass]="{'field-spacing': i > 0}">
+                    <label *ngIf="i === 0" htmlFor="alimento">Selecione o Alimento *</label>
+                    <p-dropdown id="alimento" [options]="listFoodies" optionLabel="descricao" optionValue="id"
+                        formControlName="id" placeholder="Selecione o alimento" [filter]="true"></p-dropdown>
+                </div>
+            </ng-container>
         </div>
-        }
-      </div>
+        
 
-      <div class="field col-12 md:col-2">
-        <div class="field-spacing">
-          <p-button label="Adicionar" icon="pi pi-plus" (click)="addFood()"/>
-        </div>
-        <div class="field-spacing">
-          @for(alimentos of formDiet.value.alimentos; track i; let i=$index){
-            <div class="field-spacing">
-                <p-button  *ngIf="i > 0" label="Remover" icon="pi pi-minus" (click)="removeFood(i)" ></p-button>
-            </div>
-            }
-        </div>
-      </div>
-    </form>
+          <div class="field col-12 md:col-2" formArrayName="alimentos">
+              <ng-container *ngFor="let alimento of alimentos.controls; let i=index">
+                  <div [formGroupName]="i" [ngClass]="{'field-spacing': i > 0}">
+                      <label *ngIf="i === 0" htmlFor="qtd">Quantidade (g)</label>
+                      <input pInputText id="qtd" type="number" formControlName="qtd"/>
+                  </div>
+              </ng-container>
+          </div>
+
+          <div class="field col-12 md:col-2">
+              <div class="field-spacing">
+                  <p-button label="Adicionar" icon="pi pi-plus" (click)="addFood()" outlined="true" ></p-button>
+              </div>
+              <div class="field-spacing">
+                  <ng-container *ngFor="let alimento of alimentos.controls; let i=index">
+                      <div class="field-spacing">
+                          <p-button *ngIf="i > 0" label="Remover" icon="pi pi-minus" (click)="removeFood(i)" outlined="true" severity="danger"></p-button>
+                      </div>
+                  </ng-container>
+              </div>
+          </div>
+      </form>
   </div>
 </div>
+
 
 <p-confirmDialog></p-confirmDialog>
 
