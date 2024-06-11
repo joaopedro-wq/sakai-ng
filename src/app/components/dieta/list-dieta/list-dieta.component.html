@@ -1,43 +1,51 @@
 <div class="grid" style="margin-top: 1%;">
-    <ng-container *ngFor="let diet of diet">
-        <p-card header="{{diet.descricao}}" subheader="{{ diet.refeicao.descricao }}" (click)="navigateToCompanyEdit(diet.id)" class="diet-card">
-            <ng-template pTemplate="header">
-                <div *ngIf="diet.refeicao.descricao == 'aa'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
-                    <div class="overlay"></div>
+    <ng-container *ngIf="diet.length > 0; else emptyState">
+        <ng-container *ngFor="let diet of diet">
+            <p-card header="{{diet.descricao}}" subheader="{{ diet.refeicao.descricao }}" (click)="navigateToCompanyEdit(diet.id)" class="diet-card">
+                <ng-template pTemplate="header">
+                    <div *ngIf="diet.refeicao.descricao == 'aa'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
+                        <div class="overlay"></div>
+                    </div>
+                    <div *ngIf="diet.refeicao.descricao == 'Jantar'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/jantar.jpg');">
+                        <div class="overlay"></div>
+                    </div>
+                    <div *ngIf="diet.refeicao.descricao == 'Café da manhã'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/cafeManha.jpg');">
+                        <div class="overlay"></div>
+                    </div>
+                    <div *ngIf="diet.refeicao.descricao == 'Lanche da tarde'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/lanche-da-tarde.jpg');">
+                        <div class="overlay"></div>
+                    </div>
+                    <div *ngIf="diet.refeicao.descricao == 'Ceia'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/ceia.jpg');">
+                        <div class="overlay"></div>
+                    </div>
+                    <div *ngIf="diet.refeicao.descricao == 'Almoço'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/almoco.jpeg');">
+                        <div class="overlay"></div>
+                    </div>
+                </ng-template>
+                <div class="card-content">
+                    <p><strong>Alimentos:</strong></p>
+                    <div class="alimentos-list">
+                        <ng-container *ngFor="let alimento of diet.alimentos">
+                            {{ alimento.descricao }}<br>
+                        </ng-container>
+                    </div>
+                    <p><strong>Porção:</strong> {{ diet.totalQtd }} (g)</p>
+                    <p><strong>Carboidrato:</strong> {{ diet.total_carbo }}</p>
+                    <p><strong>Gordura:</strong> {{ diet.total_gordura }}</p>
+                    <p><strong>Proteina:</strong> {{ diet.total_proteina }}</p>
+                    <p><strong>Calorias:</strong> {{ diet.total_caloria }} (kcal)</p>
                 </div>
-                <div *ngIf="diet.refeicao.descricao == 'Jantar'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/jantar.jpg');">
-                    <div class="overlay"></div>
-                </div>
-                <div *ngIf="diet.refeicao.descricao == 'Café da manhã'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/cafeManha.jpg');">
-                    <div class="overlay"></div>
-                </div>
-                <div *ngIf="diet.refeicao.descricao == 'Lanche da tarde'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/lanche-da-tarde.jpg');">
-                    <div class="overlay"></div>
-                </div>
-                <div *ngIf="diet.refeicao.descricao == 'Ceia'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/ceia.jpg');">
-                    <div class="overlay"></div>
-                </div>
-                <div *ngIf="diet.refeicao.descricao == 'Almoço'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/almoco.jpeg');">
-                    <div class="overlay"></div>
-                </div>
-            </ng-template>
-            <div class="card-content">
-                <p><strong>Alimentos:</strong></p>
-                <div class="alimentos-list">
-                    <ng-container *ngFor="let alimento of diet.alimentos">
-                        {{ alimento.descricao }}<br>
-                    </ng-container>
-                </div>
-                <p><strong>Porção:</strong> {{ diet.totalQtd }} (g)</p>
-                <p><strong>Carboidrato:</strong> {{ diet.total_carbo }}</p>
-                <p><strong>Gordura:</strong> {{ diet.total_gordura }}</p>
-                <p><strong>Proteina:</strong> {{ diet.total_proteina }}</p>
-                <p><strong>Calorias:</strong> {{ diet.total_caloria }} (kcal)</p>
+            </p-card>
+        </ng-container>
+    </ng-container>
+    <ng-template #emptyState>
+        <p-card class="diet-card">
+            <div class="card-content empty-card">
+                <p>Nenhum registro encontrado</p>
             </div>
         </p-card>
-    </ng-container>
+    </ng-template>
 </div>
-
 
 <style>
     .grid {
@@ -52,7 +60,7 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s, box-shadow 0.3s;
         display: flex;
-		max-width: 300px;
+        max-width: 300px;
         flex-direction: column;
         justify-content: space-between;
         width: 100%;
@@ -90,5 +98,11 @@
     .diet-card .alimentos-list {
         height: calc(150px - 50px);
         overflow-y: auto;
+    }
+
+    .empty-card {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
     }
 </style>

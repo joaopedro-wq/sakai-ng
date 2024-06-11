@@ -1,4 +1,14 @@
+<div style="margin-top: 1%;  display: flex;
+justify-content: flex-end;">
+    <p-button icon="pi pi-chevron-up" severity="info" label="Ordenar data" outlined="true" (click)="sortRegistersByDate('asc')" class="mr-2">
+    </p-button >
+    <p-button  label="Ordenar data" outlined="true" severity="help" (click)="sortRegistersByDate('desc')" class="mr-2" icon=" pi pi-chevron-down">
+    </p-button> 
+  
+</div>
+
 <div class="grid" style="margin-top: 1%;">
+    <ng-container *ngIf="register.length > 0; else emptyState">
     <p-card *ngFor="let register of register" (click)="navigateToCompanyEdit(register.id)"
             header="{{register.descricao_refeicao}}" class="diet-card">
         <ng-template pTemplate="header">
@@ -37,11 +47,20 @@
             <p><strong>Data:</strong> {{register.data | date: 'dd/MM/yyyy'}}</p>
             <p><strong>Porção:</strong> {{register.nutrientes_totais.qtd}} (g)</p>
             <p><strong>Calorias:</strong> {{register.nutrientes_totais.caloria}} (Kcal)</p>
+            
         </ng-template>
         <ng-template pTemplate="footer">
             <div class="flex gap-3 mt-1"></div>
         </ng-template>
     </p-card>
+</ng-container>
+<ng-template #emptyState>
+    <p-card class="diet-card">
+        <div class="card-content empty-card">
+            <p>Nenhum registro encontrado</p>
+        </div>
+    </p-card>
+</ng-template>
 </div>
 
 <style>
@@ -96,4 +115,11 @@
         height: calc(150px - 50px);
         overflow-y: auto;
     }
+
+    .sorting-dropdown {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
 </style>

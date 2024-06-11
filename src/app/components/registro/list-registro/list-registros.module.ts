@@ -11,6 +11,7 @@ import { LisRegistroRoutingModule } from './list-registros-routing.module';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
     declarations: [ListRegistrosComponent],
@@ -25,7 +26,8 @@ import { CardModule } from 'primeng/card';
         DropdownModule,
         DialogModule,
         CalendarModule,
-        CardModule
+        CardModule,
+        OverlayPanelModule
 
     ],
 })

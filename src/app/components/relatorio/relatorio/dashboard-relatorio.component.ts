@@ -109,21 +109,23 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
             });
             
             this.labelsGraficos = registrosFiltrados.map((item: any) => this.formatDate(item.data));
-            this.registroProteina = registrosFiltrados.map((item: any) => item.alimento.proteina);
-            this.registroCarbo = registrosFiltrados.map((item: any) => item.alimento.carbo);
-            this.registroGordura = registrosFiltrados.map((item: any) => item.alimento.gordura);
-            this.nomeALimento = registrosFiltrados.map((item: any) => item.descricao_alimento);
-            this.registroCaloria = registrosFiltrados.map((item: any) => item.alimento.caloria);
+            
+            this.registroProteina = registrosFiltrados.map((item: any) => item.nutrientes_totais.proteina);
+            
+            this.registroCarbo = registrosFiltrados.map((item: any) => item.nutrientes_totais.carbo);
+            this.registroGordura = registrosFiltrados.map((item: any) => item.nutrientes_totais.gordura);
+            this.nomeALimento = registrosFiltrados.map((item: any) => {
+                return item.alimentos.map((alimento: any) => alimento.descricao);
+            });
+
+            this.registroCaloria = registrosFiltrados.map((item: any) => item.nutrientes_totais.caloria);
             this.labelsDescricao_refeicao = registrosFiltrados.map((item: any) => item.descricao_refeicao);
             this.setupChart();
             this.setupChartLine();
             
         } else {
             this.labelsGraficos = this.register.map((item: any) => this.formatDate(item.data));
-            console.log('this.labelsGraficos',this.labelsGraficos)
             this.registroProteina = this.register.map((item: any) => item.nutrientes_totais.proteina);
-            
-
             this.registroCarbo = this.register.map((item: any) => item.nutrientes_totais.carbo);
             this.registroGordura = this.register.map((item: any) => item.nutrientes_totais.gordura);
             
@@ -272,7 +274,7 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
         this.basicData = {
-            labels: this.labelsGraficos,
+            labels: this.nomeALimento,
                     datasets: [
                         {
                             type: 'bar',
