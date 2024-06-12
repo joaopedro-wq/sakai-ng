@@ -35,6 +35,14 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                                     './components/dieta/dieta.module'
                                 ).then((m) => m.DietaModule),
                         },
+                        {
+                            path: 'metas',
+                            data: { breadcrumb: 'Metas Diárias' },
+                            loadChildren: () =>
+                                import(
+                                    './components/metas/metas.module'
+                                ).then((m) => m.MetasModule),
+                        },
                         
                         {
                             path: 'alimentos',

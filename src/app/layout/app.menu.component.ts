@@ -25,6 +25,8 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     { label: 'Refeição', icon: 'pi pi-server', routerLink: ['/refeicoes'] },
                     { label: 'Dieta', icon: 'pi pi-file', routerLink: ['/dietas'] },
+                    { label: 'Meta Diária', icon: 'pi  pi-chart-line', routerLink: ['/metas'] },
+
 
                 ]
             },
@@ -40,7 +42,7 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Estatística',
                 items: [
-                    { label: 'Estatística Alimentação', icon: 'pi pi-chart-line', routerLink: ['/relatorio'] },
+                    { label: 'Estatística Alimentação', icon: 'pi pi-chart-bar', routerLink: ['/relatorio'] },
                     
                 ]
             },

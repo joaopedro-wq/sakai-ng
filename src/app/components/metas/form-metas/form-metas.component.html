@@ -1,0 +1,41 @@
+<div class="col-12">
+  <div class="card">
+    <p-card header="Meta Diária"></p-card>
+
+    <form class="p-fluid p-formgrid grid" [formGroup]="formGoal">
+      <div class="field col-12 md:col-6">
+        <label htmlFor="descricao">Calorias *</label>
+        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade calorias" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_calorias"/>
+
+      </div>
+      <div class="field col-12 md:col-6">
+        <label htmlFor="descricao">Proteinas  *</label>
+        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade Proteinas" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_proteinas"/>
+
+      </div>
+      <div class="field col-12 md:col-6">
+        <label htmlFor="descricao">Carboidratos *</label>
+        <p-inputNumber id="cal" mode="decimal"  placeholder="Definir quantidade Carboidratos" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_carboidratos"/>
+        
+      </div>
+      <div class="field col-12 md:col-6">
+        <label htmlFor="descricao">Gorduras  *</label>
+        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade Gorduras" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_gorduras" />
+
+      </div>
+      
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<p-confirmDialog></p-confirmDialog>
+
+<style>
+  .field-spacing {
+    margin-top: 1rem;
+  }
+</style>
