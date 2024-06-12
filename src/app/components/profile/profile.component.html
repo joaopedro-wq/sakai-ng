@@ -1,25 +1,35 @@
 <div class="col-12">
   <div class="card">
     <form class="p-fluid p-formgrid grid" [formGroup]="formProfile">
-      <div class="col-8 col-offset-2 md:col-4 md:col-offset-0">
+      <div class="col-12 md:col-4">
         <img [src]="getUserAvatar()" alt="Avatar" class="col" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 50%;" >
         <div class="flex justify-content-center items-center gap-2 mt-2">
           <p-fileUpload mode="basic" name="avatar" accept="image/*" [maxFileSize]="1000000" [url]="getUrlToUpload()" [auto]="true" chooseLabel="Carregar foto" method="post" (onUpload)="authService.getLoggedUserWithToken().subscribe()"></p-fileUpload>
           <button class="w-auto" pButton pRipple label="Excluir foto" icon="pi pi-trash" (click)="confirmDeleteUserProfilePic()" [disabled]="!formProfile.get('avatar')?.value"></button>
         </div>
       </div>
-      <div class="col-12 md:col">
-        <div class="field col-12 md:col-12">
-          <label htmlFor="name">Nome</label>
-          <input pInputText id="name" type="text" formControlName="name" />
-        </div>
-        <div class="field col-12 md:col-12">
-          <label htmlFor="email">Email</label>
-          <input pInputText id="email" type="text" formControlName="email" />
-        </div>
-        <div class="field col-12 md:col-12">
-          <label htmlFor="data_nascimento">Data de nascimento</label>
-          <p-calendar [showIcon]="true" inputId="data_nascimento" formControlName="data_nascimento" dateFormat="dd/mm/yy"></p-calendar>
+      <div class="col-12 md:col-8">
+        <div class="p-fluid grid">
+          <div class="field col-12 md:col-6">
+            <label for="data_nascimento">Data de nascimento</label>
+            <p-calendar [showIcon]="true" inputId="data_nascimento" formControlName="data_nascimento" dateFormat="dd/mm/yy"></p-calendar>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="genero">Gênero</label>
+            <p-dropdown id="genero" formControlName="genero" [options]="generoOptions"></p-dropdown>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="peso">Peso (kg)</label>
+            <input pInputText id="peso" type="number" formControlName="peso" />
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="altura">Altura (cm)</label>
+            <input pInputText id="altura" type="number" formControlName="altura" />
+          </div>
+          <div class="field col-12 md:col-12">
+            <label for="atividade_fisica">Nível de Atividade Física</label>
+            <p-dropdown id="atividade_fisica" formControlName="atividade_fisica" [options]="atividadeFisicaOptions"></p-dropdown>
+          </div>
         </div>
       </div>
     </form>

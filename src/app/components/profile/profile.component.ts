@@ -177,4 +177,16 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             .updateUserPassword(this.formUserPassword.getRawValue())
             .subscribe();
     }
+
+    generoOptions = [
+        { label: 'Masculino', value: 'masculino' },
+        { label: 'Feminino', value: 'feminino' }
+      ];
+      atividadeFisicaOptions = [
+        { label: 'Sedentário (pouco ou nenhum exercício)', value: 1.2 },
+        { label: 'Levemente ativo (exercício leve/sessões de esporte de 1 a 3 dias por semana)', value: 1.375 },
+        { label: 'Moderadamente ativo (exercício moderado/sessões de esporte de 3 a 5 dias por semana)', value: 1.55 },
+        { label: 'Muito ativo (exercício intenso/sessões de esporte de 6 a 7 dias por semana)', value: 1.725 },
+        { label: 'Extremamente ativo (exercício físico muito intenso/trabalho físico, sessões de esporte, etc.)', value: 1.9 }
+      ];
 }

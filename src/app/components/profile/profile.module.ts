@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { PasswordModule } from 'primeng/password';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
     declarations: [ProfileComponent],
@@ -26,6 +27,8 @@ import { PasswordModule } from 'primeng/password';
         ConfirmDialogModule,
         DialogModule,
         PasswordModule,
+        DropdownModule,
+
     ],
 })
 export class ProfileModule {}
