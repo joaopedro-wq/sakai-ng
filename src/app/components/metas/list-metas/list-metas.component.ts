@@ -1,16 +1,13 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService, MenuItem } from 'primeng/api';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { ConfirmationService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subject, takeUntil } from 'rxjs';
 import { Alimento } from 'src/app/api/alimento';
 import { Metas } from 'src/app/api/metas';
-import { Refeicao } from 'src/app/api/refeicao';
 import { Registro } from 'src/app/api/registro';
 import { FoodService } from 'src/app/service/alimento.service';
 import { GoalService } from 'src/app/service/metas.service';
-import { SnackService } from 'src/app/service/refeicao.service';
 import { RegisterService } from 'src/app/service/registro.service';
 
 @Component({
@@ -18,20 +15,21 @@ import { RegisterService } from 'src/app/service/registro.service';
     providers: [ConfirmationService],
 })
 export class ListMetasComponent implements OnInit, OnDestroy {
-    @ViewChild('filter') filter!: ElementRef;
-    @ViewChild('op') overlayPanel!: OverlayPanel;
+    @ViewChild('filter') filter!: Table;
     private unsubscribe = new Subject<void>();
     food: Alimento[] = [];
     register: Registro[] = [];
     goal: Metas[] = [];
-
-    selectedDate: string = '';
+    position: string = 'top';
+    selectedDate: string = ''; // Data inicial para exibir as metas
+    selectedFilterDate: Date = new Date(); // Data selecionada no modal de filtro
 
     constructor(
         private router: Router,
         public foodService: FoodService,
         public goalService: GoalService,
-        public registerService: RegisterService
+        public registerService: RegisterService,
+        private confirmationService: ConfirmationService
     ) {
         this.goalService.obsListGoal
             .pipe(takeUntil(this.unsubscribe))
@@ -50,18 +48,6 @@ export class ListMetasComponent implements OnInit, OnDestroy {
         this.goalService.loadButtons('list');
     }
 
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal(
-            (event.target as HTMLInputElement).value,
-            'contains'
-        );
-    }
-
-    clear(table: Table) {
-        table.clear();
-        this.filter.nativeElement.value = '';
-    }
-
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
@@ -72,31 +58,84 @@ export class ListMetasComponent implements OnInit, OnDestroy {
     }
 
     setSelectedDate() {
+        // Define a data mais recente para exibir as metas
         if (this.register.length > 0) {
-            // Sort the registers by date in descending order
-            const sortedRegisters = [...this.register].sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
-            // Set the most recent date
-            this.selectedDate = new Date(sortedRegisters[0].data).toISOString().split('T')[0];
+            const sortedRegisters = [...this.register].sort(
+                (a, b) =>
+                    new Date(b.data).getTime() - new Date(a.data).getTime()
+            );
+            this.selectedDate = new Date(sortedRegisters[0].data)
+                .toISOString()
+                .split('T')[0];
         }
     }
 
     getTotalCalories(): number {
-        const registersForDate = this.register.filter(register => new Date(register.data).toISOString().split('T')[0] === this.selectedDate);
-        return registersForDate.reduce((total, register) => total + register.nutrientes_totais.caloria, 0);
+        // Retorna as calorias consumidas na data selecionada
+        const registersForDate = this.register.filter(
+            (register) =>
+                new Date(register.data).toISOString().split('T')[0] ===
+                this.selectedDate
+        );
+        const totalCalories = registersForDate.reduce(
+            (total, register) => total + register.nutrientes_totais.caloria,
+            0
+        );
+        return parseFloat(totalCalories.toFixed(2));
     }
 
     getTotalProteins(): number {
-        const registersForDate = this.register.filter(register => new Date(register.data).toISOString().split('T')[0] === this.selectedDate);
-        return registersForDate.reduce((total, register) => total + register.nutrientes_totais.proteina, 0);
+        // Retorna as proteínas consumidas na data selecionada
+        const registersForDate = this.register.filter(
+            (register) =>
+                new Date(register.data).toISOString().split('T')[0] ===
+                this.selectedDate
+        );
+        const totalProteins = registersForDate.reduce(
+            (total, register) => total + register.nutrientes_totais.proteina,
+            0
+        );
+        return parseFloat(totalProteins.toFixed(2));
     }
 
-    getTotalCarbohydrates(): number {
-        const registersForDate = this.register.filter(register => new Date(register.data).toISOString().split('T')[0] === this.selectedDate);
-        return registersForDate.reduce((total, register) => total + register.nutrientes_totais.carbo, 0);
+    getTotalCarbo(): number {
+        // Retorna os carboidratos consumidos na data selecionada
+        const registersForDate = this.register.filter(
+            (register) =>
+                new Date(register.data).toISOString().split('T')[0] ===
+                this.selectedDate
+        );
+        const totalCarbo = registersForDate.reduce(
+            (total, register) => total + register.nutrientes_totais.carbo,
+            0
+        );
+        return parseFloat(totalCarbo.toFixed(2));
     }
 
     getTotalFats(): number {
-        const registersForDate = this.register.filter(register => new Date(register.data).toISOString().split('T')[0] === this.selectedDate);
-        return registersForDate.reduce((total, register) => total + register.nutrientes_totais.gordura, 0);
+        // Retorna as gorduras consumidas na data selecionada
+        const registersForDate = this.register.filter(
+            (register) =>
+                new Date(register.data).toISOString().split('T')[0] ===
+                this.selectedDate
+        );
+        const totalFats = registersForDate.reduce(
+            (total, register) => total + register.nutrientes_totais.gordura,
+            0
+        );
+        return parseFloat(totalFats.toFixed(2));
+    }
+
+    applyFilter() {
+        // Aplica o filtro de data selecionada
+        this.selectedDate = this.selectedFilterDate.toISOString().split('T')[0];
+        this.goalService.openModalFilter = false; 
+        this.goalService.loadButtons('list');
+
+    }
+
+    closeModal() {
+        // Fecha o modal sem aplicar o filtro
+        this.goalService.openModalFilter = false;
     }
 }

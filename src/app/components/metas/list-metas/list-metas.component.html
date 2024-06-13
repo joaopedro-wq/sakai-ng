@@ -1,19 +1,66 @@
 <div class="grid" style="margin-top: 1%;">
-    <ng-container *ngIf="goal.length > 0 && selectedDate; else emptyState">
-        <p-card *ngFor="let goal of goal" (click)="navigateToCompanyEdit(goal.id)" header="{{'Meta Diária'}}" class="diet-card">
+    <ng-container *ngIf="goal.length > 0 ; else emptyState">
+        <p-card *ngFor="let goal of goal" (click)="navigateToCompanyEdit(goal.id)" header="{{'Meta Diária'}}"
+            class="diet-card">
             <ng-template pTemplate="header">
-                <div class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
+                <div class="card-image-container"
+                    style="background-image: url('../../../../assets/layout/images/img01.png');">
                     <div class="overlay"></div>
                 </div>
             </ng-template>
             <p><strong>Data:</strong> {{selectedDate | date: 'dd/MM/yyyy'}}</p>
-            <p><strong>Calorias Consumidas:</strong> {{getTotalCalories()}} / {{goal.meta_calorias}} (Kcal)</p>
-            <p><strong>Proteínas Consumidas:</strong> {{getTotalProteins()}} / {{goal.meta_proteinas}} (g)</p>
-            <p><strong>Carboidratos Consumidos:</strong> {{getTotalCarbohydrates()}} / {{goal.meta_carboidratos}} (g)</p>
-            <p><strong>Gorduras Consumidas:</strong> {{getTotalFats()}} / {{goal.meta_gorduras}} (g)</p>
-            <ng-template pTemplate="footer">
-                <div class="flex gap-3 mt-1"></div>
-            </ng-template>
+
+            <p><strong>Calorias Consumidas:</strong></p>
+            <div style="position: relative;">
+
+                <p-progressBar [value]="(getTotalCalories() * 100) / goal.meta_calorias "
+                    [color]="getTotalCalories() > goal.meta_calorias ? 'red' : null" styleClass="custom-progressbar">
+                    <ng-template pTemplate="content" let-value>
+                    </ng-template>
+                </p-progressBar>
+                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                    class="progress-text">{{getTotalCalories()}} / {{goal.meta_calorias}}</span>
+            </div>
+            <br>
+            <p><strong>Proteínas Consumidas:</strong></p>
+            <div style="position: relative;">
+                <p-progressBar [value]="(getTotalProteins() * 100) / goal.meta_proteinas"
+                    [color]="getTotalProteins() > goal.meta_proteinas ? 'red' : null" styleClass="custom-progressbar">
+                    <ng-template pTemplate="content" let-value>
+
+                    </ng-template>
+                </p-progressBar>
+                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                    class="progress-text">{{getTotalProteins()}} / {{goal.meta_proteinas}}</span>
+
+            </div>
+
+            <br>
+            <p><strong>Carboidratos Consumidos:</strong></p>
+            <div style="position: relative;">
+                <p-progressBar [value]="(getTotalCarbo() * 100) / goal.meta_carboidratos"
+                    [color]="getTotalCarbo() > goal.meta_carboidratos ? 'red' : null" styleClass="custom-progressbar">
+                    <ng-template pTemplate="content" let-value>
+
+                    </ng-template>
+                </p-progressBar>
+                <span
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCarbo()}}
+                    / {{goal.meta_carboidratos}}</span>
+            </div>
+
+
+            <br>
+            <p><strong>Gorduras Consumidas:</strong></p>
+            <div style="position: relative;">
+                <p-progressBar [value]="(getTotalFats() * 100) / goal.meta_gorduras"
+                    [color]="getTotalFats() > goal.meta_gorduras ? 'red' : null" styleClass="custom-progressbar">
+                    <ng-template pTemplate="content" let-value>
+                    </ng-template>
+                </p-progressBar>
+                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                    class="progress-text">{{getTotalFats()}} / {{goal.meta_gorduras}}</span>
+            </div>
         </p-card>
     </ng-container>
     <ng-template #emptyState>
@@ -24,6 +71,36 @@
         </p-card>
     </ng-template>
 </div>
+<p-dialog header="Filtragem da meta"
+    [modal]="true"
+    [(visible)]="goalService.openModalFilter"
+    [position]="position"
+    [style]="{ width: '35rem' }">
+    
+    <span class="p-text-secondary block mb-5">
+        Tipo de gráficos: 
+    </span>
+   
+    <span class="p-text-secondary block mb-5">
+        Filtrar o gráfico por data
+    </span>
+    <div class="flex align-items-center gap-3 mb-5">
+        <div class="field col-6">
+            <label for="data" class="font-semibold w-6rem">
+                Data:
+            </label>
+            <br>
+            <p-calendar placeholder="dd/mm/aa" appendTo="body" [showIcon]="true" inputId="data_termino" dateFormat="dd/mm/yy" [(ngModel)]="selectedFilterDate"></p-calendar>
+        </div>
+    </div>
+    
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="closeModal()" />
+        <p-button label="Confirmar" (click)="applyFilter()" />
+    </div>
+
+</p-dialog>
+
 
 
 
@@ -39,8 +116,7 @@
         border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s, box-shadow 0.3s;
-        display: flex;
-		max-width: 300px;
+        max-width: 500px;
         flex-direction: column;
         justify-content: space-between;
         width: 100%;
@@ -75,15 +151,11 @@
         border-top-right-radius: 15px;
     }
 
-    .diet-card .alimentos-list {
-        height: calc(150px - 50px);
-        overflow-y: auto;
-    }
+
 
     .sorting-dropdown {
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: flex-end;
-}
-
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: flex-end;
+    }
 </style>

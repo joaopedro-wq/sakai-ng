@@ -12,7 +12,8 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ToastModule } from 'primeng/toast';
 @NgModule({
     declarations: [ListMetasComponent],
     imports: [
@@ -28,6 +29,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
         CalendarModule,
         CardModule,
         OverlayPanelModule,
+        ProgressBarModule,
+        ToastModule
     ],
 })
 export class ListMetasModule {}

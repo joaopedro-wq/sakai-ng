@@ -63,6 +63,24 @@ export class GoalService {
             routerLink: ['/metas/registro'],
             tooltip: '',
         },
+
+        {
+            title: 'filtro',
+            label: 'Filtro',
+            id: 'Metas_cadastrar',
+            visible: true,
+            disabled: false,
+            class: 'inline-block mr-2',
+            icon: 'pi pi-filter',
+            routerLink: [],
+            tooltip: '',
+        },
+
+
+
+
+
+
     ];
     
 
@@ -129,11 +147,13 @@ export class GoalService {
             case 'excluir':
                 this.confirmDeleteDiet();
                 break;
-           
+           case 'filtro':
+           this.openModalFilter = true; 
+           break;
         }
     }
    
-    modalOptions: boolean = false;
+    openModalFilter: boolean = false;
 
     loadButtons(nmListButtons: string) {
         if (nmListButtons == 'form') {
