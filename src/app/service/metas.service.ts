@@ -68,7 +68,7 @@ export class GoalService {
             title: 'filtro',
             label: 'Filtro',
             id: 'Metas_cadastrar',
-            visible: true,
+            visible: false,
             disabled: false,
             class: 'inline-block mr-2',
             icon: 'pi pi-filter',
@@ -130,7 +130,12 @@ export class GoalService {
             }
         );
     }
+    updateCadastrarButtonVisibility() {
+        const hasGoals = this.goalsList && this.goalsList.length > 0;
+        this.buttonState('visible', 'cadastrar', !hasGoals);
+        this.buttonState('visible', 'filtro', hasGoals);
 
+    }
     execActionButton(action: string) {
         switch (action) {
             case 'salvar':

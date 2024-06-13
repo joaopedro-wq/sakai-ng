@@ -1,4 +1,4 @@
-<div class="grid" style="margin-top: 1%;">
+<div class="container">
     <ng-container *ngIf="goal.length > 0 ; else emptyState">
         <p-card *ngFor="let goal of goal" (click)="navigateToCompanyEdit(goal.id)" header="{{'Meta Diária'}}"
             class="diet-card">
@@ -8,30 +8,35 @@
                     <div class="overlay"></div>
                 </div>
             </ng-template>
-            <p><strong>Data:</strong> {{selectedDate | date: 'dd/MM/yyyy'}}</p>
+            <ng-template pTemplate="subtitle">
+
+                <p><strong>Data:</strong> {{selectedDate | date: 'dd/MM/yyyy'}}</p>
+            </ng-template>
 
             <p><strong>Calorias Consumidas:</strong></p>
             <div style="position: relative;">
 
                 <p-progressBar [value]="(getTotalCalories() * 100) / goal.meta_calorias "
-                    [color]="getTotalCalories() > goal.meta_calorias ? 'red' : null" styleClass="custom-progressbar">
+                    [color]="getTotalCalories() > goal.meta_calorias ? 'red' : null">
                     <ng-template pTemplate="content" let-value>
                     </ng-template>
                 </p-progressBar>
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
-                    class="progress-text">{{getTotalCalories()}} / {{goal.meta_calorias}}</span>
+                <span
+                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCalories()}}
+                    / {{goal.meta_calorias}}</span>
             </div>
             <br>
             <p><strong>Proteínas Consumidas:</strong></p>
             <div style="position: relative;">
                 <p-progressBar [value]="(getTotalProteins() * 100) / goal.meta_proteinas"
-                    [color]="getTotalProteins() > goal.meta_proteinas ? 'red' : null" styleClass="custom-progressbar">
+                    [color]="getTotalProteins() > goal.meta_proteinas ? 'red' : null">
                     <ng-template pTemplate="content" let-value>
 
                     </ng-template>
                 </p-progressBar>
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
-                    class="progress-text">{{getTotalProteins()}} / {{goal.meta_proteinas}}</span>
+                <span
+                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalProteins()}}
+                    / {{goal.meta_proteinas}}</span>
 
             </div>
 
@@ -39,13 +44,13 @@
             <p><strong>Carboidratos Consumidos:</strong></p>
             <div style="position: relative;">
                 <p-progressBar [value]="(getTotalCarbo() * 100) / goal.meta_carboidratos"
-                    [color]="getTotalCarbo() > goal.meta_carboidratos ? 'red' : null" styleClass="custom-progressbar">
+                    [color]="getTotalCarbo() > goal.meta_carboidratos ? 'red' : null">
                     <ng-template pTemplate="content" let-value>
 
                     </ng-template>
                 </p-progressBar>
                 <span
-                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCarbo()}}
+                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCarbo()}}
                     / {{goal.meta_carboidratos}}</span>
             </div>
 
@@ -58,8 +63,9 @@
                     <ng-template pTemplate="content" let-value>
                     </ng-template>
                 </p-progressBar>
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
-                    class="progress-text">{{getTotalFats()}} / {{goal.meta_gorduras}}</span>
+                <span
+                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalFats()}}
+                    / {{goal.meta_gorduras}}</span>
             </div>
         </p-card>
     </ng-container>
@@ -71,44 +77,16 @@
         </p-card>
     </ng-template>
 </div>
-<p-dialog header="Filtragem da meta"
-    [modal]="true"
-    [(visible)]="goalService.openModalFilter"
-    [position]="position"
-    [style]="{ width: '35rem' }">
-    
-    <span class="p-text-secondary block mb-5">
-        Tipo de gráficos: 
-    </span>
-   
-    <span class="p-text-secondary block mb-5">
-        Filtrar o gráfico por data
-    </span>
-    <div class="flex align-items-center gap-3 mb-5">
-        <div class="field col-6">
-            <label for="data" class="font-semibold w-6rem">
-                Data:
-            </label>
-            <br>
-            <p-calendar placeholder="dd/mm/aa" appendTo="body" [showIcon]="true" inputId="data_termino" dateFormat="dd/mm/yy" [(ngModel)]="selectedFilterDate"></p-calendar>
-        </div>
-    </div>
-    
-    <div class="flex justify-content-end gap-2">
-        <p-button label="Cancelar" severity="secondary" (click)="closeModal()" />
-        <p-button label="Confirmar" (click)="applyFilter()" />
-    </div>
-
-</p-dialog>
 
 
 
 
 <style>
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1rem;
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
 
     .diet-card {
@@ -116,10 +94,10 @@
         border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s, box-shadow 0.3s;
-        max-width: 500px;
+        max-width: 550px;
+        width: 100%;
         flex-direction: column;
         justify-content: space-between;
-        width: 100%;
         height: auto;
         cursor: pointer;
     }
@@ -151,6 +129,11 @@
         border-top-right-radius: 15px;
     }
 
+    .sorting-dropdown {
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: flex-end;
+    }
 
 
     .sorting-dropdown {
@@ -159,3 +142,32 @@
         justify-content: flex-end;
     }
 </style>
+
+
+<p-dialog header="Filtragem da meta" [modal]="true" [(visible)]="goalService.openModalFilter" [position]="position"
+    [style]="{ width: '35rem' }">
+
+    <span class="p-text-secondary block mb-5">
+        Tipo de gráficos:
+    </span>
+
+    <span class="p-text-secondary block mb-5">
+        Filtrar o gráfico por data
+    </span>
+    <div class="flex align-items-center gap-3 mb-5">
+        <div class="field col-6">
+            <label for="data" class="font-semibold w-6rem">
+                Data:
+            </label>
+            <br>
+            <p-calendar placeholder="dd/mm/aa" appendTo="body" [showIcon]="true" inputId="data_termino"
+                dateFormat="dd/mm/yy" [(ngModel)]="selectedFilterDate"></p-calendar>
+        </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="closeModal()" />
+        <p-button label="Confirmar" (click)="applyFilter()" />
+    </div>
+
+</p-dialog>

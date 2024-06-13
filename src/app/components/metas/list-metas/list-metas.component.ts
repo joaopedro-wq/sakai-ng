@@ -21,8 +21,8 @@ export class ListMetasComponent implements OnInit, OnDestroy {
     register: Registro[] = [];
     goal: Metas[] = [];
     position: string = 'top';
-    selectedDate: string = ''; // Data inicial para exibir as metas
-    selectedFilterDate: Date = new Date(); // Data selecionada no modal de filtro
+    selectedDate: string = '';
+    selectedFilterDate: Date = new Date();
 
     constructor(
         private router: Router,
@@ -35,6 +35,8 @@ export class ListMetasComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.goal = res;
+                this.goalService.updateCadastrarButtonVisibility();
+                this.goalService.loadButtons('list');
             });
         this.registerService.obsListRegister
             .pipe(takeUntil(this.unsubscribe))
@@ -58,7 +60,6 @@ export class ListMetasComponent implements OnInit, OnDestroy {
     }
 
     setSelectedDate() {
-        // Define a data mais recente para exibir as metas
         if (this.register.length > 0) {
             const sortedRegisters = [...this.register].sort(
                 (a, b) =>
@@ -67,11 +68,17 @@ export class ListMetasComponent implements OnInit, OnDestroy {
             this.selectedDate = new Date(sortedRegisters[0].data)
                 .toISOString()
                 .split('T')[0];
+
+            const dateParts = this.selectedDate.split('-');
+            this.selectedFilterDate = new Date(
+                Number(dateParts[0]),
+                Number(dateParts[1]) - 1,
+                Number(dateParts[2])
+            );
         }
     }
 
     getTotalCalories(): number {
-        // Retorna as calorias consumidas na data selecionada
         const registersForDate = this.register.filter(
             (register) =>
                 new Date(register.data).toISOString().split('T')[0] ===
@@ -85,7 +92,6 @@ export class ListMetasComponent implements OnInit, OnDestroy {
     }
 
     getTotalProteins(): number {
-        // Retorna as proteínas consumidas na data selecionada
         const registersForDate = this.register.filter(
             (register) =>
                 new Date(register.data).toISOString().split('T')[0] ===
@@ -99,7 +105,6 @@ export class ListMetasComponent implements OnInit, OnDestroy {
     }
 
     getTotalCarbo(): number {
-        // Retorna os carboidratos consumidos na data selecionada
         const registersForDate = this.register.filter(
             (register) =>
                 new Date(register.data).toISOString().split('T')[0] ===
@@ -113,7 +118,6 @@ export class ListMetasComponent implements OnInit, OnDestroy {
     }
 
     getTotalFats(): number {
-        // Retorna as gorduras consumidas na data selecionada
         const registersForDate = this.register.filter(
             (register) =>
                 new Date(register.data).toISOString().split('T')[0] ===
@@ -127,15 +131,14 @@ export class ListMetasComponent implements OnInit, OnDestroy {
     }
 
     applyFilter() {
-        // Aplica o filtro de data selecionada
         this.selectedDate = this.selectedFilterDate.toISOString().split('T')[0];
-        this.goalService.openModalFilter = false; 
-        this.goalService.loadButtons('list');
 
+        this.goalService.openModalFilter = false;
+        this.goalService.loadButtons('list');
     }
 
     closeModal() {
-        // Fecha o modal sem aplicar o filtro
         this.goalService.openModalFilter = false;
+        this.goalService.loadButtons('list');
     }
 }

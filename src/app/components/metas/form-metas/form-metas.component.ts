@@ -37,66 +37,56 @@ export class FormMetasComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private router: Router,
         private messageService: MessageService,
-        public goalService: GoalService,
-       
-       
+        public goalService: GoalService
     ) {
         this.goalService.obsLoadGoal
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-            this.formGoal.patchValue({
-                id: res.id ? res.id : null,
-                meta_calorias: res.meta_calorias,
-                meta_proteinas: res.meta_proteinas,
-                meta_carboidratos: res.meta_carboidratos,
-                meta_gorduras: res.meta_gorduras,
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.formGoal.patchValue({
+                    id: res.id ? res.id : null,
+                    meta_calorias: res.meta_calorias,
+                    meta_proteinas: res.meta_proteinas,
+                    meta_carboidratos: res.meta_carboidratos,
+                    meta_gorduras: res.meta_gorduras,
+                });
             });
-        });
 
         this.goalService.obsSaveGoal
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-            this.messageService.add({
-                severity: res.success ? 'success' : 'error',
-                summary: res.success ? 'Sucesso' : 'Erro',
-                detail: res.message,
-                
-            }); 
-            
-            if (res.success) this.router.navigate(['/metas']);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.messageService.add({
+                    severity: res.success ? 'success' : 'error',
+                    summary: res.success ? 'Sucesso' : 'Erro',
+                    detail: res.message,
+                });
+
+                if (res.success) this.router.navigate(['/metas']);
+            });
 
         this.goalService.obsDeleteGoal
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-            this.messageService.add({
-                severity: res.success ? 'success' : 'error',
-                summary: res.success ? 'Sucesso' : 'Erro',
-                detail: res.message,
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.messageService.add({
+                    severity: res.success ? 'success' : 'error',
+                    summary: res.success ? 'Sucesso' : 'Erro',
+                    detail: res.message,
+                });
+                if (res.success) this.router.navigate(['/metas']);
             });
-            if (res.success) this.router.navigate(['/metas']);
-        });
-      
     }
 
     public formGoal: FormGroup = this.formBuilder.group({
         id: [null],
         data: [''],
-        meta_calorias: [ , [Validators.required]],
-        meta_proteinas: [ , [Validators.required]],
-        meta_carboidratos: [ , [Validators.required]],
-        meta_gorduras: [ , [Validators.required]],
-
+        meta_calorias: [, [Validators.required]],
+        meta_proteinas: [, [Validators.required]],
+        meta_carboidratos: [, [Validators.required]],
+        meta_gorduras: [, [Validators.required]],
     });
-
-   
-   
-
-  
- 
 
     ngOnInit() {
         this.goalService.loadButtons('form');
+        this.formGoal.setValidators(this.totalNutrientsValidator());
     }
 
     ngAfterContentInit(): void {
@@ -122,5 +112,34 @@ export class FormMetasComponent implements OnInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
- 
+    totalNutrientsValidator() {
+        return (formGroup: FormGroup) => {
+            const meta_calorias = formGroup.get('meta_calorias')?.value || 0;
+            const meta_proteinas = formGroup.get('meta_proteinas')?.value || 0;
+            const meta_carboidratos =
+                formGroup.get('meta_carboidratos')?.value || 0;
+            const meta_gorduras = formGroup.get('meta_gorduras')?.value || 0;
+
+            const totalNutrients =
+                meta_proteinas + meta_carboidratos + meta_gorduras;
+
+            if (totalNutrients > meta_calorias) {
+                formGroup
+                    .get('meta_proteinas')
+                    ?.setErrors({ nutrientSumExceeded: true });
+                formGroup
+                    .get('meta_carboidratos')
+                    ?.setErrors({ nutrientSumExceeded: true });
+                formGroup
+                    .get('meta_gorduras')
+                    ?.setErrors({ nutrientSumExceeded: true });
+            } else {
+                formGroup.get('meta_proteinas')?.setErrors(null);
+                formGroup.get('meta_carboidratos')?.setErrors(null);
+                formGroup.get('meta_gorduras')?.setErrors(null);
+            }
+
+            return null;
+        };
+    }
 }
