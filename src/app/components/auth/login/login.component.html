@@ -30,7 +30,7 @@
                     <label *ngIf="!loading">ENTRAR</label>
                     <i *ngIf="loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
                 </button>
-                <button pButton pRipple class="w-full valueCenterButton" [disabled]="formLogin.invalid">
+                <button pButton pRipple class="w-full valueCenterButton" (click)="navigateToRegister()">
                     <label *ngIf="!loading">REGISTRE-SE</label>
                     <i *ngIf="loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
                 </button>

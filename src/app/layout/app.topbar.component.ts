@@ -21,7 +21,7 @@ export class AppTopBarComponent {
     @ViewChild('topbarmenu') menu!: ElementRef;
 
     loggedUser!: User;
-
+    avatarUrl: string = '';
     private unsubscribe = new Subject<void>();
 
     constructor(
@@ -33,9 +33,18 @@ export class AppTopBarComponent {
         this.authService.obsGetLoggedUser
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
+                console.log('res',res)
                 this.loggedUser = res;
+                this.avatarUrl = res.avatar ? res.avatar : 'assets/default-profile.png';
+            
+
             });
     }
+
+   /*  ngOnInit() {
+        this.avatarUrl = this.getUserAvatar();
+    } */
+
 
     navigateToProfile() {
         this.router.navigate(['/profile']);
@@ -45,12 +54,13 @@ export class AppTopBarComponent {
         this.authService.logout().subscribe();
     }
 
-    get getUserAvatar(): string {
-        /* if (this.authService.loggedUser && this.authService.loggedUser.avatar) {
-            return 'http://127.0.0.1:8000' + this.authService.loggedUser.avatar;
+    getUserAvatar(): string {
+        if (this.authService.loggedUser && this.authService.loggedUser.avatar) {
+          console.log('entrei', this.authService.loggedUser.avatar)
+          return this.authService.loggedUser.avatar;
         } else {
-            return 'assets/contents/images/default-profile.png';
-        } */
-        return 'assets/default-profile.png';
-    }
+          return 'assets/default-profile.png';
+        }
+      }
+      
 }

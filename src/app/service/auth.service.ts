@@ -66,14 +66,17 @@ export class AuthService {
             })
         );
     }
-
+    getCrsfToken(){
+        return this.http.get('sanctum/csrf-cookie')
+    }
     getLoggedUserWithToken(): Observable<any> {
-        console.log('toooo')
+       
         return this.http.get('/api/user/get-with-token').pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
                 if (res.success) {
                     this.loggedUser = res.data;
+                    console.log('this.loggedUser',this.loggedUser)
                     this.obsGetLoggedUser.emit(this.loggedUser);
                 }
             }),

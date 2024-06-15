@@ -75,7 +75,8 @@ export class ProfileService {
     private formUserProfile!: User;
     obsSaveUserProfile: EventEmitter<boolean> = new EventEmitter();
     obsSaveUserPassword: EventEmitter<boolean> = new EventEmitter();
-
+    obsSaveUser: EventEmitter<boolean> = new EventEmitter();
+    
     constructor(
         private http: HttpPersonService,
         private barButtonsService: BarButtonsService,
@@ -122,9 +123,26 @@ export class ProfileService {
         this.barButtonsService.startBarraButtons(this.barButton);
     }
 
-    public setformUserProfile(formUserProfile: User) {
+     setformUserProfile(formUserProfile: User) {
         this.formUserProfile = formUserProfile;
     }
+
+
+    registerUser(formUserPassword: User): Observable<any> {
+        return this.http
+            .post('/api/user', formUserPassword)
+            .pipe(
+                tap((res: any) => {
+                    // Executa uma ação quando a requisição for bem-sucedida
+                    this.obsSaveUserPassword.emit(res.success);
+                }),
+                catchError((error: any) => {
+                    // Trata o erro da requisição e propaga o erro através de um Observable de erro
+                    return throwError(() => new Error(error));
+                })
+            );
+         }
+
 
     updateUserPassword(formUserPassword: User): Observable<any> {
         return this.http
@@ -132,7 +150,7 @@ export class ProfileService {
             .pipe(
                 tap((res: any) => {
                     // Executa uma ação quando a requisição for bem-sucedida
-                    this.obsSaveUserPassword.emit(res.success);
+                    this.obsSaveUser.emit(res.success);
                 }),
                 catchError((error: any) => {
                     // Trata o erro da requisição e propaga o erro através de um Observable de erro
@@ -158,6 +176,22 @@ export class ProfileService {
                 })
             );
     }
+    updateProfilePic(userId: number, file: File): Observable<any> {
+        const formData: FormData = new FormData();
+        formData.append('avatar', file, file.name);
+    
+        return this.http.post(`/api/user/update-profile-pic/${userId}`, formData).pipe(
+            tap((res: any) => {
+                // Executa uma ação quando a requisição for bem-sucedida
+                console.log('Foto de perfil atualizada com sucesso', res);
+            }),
+            catchError((error: any) => {
+                // Trata o erro da requisição e propaga o erro através de um Observable de erro
+                return throwError(() => new Error(error));
+            })
+        );
+    }
+    
 
     deleteUserProfilePic(id: number): Observable<any> {
         return this.http.delete(`/api/user/delete-profile-pic/${id}`).pipe(

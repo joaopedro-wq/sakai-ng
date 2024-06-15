@@ -15,12 +15,14 @@
 
     <div #topbarmenu class="layout-topbar-menu"
         [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-
         <li>
             <a pStyleClass="@next" enterFromClass="ng-hidden" enterActiveClass="px-scalein" leaveToClass="ng-hidden" leaveActiveClass="px-fadeout" [hideOnOutsideClick]="true" pRipple>
-                <img [src]="getUserAvatar" alt="avatar" class="avatar w-3rem h-3rem">
+                <img [src]="avatarUrl" alt="avatar" class="avatar w-3rem h-3rem">
             </a>
         </li>
+        
+        
+        
         <div style="align-items: center; display: flex;">
             
             <li>

@@ -25,19 +25,19 @@ import { DatePipe } from '@angular/common';
     templateUrl: './dashboard-relatorio.component.html',
     providers: [],
 })
-export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
+export class DashboardRelatorioComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();
     listFoodies!: Alimento[];
     listSnackies!: Refeicao[];
-    register: Registro[]= [];
-    labelsGraficos:  any = []
+    register: Registro[] = [];
+    labelsGraficos: any = [];
     registroProteina: any[] = [];
     registroGordura: any[] = [];
     registroCarbo: any[] = [];
     nomeALimento: any[] = [];
     filtroForm!: FormGroup;
     registroCaloria: any[] = [];
-    labelsDescricao_refeicao:  any = []
+    labelsDescricao_refeicao: any = [];
     showAlimentoChart: boolean = true;
     showRefeicaoChart: boolean = false;
     basicData: any;
@@ -56,16 +56,13 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
 
         public snackService: SnackService
     ) {
-        
         this.registerService.obsListRegister
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-            this.register = res;
-            this.filtrarRegistros();
-            this.registerService.loadButtons('dashboard');
-            
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.register = res;
+                this.filtrarRegistros();
+                this.registerService.loadButtons('dashboard');
             });
-
 
         this.foodService.obsListFoods
             .pipe(takeUntil(this.unsubscribe))
@@ -84,74 +81,86 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
         const data = this.filtroForm.get('data')?.value;
         const dataFim = this.filtroForm.get('dataFim')?.value;
 
-
-        if (data && dataFim ) {
-            
+        if (data && dataFim) {
             let saveFormFood = data;
             let dataFims = dataFim;
-            saveFormFood = this.datePipe.transform(
-                saveFormFood,
-                'yyyy-MM-dd'
-            )!;
-            dataFims = this.datePipe.transform(
-                dataFims,
-                'yyyy-MM-dd'
-            )!;
-          
+            saveFormFood = this.datePipe.transform(saveFormFood, 'yyyy-MM-dd')!;
+            dataFims = this.datePipe.transform(dataFims, 'yyyy-MM-dd')!;
+
             const registrosFiltrados = this.register.filter((item) => {
                 let dataItem = item.data;
-                dataItem = this.datePipe.transform(
-                    dataItem,
-                    'yyyy-MM-dd'
-                )!;
+                dataItem = this.datePipe.transform(dataItem, 'yyyy-MM-dd')!;
                 return dataItem >= saveFormFood && dataItem <= dataFims;
-               
-            });
-            
-            this.labelsGraficos = registrosFiltrados.map((item: any) => this.formatDate(item.data));
-            
-            this.registroProteina = registrosFiltrados.map((item: any) => item.nutrientes_totais.proteina);
-            
-            this.registroCarbo = registrosFiltrados.map((item: any) => item.nutrientes_totais.carbo);
-            this.registroGordura = registrosFiltrados.map((item: any) => item.nutrientes_totais.gordura);
-            this.nomeALimento = registrosFiltrados.map((item: any) => {
-                return item.alimentos.map((alimento: any) => alimento.descricao);
             });
 
-            this.registroCaloria = registrosFiltrados.map((item: any) => item.nutrientes_totais.caloria);
-            this.labelsDescricao_refeicao = registrosFiltrados.map((item: any) => item.descricao_refeicao);
+            this.labelsGraficos = registrosFiltrados.map((item: any) =>
+                this.formatDate(item.data)
+            );
+
+            this.registroProteina = registrosFiltrados.map(
+                (item: any) => item.nutrientes_totais.proteina
+            );
+
+            this.registroCarbo = registrosFiltrados.map(
+                (item: any) => item.nutrientes_totais.carbo
+            );
+            this.registroGordura = registrosFiltrados.map(
+                (item: any) => item.nutrientes_totais.gordura
+            );
+            this.nomeALimento = registrosFiltrados.map((item: any) => {
+                return item.alimentos.map(
+                    (alimento: any) => alimento.descricao
+                );
+            });
+
+            this.registroCaloria = registrosFiltrados.map(
+                (item: any) => item.nutrientes_totais.caloria
+            );
+            this.labelsDescricao_refeicao = registrosFiltrados.map(
+                (item: any) => item.descricao_refeicao
+            );
             this.setupChart();
             this.setupChartLine();
-            
         } else {
-            this.labelsGraficos = this.register.map((item: any) => this.formatDate(item.data));
-            this.registroProteina = this.register.map((item: any) => item.nutrientes_totais.proteina);
-            this.registroCarbo = this.register.map((item: any) => item.nutrientes_totais.carbo);
-            this.registroGordura = this.register.map((item: any) => item.nutrientes_totais.gordura);
-            
+            this.labelsGraficos = this.register.map((item: any) =>
+                this.formatDate(item.data)
+            );
+            this.registroProteina = this.register.map(
+                (item: any) => item.nutrientes_totais.proteina
+            );
+            this.registroCarbo = this.register.map(
+                (item: any) => item.nutrientes_totais.carbo
+            );
+            this.registroGordura = this.register.map(
+                (item: any) => item.nutrientes_totais.gordura
+            );
+
             this.nomeALimento = this.register.map((item: any) => {
-                return item.alimentos.map((alimento: any) => alimento.descricao);
+                return item.alimentos.map(
+                    (alimento: any) => alimento.descricao
+                );
             });
-            
-           
-            this.registroCaloria = this.register.map((item: any) =>item.nutrientes_totais.caloria);
-            
-            this.labelsDescricao_refeicao = this.register.map((item: any) => item.descricao_refeicao);
+
+            this.registroCaloria = this.register.map(
+                (item: any) => item.nutrientes_totais.caloria
+            );
+
+            this.labelsDescricao_refeicao = this.register.map(
+                (item: any) => item.descricao_refeicao
+            );
             this.setupChartLine();
             this.setupChart();
         }
         this.registerService.loadButtons('dashboard');
-
     }
-    
+
     selectedOption: string = 'static';
-    cancelarOptions(){
+    cancelarOptions() {
         this.registerService.modalOptions = false;
         this.registerService.loadButtons('dashboard');
     }
 
-    confirmarOptions(){
-       
+    confirmarOptions() {
         if (document.getElementById('mode1')['checked']) {
             this.showAlimentoChart = true;
             this.showRefeicaoChart = false;
@@ -159,10 +168,8 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
             this.showAlimentoChart = false;
             this.showRefeicaoChart = true;
         }
-            this.registerService.modalOptions = false;
-            this.registerService.loadButtons('dashboard');
-            
-        
+        this.registerService.modalOptions = false;
+        this.registerService.loadButtons('dashboard');
     }
     formatDate(dateString: string): string {
         const date = new Date(dateString);
@@ -171,29 +178,27 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     }
-      
-
 
     ngOnInit() {
         this.registerService.loadButtons('dashboard');
         this.filtroForm = this.formBuilder.group({
             data: [null, Validators.required],
-            dataFim: [null, Validators.required]
-
+            dataFim: [null, Validators.required],
         });
 
         this.filtroForm.valueChanges.subscribe(() => {
             this.filtrarRegistros();
         });
-    
-    
     }
-    setupChartLine(){
+    setupChartLine() {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-        
+        const textColorSecondary = documentStyle.getPropertyValue(
+            '--text-color-secondary'
+        );
+        const surfaceBorder =
+            documentStyle.getPropertyValue('--surface-border');
+
         this.data = {
             labels: this.labelsDescricao_refeicao,
             datasets: [
@@ -202,15 +207,15 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
                     data: this.registroProteina,
                     fill: false,
                     tension: 0.4,
-                    borderColor: documentStyle.getPropertyValue('--blue-500')
+                    borderColor: documentStyle.getPropertyValue('--blue-500'),
                 },
                 {
                     label: 'Carboidrato',
                     data: this.registroCarbo,
                     fill: false,
-                 
+
                     tension: 0.4,
-                    borderColor: documentStyle.getPropertyValue('--teal-500')
+                    borderColor: documentStyle.getPropertyValue('--teal-500'),
                 },
                 {
                     label: 'Gordura',
@@ -218,7 +223,7 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
                     fill: false,
                     borderDash: [5, 5],
                     tension: 0.4,
-                    borderColor: documentStyle.getPropertyValue('--green-500')
+                    borderColor: documentStyle.getPropertyValue('--green-500'),
                 },
                 {
                     label: 'Caloria',
@@ -226,86 +231,84 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
                     fill: true,
                     borderColor: documentStyle.getPropertyValue('--orange-500'),
                     tension: 0.4,
-                    backgroundColor: 'rgba(255,167,38,0.2)'
-                }
-            ]
+                    backgroundColor: 'rgba(255,167,38,0.2)',
+                },
+            ],
         };
-        
+
         this.options = {
             maintainAspectRatio: false,
             aspectRatio: 0.6,
             plugins: {
                 tooltip: {
                     mode: 'index',
-                    intersect: false
+                    intersect: false,
                 },
                 legend: {
                     labels: {
-                        color: textColor
-                    }
-                }
+                        color: textColor,
+                    },
+                },
             },
             scales: {
                 x: {
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
                     },
                     grid: {
-                        color: surfaceBorder
-                    }
+                        color: surfaceBorder,
+                    },
                 },
                 y: {
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
                     },
                     grid: {
-                        color: surfaceBorder
-                    }
-                }
-            }
+                        color: surfaceBorder,
+                    },
+                },
+            },
         };
-
-
     }
     setupChart() {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+        const textColorSecondary = documentStyle.getPropertyValue(
+            '--text-color-secondary'
+        );
+        const surfaceBorder =
+            documentStyle.getPropertyValue('--surface-border');
 
         this.basicData = {
             labels: this.nomeALimento,
-                    datasets: [
-                        {
-                            type: 'bar',
-                            label: 'Proteina',
-                            data: this.registroProteina,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            fill: false,
-                            tension: 0.4,
-                            borderWidth: 1
-                        },
-                        {
-                            type: 'bar',
-                            label: 'Carboidrato',
-                            data: this.registroCarbo,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1,
-
-                        },
-                        {
-                            type: 'bar',
-                            label: 'Gordura',
-                            data: this.registroGordura,
-                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                            borderColor: 'rgba(255, 206, 86, 1)',
-                            borderWidth: 1,
-                            
-                        }
-                    ]
-                    
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Proteina',
+                    data: this.registroProteina,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false,
+                    tension: 0.4,
+                    borderWidth: 1,
+                },
+                {
+                    type: 'bar',
+                    label: 'Carboidrato',
+                    data: this.registroCarbo,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                },
+                {
+                    type: 'bar',
+                    label: 'Gordura',
+                    data: this.registroGordura,
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1,
+                },
+            ],
         };
 
         this.basicOptions = {
@@ -314,36 +317,36 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
             plugins: {
                 tooltip: {
                     mode: 'index',
-                    intersect: false
+                    intersect: false,
                 },
                 legend: {
                     labels: {
-                        color: textColor
-                    }
-                }
+                        color: textColor,
+                    },
+                },
             },
             scales: {
                 x: {
                     stacked: true,
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
                     },
                     grid: {
                         color: surfaceBorder,
-                        drawBorder: false
-                    }
+                        drawBorder: false,
+                    },
                 },
                 y: {
                     stacked: true,
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
                     },
                     grid: {
                         color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
+                        drawBorder: false,
+                    },
+                },
+            },
         };
     }
 
@@ -351,5 +354,4 @@ export class DashboardRelatorioComponent implements OnInit,  OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-   
 }

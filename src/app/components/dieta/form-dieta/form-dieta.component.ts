@@ -69,6 +69,7 @@ export class FormDietaComponent implements OnInit, OnDestroy {
                     summary: res.success ? 'Sucesso' : 'Erro',
                     detail: res.message,
                 });
+                this.mudarVibleButtons();
 
                 if (res.success) this.router.navigate(['/dietas']);
             });
@@ -81,6 +82,9 @@ export class FormDietaComponent implements OnInit, OnDestroy {
                     summary: res.success ? 'Sucesso' : 'Erro',
                     detail: res.message,
                 });
+
+                this.mudarVibleButtons();
+
                 if (res.success) this.router.navigate(['/dietas']);
             });
 
@@ -141,14 +145,17 @@ export class FormDietaComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.dietService.loadButtons('form');
+        this.mudarVibleButtons();
     }
 
     ngAfterContentInit(): void {
         this.formDiet.statusChanges.subscribe((res) => {
             if (res === 'INVALID') {
                 this.dietService.buttonState('disabled', 'salvar', true);
+                this.dietService.buttonState('visible', 'salvar', false);
             } else {
                 this.dietService.buttonState('disabled', 'salvar', false);
+                this.dietService.buttonState('visible', 'salvar', true);
             }
         });
 
@@ -161,9 +168,13 @@ export class FormDietaComponent implements OnInit, OnDestroy {
 
             this.dietService.setformDiet(res);
         });
-    }
+    }                       
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+    mudarVibleButtons() {
+        this.dietService.buttonState('visible', 'salvar', false);
+        this.dietService.buttonState('visible', 'excluir', false);
     }
 }

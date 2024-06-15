@@ -27,7 +27,7 @@ export class FormRefeicaoComponent
                 this.formSnack.patchValue({
                     id: res.id ? res.id : null,
                     descricao: res.descricao,
-                    horario: new Date(res.horario),
+                    horario: this.convertToDate(res.horario),
                 });
             });
 
@@ -40,6 +40,7 @@ export class FormRefeicaoComponent
                     detail: res.message,
                     
                 }); 
+                this.mudarVibleButtons()
                 
                 if (res.success) this.router.navigate(['/refeicoes']);
             });
@@ -52,34 +53,42 @@ export class FormRefeicaoComponent
                     summary: res.success ? 'Sucesso' : 'Erro',
                     detail: res.message,
                 });
+                this.mudarVibleButtons()
+
                 if (res.success) this.router.navigate(['/refeicoes']);
             });
-
+            
     }
     
     public formSnack: FormGroup = this.formBuilder.group({
         id: [null],
-        descricao: ['', [Validators.required]],
-        horario: ['', [Validators.required]],
-
-        
+        descricao: [null, [Validators.required]],
+        horario: [null, [Validators.required]],
     });
+    
 
     ngOnInit() {
          this.snackService.loadButtons('form');  
-          
+         this.mudarVibleButtons()
+
     }
   
     ngAfterContentInit(): void {
         this.formSnack.statusChanges.subscribe((res) => {
-            if (res === 'INVALID') {
+            console.log('res',res)
+            if (res == 'INVALID') {
                 this.snackService.buttonState('disabled', 'salvar', true);
+                this.snackService.buttonState('visible', 'salvar', false);
+               
             } else {
                 this.snackService.buttonState('disabled', 'salvar', false);
+                this.snackService.buttonState('visible', 'salvar', true);
+
             }
-        });
+            });
 
         this.formSnack.valueChanges.subscribe((res) => {
+           
             if (this.formSnack.get('id')?.value) {
                 this.snackService.buttonState('visible', 'excluir', true);
             } else {
@@ -94,4 +103,17 @@ export class FormRefeicaoComponent
         this.unsubscribe.complete();
        
     }
+
+    mudarVibleButtons(){
+        this.snackService.buttonState('visible', 'salvar', false);
+        this.snackService.buttonState('visible', 'excluir', false);
+    }
+
+    convertToDate(timeString: string): Date {
+        const [hours, minutes, seconds] = timeString.split(':').map(Number);
+        const date = new Date();
+        date.setHours(hours, minutes, seconds, 0);
+        return date;
+    }
+
 }

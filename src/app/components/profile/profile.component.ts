@@ -21,7 +21,14 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
         name: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         avatar: [''],
-        data_nascimento: [null, [Validators.required]],
+        peso: [''],
+        genero: [''],
+       
+
+        altura: [''],
+        atividade_fisica: [''],
+
+        data_nascimento: [null, []],
     });
 
     constructor(
@@ -104,14 +111,32 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
-    onUploadAuto() {
+    onUploadAuto(event: any) {
+        if (event.originalEvent.body) {
+            this.authService.getLoggedUserWithToken().subscribe();
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Successo',
+                detail: 'Imagem carregada com sucesso!',
+            });
+        } else {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Erro',
+                detail: 'Erro ao carregar imagem.',
+            });
+        }
+    }
+    
+
+   /*  onUploadAuto() {
         let saveFormProfile: User = this.formProfile.getRawValue();
         saveFormProfile.data_nascimento = this.datePipe.transform(
             saveFormProfile.data_nascimento,
             'yyyy-MM-dd'
         )!;
         this.profileService.updateUserProfile(saveFormProfile).subscribe();
-    }
+    } */
 
     getUserAvatar(): string {
         if (this.formProfile.get('avatar')?.value) {
@@ -122,14 +147,39 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             return 'assets/contents/images/default-profile.png';
         }
     }
+    
 
     getUrlToUpload(): string {
-       
-        return `/api/user/update-profile-pic/${
-            this.formProfile.get('id')?.value
-        }`;
+        return `http://127.0.0.1:8000/api/user/update-profile-pic/${this.formProfile.get('id')?.value}`;
     }
+    
 
+
+    selectedFile: File | null = null;
+
+    onFileSelected(event: any): void {
+        const file: File = event.target.files[0];
+        if (file) {
+          this.selectedFile = file;
+        }
+      }
+    
+      onSubmit(): void {
+        const userId = 1; // ID do usuário
+        const file: File = this.selectedFile;
+    
+        if (file) {
+            this.profileService.updateProfilePic(userId, file).subscribe(response => {
+                console.log(response);
+            }, error => {
+                console.error(error);
+            });
+        }
+    }
+    
+    
+  
+      
     confirmDeleteUserProfilePic() {
         this.confirmationService.confirm({
             target: new EventTarget(),

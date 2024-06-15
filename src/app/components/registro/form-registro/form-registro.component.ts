@@ -77,6 +77,7 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
                     summary: res.success ? 'Sucesso' : 'Erro',
                     detail: res.message,
                 });
+                this.mudarVibleButtons()
 
                 if (res.success) this.router.navigate(['/registros']);
             });
@@ -89,6 +90,7 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
                     summary: res.success ? 'Sucesso' : 'Erro',
                     detail: res.message,
                 });
+                this.mudarVibleButtons()
                 if (res.success) this.router.navigate(['/registros']);
             });
 
@@ -151,12 +153,10 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
     }
 
     removeFood(index: number): void {
-        const alimentos = this.formRegister.get('id_alimento') as FormArray;
-        const qtd = this.formRegister.get('qtd') as FormArray;
-        if (alimentos.length > 1 && qtd.length > 1) {
-            // Ensure there's always at least one field
+        const alimentos = this.formRegister.get('alimentos') as FormArray;
+
+        if (alimentos.length > 1) {
             alimentos.removeAt(index);
-            qtd.removeAt(index);
         }
     }
 
@@ -167,14 +167,20 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.registerService.loadButtons('form');
+        this.mudarVibleButtons()
+            
     }
 
     ngAfterContentInit(): void {
         this.formRegister.statusChanges.subscribe((res) => {
             if (res === 'INVALID') {
                 this.registerService.buttonState('disabled', 'salvar', true);
+                this.registerService.buttonState('visible', 'salvar', false);
+
             } else {
                 this.registerService.buttonState('disabled', 'salvar', false);
+               
+                this.registerService.buttonState('visible', 'salvar', true);
             }
         });
 
@@ -186,6 +192,12 @@ export class FormRegistroComponent implements OnInit, OnDestroy {
             }
             this.registerService.setformFood(res);
         });
+    }
+
+
+    mudarVibleButtons(){
+        this.registerService.buttonState('visible', 'salvar', false);
+        this.registerService.buttonState('visible', 'excluir', false);
     }
     ngOnDestroy(): void {
         this.unsubscribe.next();

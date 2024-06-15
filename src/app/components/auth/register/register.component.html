@@ -14,35 +14,40 @@
                 </div>
             </div>
             <div class="flex flex-column gap-3 mt-6">
-                <p-inputGroup>
-                    <p-inputGroupAddon><i class="pi pi-user"></i>   </p-inputGroupAddon>
-                    <input type="text" pInputText placeholder="Name">
-                </p-inputGroup>
-                <p-inputGroup>
-                    <p-inputGroupAddon><i class="pi pi-at"></i></p-inputGroupAddon>
-                    <input type="text" pInputText placeholder="Email">
-                </p-inputGroup>
-                <p-inputGroup>
-                    <p-inputGroupAddon><i class="pi pi-key"></i></p-inputGroupAddon>
-                    <p-password id="password" placeholder="Password" styleClass="w-full"  [toggleMask]="true" [feedback]="true"></p-password>
-                </p-inputGroup>
-                <p-inputGroup>
-                    <p-inputGroupAddon><i class="pi pi-key"></i></p-inputGroupAddon>
-                    <p-password id="password" placeholder="Password Again" styleClass="w-full"  [toggleMask]="true" [feedback]="false"></p-password>
-
-                </p-inputGroup>
+                <form class="p-fluid p-formgrid grid" [formGroup]="formLogin">
+                    <p-inputGroup>
+                        <p-inputGroupAddon><i class="pi pi-user"></i>   </p-inputGroupAddon>
+                        <input type="text" pInputText placeholder="Name" formControlName="name">
+                    </p-inputGroup>
+                    <p-inputGroup>
+                        <p-inputGroupAddon><i class="pi pi-at"></i></p-inputGroupAddon>
+                        <input type="text" pInputText placeholder="Email" formControlName="email">
+                    </p-inputGroup>
+                    <p-inputGroup>
+                        <p-inputGroupAddon><i class="pi pi-key"></i></p-inputGroupAddon>
+                        <p-password id="password" placeholder="Password" styleClass="w-full"  [toggleMask]="true" [feedback]="true" formControlName="password"></p-password>
+                    </p-inputGroup>
+                    <p-inputGroup>
+                        <p-inputGroupAddon><i class="pi pi-key"></i></p-inputGroupAddon>
+                        <p-password id="password" placeholder="Password Again" styleClass="w-full"  [toggleMask]="true" [feedback]="false" formControlName="password_confirmation"></p-password>
+    
+                    </p-inputGroup>
+                
+                </form>
                 <div>
-                    <button pButton pRipple class="w-full" label="SIGN UP"></button>
+                    <button pButton pRipple class="w-full" label="Cadastrar" (click)="registerUser()"></button>
+
                 </div>
                 <div>
-                    <button pButton pRipple class="w-full p-button-text text-primary-500" label="BACK TO LOGIN"></button>
+                    <button pButton pRipple class="w-full p-button-text text-primary-500" (click)="navigateToLogin()" label="Voltar para o Login"></button>
                 </div>
             </div>
         </div>
     </div>
-    <div [style.background]="'url(assets/layout/images/pages/accessDenied-bg.jpg)'"
-        class="hidden lg:flex flex-1 align-items-center justify-content-center bg-cover">
-        <img src="assets/layout/images/vector_logo.png" alt="">
+    <div [style.background]="
+            'url(assets/layout/images/pages/accessDenied-bg.jpg)'
+        " class="hidden lg:flex flex-1 align-items-center justify-content-center bg-cover">
+      <img src="../../../../assets/layout/images/OficialLogo1.png" alt="" style="width: 650px; height: auto;" />
     </div>
 </div>
 

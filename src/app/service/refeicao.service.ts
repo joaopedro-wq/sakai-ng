@@ -81,6 +81,7 @@ export class SnackService {
                 break;
             case 'visible':
                 this.barButton.buttons.filter((button) => {
+                    console.log('button',button)
                     if (button.title == nmButton) {
                         button.visible = value;
                     }
@@ -110,12 +111,20 @@ export class SnackService {
             }
         ); 
     }
-
+    convertToTimeString(date: Date): string {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+    }
     execActionButton(action: string) {
         switch (action) {
             case 'salvar':
-                let saveFormSnack: Refeicao = this.formSnack;
                 
+                let saveFormSnack: Refeicao = this.formSnack;
+                saveFormSnack.horario = this.convertToTimeString(saveFormSnack.horario as unknown as Date);
+             
+
                 if (saveFormSnack.id) {
                     this.updateSnack(saveFormSnack).subscribe();
                 } else {
@@ -214,6 +223,7 @@ export class SnackService {
     }
 
     public setformSnack(formSnack: Refeicao) {
+       
         this.formSnack = formSnack;
       
     }
