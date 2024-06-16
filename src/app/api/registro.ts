@@ -2,6 +2,7 @@ import { Alimento } from "./alimento";
 import { Nutrientes_totais } from "./nutrientes_totais";
 
 export interface Registro {
+    checked: boolean;
     id?: number;
     data: Date | string;
     qtd: number | [];

@@ -16,8 +16,8 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                             path: '',
                             loadChildren: () =>
                                 import(
-                                    './demo/components/dashboard/dashboard.module'
-                                ).then((m) => m.DashboardModule),
+                                    './components/dashboard/dashboard.module'
+                                ).then((m) => m.DashboardsModule),
                         },
                         {
                             path: 'refeicoes',
