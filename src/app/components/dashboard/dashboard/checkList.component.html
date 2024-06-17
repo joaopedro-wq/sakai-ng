@@ -1,40 +1,79 @@
 <div class="grid" style="margin-top: 1%;">
-    <ng-container *ngIf="todayRegisters.length > 0; else emptyState">
-        <p-table #dt1 [rowHover]="true" styleClass="p-datatable-gridlines"  [value]="todayRegisters" class="p-datatable-sm">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th></th>
-                    <th>Data</th>
-                    <th>Refeição</th>
-                    <th>Alimentos</th>
-                    <th>Calorias</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-register>
-                <tr>
-                    <td>
-                        <p-checkbox [(ngModel)]="register.checked" binary="true" disabled="true"></p-checkbox>
-                    </td>
-                    <td>{{ register.data | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ register.descricao_refeicao }}</td>
-                    <td>
-                        <div *ngFor="let alimento of register.alimentos">
-                            <br>
-                            {{ alimento.descricao }}
-                        </div>
-                    </td>
-                    <td>{{ register.nutrientes_totais.caloria }} Kcal</td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <tr (click)="navigateToNewRegister()" class="new-register-row">
-                    <td colspan="5" style="text-align: center; cursor: pointer;">
-                        <i class="pi pi-plus-circle"></i> Adicionar novo registro
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </ng-container>
+    <div class="card">
+        <ng-container *ngIf="todayRegisters.length > 0; else emptyState">
+            <p-table #dt1 [rowHover]="true" styleClass="p-datatable-gridlines" [value]="todayRegisters"
+                class="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th></th>
+                        <th>Data</th>
+                        <th>Refeição</th>
+                        <th>Alimentos</th>
+                        <th>Calorias</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-register>
+                    <tr>
+                        <td>
+                            <p-checkbox [(ngModel)]="register.checked" binary="true" disabled="true"></p-checkbox>
+                        </td>
+                        <td>{{ register.data | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ register.descricao_refeicao }}</td>
+                        <td>
+                            <div *ngFor="let alimento of register.alimentos">
+                                <br>
+                                {{ alimento.descricao }}
+                            </div>
+                        </td>
+                        <td>{{ register.nutrientes_totais.caloria }} Kcal</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr (click)="navigateToNewRegister()" class="new-register-row">
+                        <td colspan="5" style="text-align: center; cursor: pointer;">
+                            <i class="pi pi-plus-circle"></i> Adicionar novo registro
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </ng-container>
+
+    </div>
+    <div class="card">
+        <ng-container *ngIf="snack.length > 0">
+            <p-card header="Refeições do dia" style="margin-top: 1rem;">
+                <p-table #dt2 [rowHover]="true" styleClass="p-datatable-gridlines" [value]="snack" class="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Refeição</th>
+                            <th>Horário</th>
+                            <th>Status</th>
+                            <th>Próxima Refeição</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-snack>
+                        <tr [ngClass]="{'next-meal': snack.id === nextMealId}">
+                            <td>{{ snack.descricao }}</td>
+                            <td>{{ snack.horario }}</td>
+                            <td>
+                                <p-checkbox [(ngModel)]="snack.checked" binary="true" disabled="true"></p-checkbox>
+                            </td>
+                            <td *ngIf="snack.id === nextMealId && !snack.checked" class="next-meal-msg">
+                                <i class="pi pi-clock" style="margin-right: 0.5rem;"></i> Próxima refeição
+                            </td>
+                            <td *ngIf="snack.checked" class="completed-meal-msg">
+                                <i class="pi pi-check-circle text-green-500" style="margin-right: 0.5rem;"></i> Completa
+                            </td>
+                            <td *ngIf="snack.id !== nextMealId && !snack.checked" class="not-completed-meal-msg">
+                                <i class="pi pi-hourglass " style="margin-right: 0.5rem;"></i> Aguarde
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </ng-container>
+
+    </div>
     <ng-template #emptyState>
         <p-card class="diet-card" (click)="navigateToNewRegister()">
             <span class="card-content empty-card">
@@ -46,162 +85,88 @@
 </div>
 
 
-
 <style>
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.diet-card {
-    margin: 1rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer;
-}
-
-.diet-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.p-datatable-sm .p-datatable-thead > tr > th {
-    padding: 0.5rem;
-}
-
-.p-datatable-sm .p-datatable-tbody > tr > td {
-    padding: 0.5rem;
-}
-
-.empty-card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 2rem;
-    font-size: 1.2rem;
-    color: #666;
-}
-
-.checklist-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
 
 
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+        margin: 0 auto;
+    }
 
+    .diet-card {
+        margin: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+    }
 
+    .diet-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .p-datatable-sm .p-datatable-thead>tr>th {
+        padding: 0.5rem;
+    }
+
+    .p-datatable-sm .p-datatable-tbody>tr>td {
+        padding: 0.5rem;
+    }
+
+    .empty-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 2rem;
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+    .checklist-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+       
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+   
+
+    .next-meal-msg {
+        font-weight: bold;
+        color: #3c763d;
+    }
+
+    .completed-meal-msg {
+        font-weight: bold;
+        color: #5cb885;
+    }
+
+    .not-completed-meal-msg {
+        font-weight: bold;
+        color: #f0ad4e;
+    }
+
+    .p-card {
+        margin-top: 1rem;
+    }
+
+    .p-card-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 0.5rem;
+    }
 </style>
-<!-- 
-<div class="grid" style="margin-top: 1%;">
-    <ng-container *ngIf="todayRegisters.length > 0; else emptyState">
-        <div *ngFor="let register of todayRegisters" class="diet-card">
-            <p-card>
-                <div class="card-header">
-                    <p-checkbox [(ngModel)]="register.checked" binary="true"></p-checkbox>
-                    <span>{{ register.data | date: 'dd/MM/yyyy' }}</span>
-                </div>
-                <hr>
-                <div class="card-content">
-                    <h5> {{ register.descricao_refeicao }}</h5>
-                    <div class="alimentos-list">
-                        <span *ngFor="let alimento of register.alimentos">
-                            {{ alimento.descricao }}
-                        </span>
-                    </div>
-                    <p><strong>Calorias:</strong> {{ register.nutrientes_totais.caloria }} Kcal</p>
-                </div>
-            </p-card>
-        </div>
-    </ng-container>
-    <ng-template #emptyState>
-        <p-card class="diet-card">
-            <div class="card-content empty-card">
-                <p>Nenhum registro encontrado</p>
-            </div>
-        </p-card>
-    </ng-template>
-</div>
-
-
-
-
-
-<style>
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.diet-card {
-    margin: 1rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-}
-
-.diet-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-   
-   
-}
-
-.card-content {
-    padding: 1rem;
-}
-
-.alimentos-list {
-    margin: 1rem 0;
-}
-
-.empty-card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 2rem;
-    font-size: 1.2rem;
-    color: #666;
-}
-
-.checklist-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-   
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-
-
-
-
-</style>
- -->
