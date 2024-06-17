@@ -37,7 +37,7 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                         },
                         {
                             path: 'metas',
-                            data: { breadcrumb: 'Metas Diárias' },
+                            data: { breadcrumb: 'Meta Diária' },
                             loadChildren: () =>
                                 import(
                                     './components/metas/metas.module'

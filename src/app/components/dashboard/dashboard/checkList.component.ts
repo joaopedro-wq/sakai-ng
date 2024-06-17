@@ -27,8 +27,9 @@ export class CheckListComponent implements OnInit, OnDestroy {
             .subscribe((res) => {
                 this.register = res;
                 this.filterTodayRegisters();
-                this.markRegisteredSnacks(); 
-                this.calculateNextMeal(); 
+                this.markRegisteredSnacks();
+                this.calculateNextMeal();
+                this.calculateTotalCalories();
             });
 
         this.snackService.obsListSnacks
@@ -36,8 +37,8 @@ export class CheckListComponent implements OnInit, OnDestroy {
             .subscribe((res) => {
                 this.snack = res;
                 this.sortSnacksByTime();
-                this.markRegisteredSnacks(); 
-                this.calculateNextMeal(); 
+                this.markRegisteredSnacks();
+                this.calculateNextMeal();
             });
     }
 
@@ -78,8 +79,8 @@ export class CheckListComponent implements OnInit, OnDestroy {
                 (hoursB * 3600 + minutesB * 60 + (secondsB || 0))
             );
         });
-        
     }
+
 
     calculateNextMeal() {
         const now = new Date();
@@ -89,29 +90,32 @@ export class CheckListComponent implements OnInit, OnDestroy {
         let closestMeal: Refeicao | null = null;
         let closestTimeDiff = Infinity;
 
-      
-
         this.snack.forEach((snack) => {
-            
-            if (!snack.checked) {
-                const [hours, minutes, seconds] = snack.horario
-                    .split(':')
-                    .map(Number);
-                const snackTime = hours * 3600 + minutes * 60 + (seconds || 0);
-                const timeDiff = snackTime - nowTime;
+            const [hours, minutes, seconds] = snack.horario
+                .split(':')
+                .map(Number);
+            const snackTime = hours * 3600 + minutes * 60 + (seconds || 0);
+            const timeDiff = snackTime - nowTime;
 
-               
-                if (timeDiff > 0 && timeDiff < closestTimeDiff) {
-                    closestMeal = snack;
-                    closestTimeDiff = timeDiff;
-                }
+            if (snack.checked) {
+                snack.notRegistered = false;
+                return;
+            }
+
+            if (timeDiff > 0 && timeDiff < closestTimeDiff) {
+                closestMeal = snack;
+                closestTimeDiff = timeDiff;
+            } else if (timeDiff < 0 && !snack.checked) {
+                snack.notRegistered = true;
             }
         });
 
         this.nextMealId = closestMeal ? closestMeal.id : null;
-         
     }
 
+    formatarHorario(horario: string): string {
+        return horario.slice(0, 5);
+    }
     markRegisteredSnacks() {
         this.snack.forEach((snack) => {
             snack.checked = this.todayRegisters.some(
@@ -119,11 +123,17 @@ export class CheckListComponent implements OnInit, OnDestroy {
                     register.descricao_refeicao.trim() ===
                     snack.descricao.trim()
             );
-            
         });
     }
 
     navigateToNewRegister() {
         this.router.navigate(['/registros/registro']);
+    }
+    totalCalories: number = 0;
+    calculateTotalCalories() {
+        const total = this.todayRegisters.reduce((sum, register) => {
+            return sum + register.nutrientes_totais.caloria;
+        }, 0);
+        this.totalCalories = parseFloat(total.toFixed(3));
     }
 }

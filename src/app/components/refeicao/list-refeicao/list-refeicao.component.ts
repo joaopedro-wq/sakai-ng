@@ -27,15 +27,17 @@ export class ListRefeicaoComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.snack = res;
+                this.sortSnacksByTime();
             });
     }
 
     ngOnInit() {
         this.snackService.loadButtons('list');
     }
+
     formatarHorario(horario: string): string {
-        return horario.slice(0, 5); 
-      }
+        return horario.slice(0, 5);
+    }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal(
@@ -56,5 +58,22 @@ export class ListRefeicaoComponent implements OnInit, OnDestroy {
 
     navigateToCompanyEdit(id: number) {
         this.router.navigate([`/refeicoes/registro/${id}`]);
+    }
+
+    sortSnacksByTime() {
+        this.snack.sort((a, b) => {
+            const [hoursA, minutesA, secondsA] = a.horario
+                .split(':')
+                .map(Number);
+            const [hoursB, minutesB, secondsB] = b.horario
+                .split(':')
+                .map(Number);
+            return (
+                hoursA * 3600 +
+                minutesA * 60 +
+                (secondsA || 0) -
+                (hoursB * 3600 + minutesB * 60 + (secondsB || 0))
+            );
+        });
     }
 }

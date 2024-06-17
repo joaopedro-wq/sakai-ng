@@ -12,8 +12,8 @@ justify-content: flex-end;">
     <p-card *ngFor="let register of register" (click)="navigateToCompanyEdit(register.id)"
             header="{{register.descricao_refeicao}}" class="diet-card">
         <ng-template pTemplate="header">
-            <div *ngIf="register.descricao_refeicao == 'Default'" class="card-image-container"
-                 style="background-image: url('../../../../assets/layout/images/img01.png');">
+            <div *ngIf="['Jantar', 'Café da manhã', 'Lanche da tarde', 'Ceia', 'Almoço'].indexOf(register.descricao_refeicao) === -1"
+                class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
                 <div class="overlay"></div>
             </div>
             <div *ngIf="register.descricao_refeicao == 'Jantar'" class="card-image-container"

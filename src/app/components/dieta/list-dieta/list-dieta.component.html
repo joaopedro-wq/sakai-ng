@@ -3,9 +3,13 @@
         <ng-container *ngFor="let diet of diet">
             <p-card header="{{diet.descricao}}" subheader="{{ diet.refeicao.descricao }}" (click)="navigateToCompanyEdit(diet.id)" class="diet-card">
                 <ng-template pTemplate="header">
-                    <div *ngIf="diet.refeicao.descricao == 'aa'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
-                        <div class="overlay"></div>
-                    </div>
+                   
+
+                        <div *ngIf="['Jantar', 'Café da manhã', 'Lanche da tarde', 'Ceia', 'Almoço'].indexOf(diet.refeicao.descricao) === -1"
+                            class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
+                            <div class="overlay"></div>
+                        </div>
+                    
                     <div *ngIf="diet.refeicao.descricao == 'Jantar'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/jantar.jpg');">
                         <div class="overlay"></div>
                     </div>

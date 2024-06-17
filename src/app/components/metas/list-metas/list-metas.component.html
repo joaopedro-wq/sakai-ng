@@ -1,81 +1,84 @@
-<div class="container">
-    <ng-container *ngIf="goal.length > 0 ; else emptyState">
-        <p-card *ngFor="let goal of goal" (click)="navigateToCompanyEdit(goal.id)" header="{{'Meta Diária'}}"
-            class="diet-card">
-            <ng-template pTemplate="header">
-                <div class="card-image-container"
-                    style="background-image: url('../../../../assets/layout/images/img01.png');">
-                    <div class="overlay"></div>
+<div class=" col-12 " style="margin-top: 1%;">
+    <div class="container ">
+        <ng-container *ngIf="goal.length > 0 ; else emptyState">
+            <p-card *ngFor="let goal of goal" (click)="navigateToCompanyEdit(goal.id)" header="{{'Meta Diária'}}"
+                class="diet-card card">
+                <ng-template pTemplate="header">
+                    <div class="card-image-container"
+                        style="background-image: url('../../../../assets/layout/images/img01.png');">
+                        <div class="overlay"></div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="subtitle">
+    
+                    <p><strong>Data:</strong> {{selectedDate | date: 'dd/MM/yyyy'}}</p>
+                </ng-template>
+    
+                <p><strong>Calorias Consumidas:</strong></p>
+                <div style="position: relative;">
+    
+                    <p-progressBar [value]="(getTotalCalories() * 100) / goal.meta_calorias "
+                        [color]="getTotalCalories() > goal.meta_calorias ? 'red' : null">
+                        <ng-template pTemplate="content" let-value>
+                        </ng-template>
+                    </p-progressBar>
+                    <span
+                        style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCalories()}}
+                        / {{goal.meta_calorias}}</span>
                 </div>
-            </ng-template>
-            <ng-template pTemplate="subtitle">
+                <br>
+                <p><strong>Proteínas Consumidas:</strong></p>
+                <div style="position: relative;">
+                    <p-progressBar [value]="(getTotalProteins() * 100) / goal.meta_proteinas"
+                        [color]="getTotalProteins() > goal.meta_proteinas ? 'red' : null">
+                        <ng-template pTemplate="content" let-value>
+    
+                        </ng-template>
+                    </p-progressBar>
+                    <span
+                        style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalProteins()}}
+                        / {{goal.meta_proteinas}}</span>
+    
+                </div>
+    
+                <br>
+                <p><strong>Carboidratos Consumidos:</strong></p>
+                <div style="position: relative;">
+                    <p-progressBar [value]="(getTotalCarbo() * 100) / goal.meta_carboidratos"
+                        [color]="getTotalCarbo() > goal.meta_carboidratos ? 'red' : null">
+                        <ng-template pTemplate="content" let-value>
+    
+                        </ng-template>
+                    </p-progressBar>
+                    <span
+                        style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCarbo()}}
+                        / {{goal.meta_carboidratos}}</span>
+                </div>
+    
+    
+                <br>
+                <p><strong>Gorduras Consumidas:</strong></p>
+                <div style="position: relative;">
+                    <p-progressBar [value]="(getTotalFats() * 100) / goal.meta_gorduras"
+                        [color]="getTotalFats() > goal.meta_gorduras ? 'red' : null" styleClass="custom-progressbar">
+                        <ng-template pTemplate="content" let-value>
+                        </ng-template>
+                    </p-progressBar>
+                    <span
+                        style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalFats()}}
+                        / {{goal.meta_gorduras}}</span>
+                </div>
+            </p-card>
+        </ng-container>
+        <ng-template #emptyState>
+            <p-card class="diet-card">
+                <div class="card-content empty-card">
+                    <p>Nenhum registro encontrado</p>
+                </div>
+            </p-card>
+        </ng-template>
+    </div>
 
-                <p><strong>Data:</strong> {{selectedDate | date: 'dd/MM/yyyy'}}</p>
-            </ng-template>
-
-            <p><strong>Calorias Consumidas:</strong></p>
-            <div style="position: relative;">
-
-                <p-progressBar [value]="(getTotalCalories() * 100) / goal.meta_calorias "
-                    [color]="getTotalCalories() > goal.meta_calorias ? 'red' : null">
-                    <ng-template pTemplate="content" let-value>
-                    </ng-template>
-                </p-progressBar>
-                <span
-                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCalories()}}
-                    / {{goal.meta_calorias}}</span>
-            </div>
-            <br>
-            <p><strong>Proteínas Consumidas:</strong></p>
-            <div style="position: relative;">
-                <p-progressBar [value]="(getTotalProteins() * 100) / goal.meta_proteinas"
-                    [color]="getTotalProteins() > goal.meta_proteinas ? 'red' : null">
-                    <ng-template pTemplate="content" let-value>
-
-                    </ng-template>
-                </p-progressBar>
-                <span
-                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalProteins()}}
-                    / {{goal.meta_proteinas}}</span>
-
-            </div>
-
-            <br>
-            <p><strong>Carboidratos Consumidos:</strong></p>
-            <div style="position: relative;">
-                <p-progressBar [value]="(getTotalCarbo() * 100) / goal.meta_carboidratos"
-                    [color]="getTotalCarbo() > goal.meta_carboidratos ? 'red' : null">
-                    <ng-template pTemplate="content" let-value>
-
-                    </ng-template>
-                </p-progressBar>
-                <span
-                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalCarbo()}}
-                    / {{goal.meta_carboidratos}}</span>
-            </div>
-
-
-            <br>
-            <p><strong>Gorduras Consumidas:</strong></p>
-            <div style="position: relative;">
-                <p-progressBar [value]="(getTotalFats() * 100) / goal.meta_gorduras"
-                    [color]="getTotalFats() > goal.meta_gorduras ? 'red' : null" styleClass="custom-progressbar">
-                    <ng-template pTemplate="content" let-value>
-                    </ng-template>
-                </p-progressBar>
-                <span
-                    style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">{{getTotalFats()}}
-                    / {{goal.meta_gorduras}}</span>
-            </div>
-        </p-card>
-    </ng-container>
-    <ng-template #emptyState>
-        <p-card class="diet-card">
-            <div class="card-content empty-card">
-                <p>Nenhum registro encontrado</p>
-            </div>
-        </p-card>
-    </ng-template>
 </div>
 
 
