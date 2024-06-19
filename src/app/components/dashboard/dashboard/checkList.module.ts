@@ -14,6 +14,9 @@ import { CardModule } from 'primeng/card';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ListboxModule } from 'primeng/listbox';
 import { CheckboxModule } from 'primeng/checkbox';
+import { PanelModule } from 'primeng/panel';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
     declarations: [CheckListComponent],
@@ -31,7 +34,11 @@ import { CheckboxModule } from 'primeng/checkbox';
         CardModule,
         OverlayPanelModule,
         ListboxModule,
-        CheckboxModule
+        PanelModule,
+        ProgressBarModule,
+        TooltipModule,
+
+        CheckboxModule,
     ],
 })
 export class CheckListModule {}

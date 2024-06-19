@@ -2,8 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Metas } from 'src/app/api/metas';
 import { Refeicao } from 'src/app/api/refeicao';
 import { Registro } from 'src/app/api/registro';
+import { User } from 'src/app/api/user';
+import { AuthService } from 'src/app/service/auth.service';
+import { GoalService } from 'src/app/service/metas.service';
 import { SnackService } from 'src/app/service/refeicao.service';
 import { RegisterService } from 'src/app/service/registro.service';
 
@@ -16,10 +20,19 @@ export class CheckListComponent implements OnInit, OnDestroy {
     todayRegisters: Registro[] = [];
     snack: Refeicao[] = [];
     nextMealId: number | null = null;
+    today: string;
+    currentTime: string;
+    location: string;
+    dayOfWeek: string;
+    goal: Metas[] = [];
+    loggedUser!: User;
 
     constructor(
         public registerService: RegisterService,
         public snackService: SnackService,
+        public goalService: GoalService,
+        public authService: AuthService,
+
         private router: Router
     ) {
         this.registerService.obsListRegister
@@ -30,6 +43,9 @@ export class CheckListComponent implements OnInit, OnDestroy {
                 this.markRegisteredSnacks();
                 this.calculateNextMeal();
                 this.calculateTotalCalories();
+                this.calculateproteina();
+                this.calculatecarbos();
+                this.calculategordura();
             });
 
         this.snackService.obsListSnacks
@@ -40,13 +56,45 @@ export class CheckListComponent implements OnInit, OnDestroy {
                 this.markRegisteredSnacks();
                 this.calculateNextMeal();
             });
+
+        this.goalService.obsListGoal
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.goal = res;
+            });
+        this.authService.obsGetLoggedUser
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.loggedUser = res;
+            });
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        const todayDate = new Date();
+        this.today = todayDate.toLocaleDateString();
 
+        this.dayOfWeek = todayDate.toLocaleDateString('pt-BR', {
+            weekday: 'long',
+        });
+        this.updateTime();
+        setInterval(() => this.updateTime(), 1000);
+    }
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+
+    updateTime() {
+        const now = new Date();
+        this.currentTime = now.toLocaleTimeString();
+    }
+
+    totalProteins: number = 0;
+
+    calculateProgress(goalValue: number, actualValue: number): number {
+        return actualValue > 0
+            ? Math.min((actualValue / goalValue) * 100, 100)
+            : 0;
     }
 
     filterTodayRegisters() {
@@ -81,9 +129,9 @@ export class CheckListComponent implements OnInit, OnDestroy {
         });
     }
 
-
     calculateNextMeal() {
         const now = new Date();
+
         const nowTime =
             now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
@@ -112,6 +160,15 @@ export class CheckListComponent implements OnInit, OnDestroy {
 
         this.nextMealId = closestMeal ? closestMeal.id : null;
     }
+    getMealName(nextMealId: number): string {
+        const meal = this.snack.find((snack) => snack.id === nextMealId);
+        return meal ? meal.descricao : '';
+    }
+
+    getMealTime(nextMealId: number): string {
+        const meal = this.snack.find((snack) => snack.id === nextMealId);
+        return meal ? this.formatarHorario(meal.horario) : '';
+    }
 
     formatarHorario(horario: string): string {
         return horario.slice(0, 5);
@@ -129,11 +186,49 @@ export class CheckListComponent implements OnInit, OnDestroy {
     navigateToNewRegister() {
         this.router.navigate(['/registros/registro']);
     }
+
+    navigateToNewGoal() {
+        this.router.navigate(['/metas/registro']);
+    }
     totalCalories: number = 0;
+    totalGordu: number = 0;
+    totalprot: number = 0;
+    totalCarbo: number = 0;
+
     calculateTotalCalories() {
         const total = this.todayRegisters.reduce((sum, register) => {
             return sum + register.nutrientes_totais.caloria;
         }, 0);
-        this.totalCalories = parseFloat(total.toFixed(3));
+        this.totalCalories = parseFloat(total.toFixed(2));
+    }
+    calculateproteina() {
+        const total = this.todayRegisters.reduce((sum, register) => {
+            return sum + register.nutrientes_totais.proteina;
+        }, 0);
+        this.totalprot = parseFloat(total.toFixed(2));
+    }
+    calculatecarbos() {
+        const total = this.todayRegisters.reduce((sum, register) => {
+            return sum + register.nutrientes_totais.carbo;
+        }, 0);
+        this.totalCarbo = parseFloat(total.toFixed(2));
+    }
+    calculategordura() {
+        const total = this.todayRegisters.reduce((sum, register) => {
+            return sum + register.nutrientes_totais.gordura;
+        }, 0);
+        this.totalGordu = parseFloat(total.toFixed(2));
+    }
+    calculateTotalNutrient(nutrient: string): number {
+        const total = this.todayRegisters.reduce((sum, register) => {
+            return sum + register.nutrientes_totais[nutrient];
+        }, 0);
+        return parseFloat(total.toFixed(2));
+    }
+
+    getGoalProgress(goalValue: number, totalValue: number): number {
+        const progress = (totalValue * 100) / goalValue;
+
+        return parseFloat(progress.toFixed(2));
     }
 }

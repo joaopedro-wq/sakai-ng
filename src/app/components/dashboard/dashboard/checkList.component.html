@@ -1,6 +1,120 @@
 <div class="grid" style="margin-top: 1%;">
+    
     <div class="col-12">
+        
         <div class="card">
+            <p-panel header="Bem-vindo(a) a Vitality PLUS" [style]="{'font-family': 'Arial, sans-serif'}">
+                <div class="welcome-message">
+                    <h2>Olá, {{ loggedUser?.name }}!</h2>
+                    <p>Acompanhe seu progresso diário e mantenha-se saudável.</p>
+                </div>
+            </p-panel>
+
+            <p-panel header="Meta Diária">
+                <div class="daily-goals">
+                    <ng-container *ngIf="goal && goal.length > 0; else noGoals">
+                        <div *ngFor="let goalItem of goal">
+                            <b>
+
+                                <p>Meta de Calorias: {{ goalItem.meta_calorias }} Kcal</p>
+                            </b>
+                            <div style="position: relative;">
+                                <p-progressBar
+                                    [value]="getGoalProgress(goalItem.meta_calorias, calculateTotalNutrient('caloria'))"
+                                    [color]="getGoalProgress(goalItem.meta_calorias, calculateTotalNutrient('caloria')) > 100 ? 'red' : '#3c763d'"
+                                    pTooltip="{{ calculateTotalNutrient('caloria') }} Kcal" tooltipPosition="top">
+                                    <ng-template pTemplate="content"></ng-template>
+                                </p-progressBar>
+                                <span class="progress-label"
+                                    [ngStyle]="{ 'color': getGoalProgress(goalItem.meta_calorias, calculateTotalNutrient('caloria')) > 100 ? '' : 'rgb(241, 162, 162);' }">
+                                    {{ getGoalProgress(goalItem.meta_calorias, calculateTotalNutrient('caloria')) }}%
+                                </span>
+                            </div>
+
+                            <br>
+                            <b>
+
+                                <p>Meta de Proteínas: {{ goalItem.meta_proteinas }} g</p>
+                            </b>
+                            <div style="position: relative;">
+                                <p-progressBar
+                                    [value]="getGoalProgress(goalItem.meta_proteinas, calculateTotalNutrient('proteina'))"
+                                    [color]="getGoalProgress(goalItem.meta_proteinas, calculateTotalNutrient('proteina')) > 100 ? 'red' :  '#3c763d'"
+                                    pTooltip="{{ calculateTotalNutrient('proteina') }} g" tooltipPosition="top">
+                                    <ng-template pTemplate="content"></ng-template>
+                                </p-progressBar>
+                                <span class="progress-label"
+                                    [ngStyle]="{ 'color': getGoalProgress(goalItem.meta_proteinas, calculateTotalNutrient('proteina')) > 100 ? '' : 'rgb(241, 162, 162);' }">
+                                    {{ getGoalProgress(goalItem.meta_proteinas, calculateTotalNutrient('proteina')) }}%
+                                </span>
+                            </div>
+
+                            <br>
+                            <b>
+
+                                <p>Meta de Carboidratos: {{ goalItem.meta_carboidratos }} g</p>
+                            </b>
+                            <div style="position: relative;">
+                                <p-progressBar
+                                    [value]="getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo'))"
+                                    [color]="getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo')) > 100 ? 'red' :  '#3c763d'"
+                                    pTooltip="{{ calculateTotalNutrient('carbo') }} g" tooltipPosition="top">
+                                    <ng-template pTemplate="content"></ng-template>
+                                </p-progressBar>
+                             
+                                  
+                                  <span class="progress-label"
+                                  [ngStyle]="{ 'color': getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo')) > 100 ? '' : '' }">
+                                  {{ getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo')) }}%
+                                    </span>
+                              
+                            </div>
+
+                            <br>
+                            <b>
+
+                                <p>Meta de Gorduras: {{ goalItem.meta_gorduras }} g</p>
+                            </b>
+                            <div style="position: relative;">
+                                <p-progressBar
+                                    [value]="getGoalProgress(goalItem.meta_gorduras, calculateTotalNutrient('gordura'))"
+                                    [color]="getGoalProgress(goalItem.meta_gorduras, calculateTotalNutrient('gordura')) > 100 ? 'red' : '#3c763d'"
+                                    pTooltip="{{ calculateTotalNutrient('gordura') }} g" tooltipPosition="top">
+                                    <ng-template pTemplate="content"></ng-template>
+                                </p-progressBar>
+                                <span class="progress-label"
+                                    [ngStyle]="{ 'color': getGoalProgress(goalItem.meta_gorduras, calculateTotalNutrient('gordura')) > 100 ? '' : 'rgb(241, 162, 162);' }">
+                                    {{ getGoalProgress(goalItem.meta_gorduras, calculateTotalNutrient('gordura')) }}%
+                                </span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noGoals>
+                        <p-card class="diet-card" (click)="navigateToNewGoal()">
+                            <span class="card-content empty-card">
+                                <i class="pi pi-plus pi-plus-circle" style="font-size: 2rem"></i>
+                                <p class="empty-card">Cadastre sua meta diária.</p>
+                            </span>
+                        </p-card>
+                    </ng-template>
+                </div>
+            </p-panel>
+
+
+            <p-panel header="Próxima Refeição">
+                <div class="next-meal">
+                    <ng-container *ngIf="nextMealId; else noNextMeal">
+                        <p>Sua próxima refeição é {{ getMealName(nextMealId) }} às {{ getMealTime(nextMealId) }}.
+                        </p>
+                        
+                    </ng-container>
+                    <ng-template #noNextMeal>
+                        <p>Nenhuma refeição próxima agendada.</p>
+                    </ng-template>
+                </div>
+            </p-panel>
+
+
             <ng-container *ngIf="todayRegisters.length > 0; else emptyState">
                 <p-table #dt1 [rowHover]="true" scrollHeight="flex" [resizableColumns]="true" dataKey="id"
                     [rowHover]="true" styleClass="p-datatable-gridlines" [value]="todayRegisters"
@@ -11,7 +125,11 @@
                             <th style="width:  10rem;" pResizableColumn>Data</th>
                             <th pResizableColumn>Refeição</th>
                             <th pResizableColumn>Alimentos</th>
+                            <th pResizableColumn>Proteina (g)</th>
+                            <th pResizableColumn>Carboidrato (g)</th>
+                            <th pResizableColumn>Gordura (g)</th>
                             <th pResizableColumn>Calorias (Kcal)</th>
+
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-register>
@@ -27,7 +145,11 @@
                                     {{ alimento.descricao }}
                                 </div>
                             </td>
+                            <td>{{ register.nutrientes_totais.proteina }}</td>
+                            <td>{{ register.nutrientes_totais.carbo }}</td>
+                            <td>{{ register.nutrientes_totais.gordura }}</td>
                             <td>{{ register.nutrientes_totais.caloria }}</td>
+
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="footer">
@@ -36,10 +158,14 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td style="font-weight: bold; text-align: left">{{ totalCalories }}</td>
+                            <td style="font-weight: bold; text-align: right">{{totalprot}}</td>
+                            <td style="font-weight: bold; text-align: right">{{totalCarbo}}</td>
+                            <td style="font-weight: bold; text-align: right">{{totalGordu}}</td>
+
+                            <td style="font-weight: bold; text-align: right">{{ totalCalories }}</td>
                         </tr>
                         <tr (click)="navigateToNewRegister()" class="new-register-row">
-                            <td colspan="5" style="text-align: center; cursor: pointer;">
+                            <td colspan="8" style="text-align: center; cursor: pointer;">
                                 <i class="pi pi-plus-circle"></i> Adicionar novo registro
                             </td>
                         </tr>
@@ -47,115 +173,195 @@
                 </p-table>
             </ng-container>
 
-        </div>
 
-    </div>
-    <div class="col-12">
-        <div class="card">
-            <ng-container *ngIf="snack.length > 0">
-                <p-card header="Refeições do dia">
-                    <p-table #dt2 [rowHover]="true" styleClass="p-datatable-gridlines" scrollHeight="flex"
-                        [resizableColumns]="true" [value]="snack" dataKey="id" [rowHover]="true">
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th style="width: 5rem;" pResizableColumn></th>
-                                <th pResizableColumn>Refeição</th>
-                                <th pResizableColumn>Horário</th>
-                                <th pResizableColumn>Próxima Refeição</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-snack>
-                            <tr
-                                [ngClass]="{'next-meal': snack.id === nextMealId, 'not-registered-meal': snack.notRegistered}">
-                                <td style="text-align: center;">
-                                    <p-checkbox [(ngModel)]="snack.checked" binary="true" disabled="true"></p-checkbox>
-                                </td>
-                                <td>{{ snack.descricao }}</td>
-                                <td>{{ formatarHorario(snack.horario) }}</td>
-                                <td *ngIf="snack.checked" class="completed-meal-msg">
-                                    <i class="pi pi-check-circle text-green-500" style="margin-right: 0.5rem;"></i>
-                                    Registrada
-                                </td>
-                                <td *ngIf="snack.id === nextMealId && !snack.checked" class="next-meal-msg">
-                                    <i class="pi pi-clock" style="margin-right: 0.5rem;"></i> Próxima refeição
-                                </td>
-                                <td *ngIf="snack.notRegistered" class="not-registered-meal-msg">
-                                    <i class="pi pi-exclamation-triangle text-red-500"
-                                        style="margin-right: 0.5rem;"></i> Não registrada
-                                </td>
-                                <td *ngIf="snack.id !== nextMealId && !snack.checked && !snack.notRegistered"
-                                    class="not-completed-meal-msg">
-                                    <i class="pi pi-hourglass" style="margin-right: 0.5rem;"></i> Aguarde
-                                </td>
-                            </tr>
-                        </ng-template>
-
-                    </p-table>
-                </p-card>
-            </ng-container>
 
         </div>
+        <div class="col-12 card">
+            <div class="card">
+                <ng-container *ngIf="snack.length > 0">
+                    <p-card header="Refeições do dia">
+                        <p-table #dt2 [rowHover]="true" styleClass="p-datatable-gridlines" scrollHeight="flex"
+                            [resizableColumns]="true" [value]="snack" dataKey="id" [rowHover]="true">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 5rem;" pResizableColumn></th>
+                                    <th pResizableColumn>Refeição</th>
+                                    <th pResizableColumn>Horário</th>
+                                    <th pResizableColumn>Próxima Refeição</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-snack>
+                                <tr
+                                    [ngClass]="{'next-meal': snack.id === nextMealId, 'not-registered-meal': snack.notRegistered}">
+                                    <td style="text-align: center;">
+                                        <p-checkbox [(ngModel)]="snack.checked" binary="true"
+                                            disabled="true"></p-checkbox>
+                                    </td>
+                                    <td>{{ snack.descricao }}</td>
+                                    <td>{{ formatarHorario(snack.horario) }}</td>
+                                    <td *ngIf="snack.checked" class="completed-meal-msg">
+                                        <i class="pi pi-check-circle text-green-500" style="margin-right: 0.5rem;"></i>
+                                        Registrada
+                                    </td>
+                                    <td *ngIf="snack.id === nextMealId && !snack.checked" class="next-meal-msg">
+                                        <i class="pi pi-clock" style="margin-right: 0.5rem;"></i> Próxima refeição
+                                    </td>
+                                    <td *ngIf="snack.notRegistered" class="not-registered-meal-msg">
+                                        <i class="pi pi-exclamation-triangle text-red-500"
+                                            style="margin-right: 0.5rem;"></i> Não registrada
+                                    </td>
+                                    <td *ngIf="snack.id !== nextMealId && !snack.checked && !snack.notRegistered"
+                                        class="not-completed-meal-msg">
+                                        <i class="pi pi-hourglass" style="margin-right: 0.5rem;"></i> Aguarde
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                        </p-table>
+                    </p-card>
+                </ng-container>
+
+            </div>
+        </div>
+        <ng-template #emptyState>
+            <p-card class="diet-card" (click)="navigateToNewRegister()">
+                <span class="card-content empty-card">
+                    <i class="pi pi-plus pi-plus-circle" style="font-size: 2rem"></i>
+                    <p class="empty-card">Nenhum registro encontrado para hoje.</p>
+                </span>
+            </p-card>
+        </ng-template>
     </div>
-    <ng-template #emptyState>
-        <p-card class="diet-card" (click)="navigateToNewRegister()">
-            <span class="card-content empty-card">
-                <i class="pi pi-plus pi-plus-circle" style="font-size: 2rem"></i>
-                <p class="empty-card">Nenhum registro encontrado para hoje.</p>
-            </span>
-        </p-card>
-    </ng-template>
-</div>
 
 
 
 
 
-<style>
-    .diet-card {
-        margin: 1rem;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        cursor: pointer;
-    }
+    <style>
+        .progress-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    .diet-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
+        .welcome-message {
+            text-align: center;
+            padding: 20px;
+        }
 
+        .welcome-message h2 {
+            font-size: 2em;
+            color: #4CAF50;
+            margin: 0;
+        }
 
-    .empty-card {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        padding: 2rem;
-        font-size: 1.2rem;
-        color: #666;
-    }
+        .welcome-message p {
+            font-size: 1.2em;
+            color: #bdb9b9;
+            margin: 10px 0 0;
+        }
 
 
-    .next-meal-msg {
-        font-weight: bold;
-        color: #3c763d;
-    }
+        .nutritional-summary,
+        .daily-goals,
+        .next-meal {
+            padding: 1rem;
+        }
 
-    .completed-meal-msg {
-        font-weight: bold;
-        color: #5cb885;
-    }
+        .next-meal p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3c763d;
+        }
 
-    .not-completed-meal-msg {
-        font-weight: bold;
-        color: #f0ad4e;
-    }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+        }
 
-    .not-registered-meal-msg {
-        font-weight: bold;
-        color: #c72f2f;
-    }
-</style>
+        .new-register-row,
+        .new-snack-row {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .new-register-row:hover,
+        .new-snack-row:hover {
+            text-decoration: underline;
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+
+            color: white;
+            border-radius: 8px;
+        }
+
+        .banner-date,
+        .banner-time {
+            font-size: 1.2rem;
+            margin-left: 0.5rem;
+        }
+
+        .banner-date {
+            font-weight: bold;
+        }
+
+        .banner-time {
+            margin-left: auto;
+            font-style: italic;
+        }
+
+
+        .diet-card {
+            margin: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .diet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .empty-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+
+        .next-meal-msg {
+            font-weight: bold;
+            color: #3c763d;
+        }
+
+        .completed-meal-msg {
+            font-weight: bold;
+            color: #5cb885;
+        }
+
+        .not-completed-meal-msg {
+            font-weight: bold;
+            color: #f0ad4e;
+        }
+
+        .not-registered-meal-msg {
+            font-weight: bold;
+            color: #c72f2f;
+        }
+
+    </style>

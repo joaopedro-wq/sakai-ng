@@ -76,7 +76,7 @@ export class AuthService {
                 // Executa uma ação quando a requisição for bem-sucedida
                 if (res.success) {
                     this.loggedUser = res.data;
-                    console.log('this.loggedUser',this.loggedUser)
+                   
                     this.obsGetLoggedUser.emit(this.loggedUser);
                 }
             }),
