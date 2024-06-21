@@ -6,6 +6,7 @@
         <div class="flex justify-content-center items-center gap-2 mt-2">
           <p-fileUpload mode="basic" name="avatar" accept="image/*" [maxFileSize]="1000000" [url]="getUrlToUpload()" [auto]="true" chooseLabel="Carregar foto" method="post" (onUpload)="authService.getLoggedUserWithToken().subscribe()"></p-fileUpload>
           <button class="w-auto" pButton pRipple label="Excluir foto" icon="pi pi-trash" (click)="confirmDeleteUserProfilePic()" [disabled]="!formProfile.get('avatar')?.value"></button>
+          
         </div>
       </div>
       <div class="col-12 md:col-8">
@@ -28,11 +29,58 @@
           </div>
           <div class="field col-12 md:col-12">
             <label for="atividade_fisica">Nível de Atividade Física</label>
-            <p-dropdown id="atividade_fisica" formControlName="atividade_fisica" [options]="atividadeFisicaOptions"></p-dropdown>
+            <p-dropdown id="atividade_fisica" formControlName="nivel_atividade" [options]="atividadeFisicaOptions"></p-dropdown>
           </div>
         </div>
       </div>
-    </form>
+      <div>
+       
+        </div>
+        
+      </form>
+<p-accordion>
+  <p-accordionTab header="Recomendações Nutricionais">
+    <p-fieldset legend="Taxa Metabólica Basal (TMB)"
+      [style]="{'border-color': '#4CAF50', 'border-width': '2px', 'border-style': 'solid'}">
+      <div class="p-d-flex p-ai-center">
+     
+        <span>{{ tmb | number:'1.2-2' }} kcal/dia</span>
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Gasto Energético Total (GET)"
+      [style]="{'border-color': '#2196F3', 'border-width': '2px', 'border-style': 'solid'}">
+      <div class="p-d-flex p-ai-center">
+       
+        <span>{{ get | number:'1.2-2' }} kcal/dia</span>
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Proteínas Recomendadas"
+      [style]="{'border-color': '#FFC107', 'border-width': '2px', 'border-style': 'solid'}">
+      <div class="p-d-flex p-ai-center">
+       
+        <span>{{ proteinasRecomendadas() | number:'1.2-2' }} g/dia</span>
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Gorduras Recomendadas"
+      [style]="{'border-color': '#F44336', 'border-width': '2px', 'border-style': 'solid'}">
+      <div class="p-d-flex p-ai-center">
+       
+        <span>{{ gordurasRecomendadas() | number:'1.2-2' }} g/dia</span>
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Carboidratos Recomendados"
+      [style]="{'border-color': '#9C27B0', 'border-width': '2px', 'border-style': 'solid'}">
+      <div class="p-d-flex p-ai-center">
+       
+        <span>{{ carboidratosRecomendados() | number:'1.2-2' }} g/dia</span>
+      </div>
+    </p-fieldset>
+  </p-accordionTab>
+</p-accordion>
+
+
+
+    
   </div>
 </div>
 

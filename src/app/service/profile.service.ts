@@ -124,7 +124,8 @@ export class ProfileService {
     }
 
      setformUserProfile(formUserProfile: User) {
-        this.formUserProfile = formUserProfile;
+         this.formUserProfile = formUserProfile;
+         console.log('this.formUserProfile', this.formUserProfile);
     }
 
 
@@ -162,7 +163,7 @@ export class ProfileService {
     updateUserProfile(formUserProfile: User): Observable<any> {
         return this.http
             .put(
-                `/api/user/update-profile/${formUserProfile.id}`,
+                `/api/user/${formUserProfile.id}`,
                 formUserProfile
             )
             .pipe(

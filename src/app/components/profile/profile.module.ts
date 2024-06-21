@@ -12,6 +12,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { PasswordModule } from 'primeng/password';
 import { DropdownModule } from 'primeng/dropdown';
+import { AccordionModule } from 'primeng/accordion';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
+import { FieldsetModule } from 'primeng/fieldset';
 
 @NgModule({
     declarations: [ProfileComponent],
@@ -28,7 +32,10 @@ import { DropdownModule } from 'primeng/dropdown';
         DialogModule,
         PasswordModule,
         DropdownModule,
-
+        AccordionModule,
+        PanelModule,
+        CardModule,
+        FieldsetModule,
     ],
 })
 export class ProfileModule {}

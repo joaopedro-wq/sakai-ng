@@ -231,4 +231,23 @@ export class CheckListComponent implements OnInit, OnDestroy {
 
         return parseFloat(progress.toFixed(2));
     }
+    getLateMeals(): any[] {
+        const currentTime = new Date();
+        const currentHours = currentTime.getHours();
+        const lateMeals = this.snack.filter(
+            (snack) =>
+                !snack.checked &&
+                parseInt(snack.horario.split(':')[0]) < currentHours
+        );
+
+       
+
+        return lateMeals;
+    }
+
+    showNotification = false;
+
+    toggleNotification() {
+        this.showNotification = !this.showNotification;
+    }
 }

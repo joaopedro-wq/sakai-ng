@@ -101,18 +101,22 @@
             </p-panel>
 
 
-            <p-panel header="Próxima Refeição">
-                <div class="next-meal">
-                    <ng-container *ngIf="nextMealId; else noNextMeal">
-                        <p>Sua próxima refeição é {{ getMealName(nextMealId) }} às {{ getMealTime(nextMealId) }}.
-                        </p>
-                        
-                    </ng-container>
-                    <ng-template #noNextMeal>
-                        <p>Nenhuma refeição próxima agendada.</p>
-                    </ng-template>
-                </div>
-            </p-panel>
+
+<p-panel header="Próxima Refeição">
+    <div class="next-meal">
+        <ng-container *ngIf="nextMealId; else noNextMeal">
+            <p>Sua próxima refeição é {{ getMealName(nextMealId) }} às {{ getMealTime(nextMealId) }}.
+            </p>
+
+        </ng-container>
+        <ng-template #noNextMeal>
+            <p>Nenhuma refeição próxima agendada.</p>
+        </ng-template>
+    </div>
+</p-panel>
+
+
+
 
 
             <ng-container *ngIf="todayRegisters.length > 0; else emptyState">
@@ -238,6 +242,15 @@
 
 
     <style>
+        .header-with-notification {
+    display: flex;
+    align-items: center;
+}
+
+.notification-badge {
+    cursor: pointer;
+}
+
         .progress-label {
             position: absolute;
             top: 50%;

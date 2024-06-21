@@ -21,14 +21,11 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
         name: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         avatar: [''],
-        peso: [''],
-        genero: [''],
-       
-
-        altura: [''],
-        atividade_fisica: [''],
-
-        data_nascimento: [null, []],
+        peso: ['', [Validators.required]],
+        genero: ['', [Validators.required]],
+        altura: ['', [Validators.required]],
+        nivel_atividade: ['', [Validators.required]],
+        data_nascimento: [null, [Validators.required]],
     });
 
     constructor(
@@ -49,6 +46,10 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
                     email: res.email,
                     avatar: res.avatar,
                     data_nascimento: new Date(res.data_nascimento),
+                    genero: res.genero,
+                    altura: res.altura,
+                    peso: res.peso,
+                    nivel_atividade: res.nivel_atividade,
                 });
                 let userId: number = this.formProfile.get('id')?.value;
                 this.formUserPassword.get('id')?.setValue(userId);
@@ -103,6 +104,7 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
 
         this.formProfile.valueChanges.subscribe((res) => {
             this.profileService.setformUserProfile(res);
+            this.calculateBasalMetabolicRate(); // Calcular TMB e GET sempre que os valores mudarem
         });
     }
 
@@ -127,16 +129,6 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             });
         }
     }
-    
-
-   /*  onUploadAuto() {
-        let saveFormProfile: User = this.formProfile.getRawValue();
-        saveFormProfile.data_nascimento = this.datePipe.transform(
-            saveFormProfile.data_nascimento,
-            'yyyy-MM-dd'
-        )!;
-        this.profileService.updateUserProfile(saveFormProfile).subscribe();
-    } */
 
     getUserAvatar(): string {
         if (this.formProfile.get('avatar')?.value) {
@@ -147,39 +139,38 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             return 'assets/contents/images/default-profile.png';
         }
     }
-    
 
     getUrlToUpload(): string {
-        return `http://127.0.0.1:8000/api/user/update-profile-pic/${this.formProfile.get('id')?.value}`;
+        return `http://127.0.0.1:8000/api/user/update-profile-pic/${
+            this.formProfile.get('id')?.value
+        }`;
     }
-    
-
 
     selectedFile: File | null = null;
 
     onFileSelected(event: any): void {
         const file: File = event.target.files[0];
         if (file) {
-          this.selectedFile = file;
-        }
-      }
-    
-      onSubmit(): void {
-        const userId = 1; // ID do usuário
-        const file: File = this.selectedFile;
-    
-        if (file) {
-            this.profileService.updateProfilePic(userId, file).subscribe(response => {
-                console.log(response);
-            }, error => {
-                console.error(error);
-            });
+            this.selectedFile = file;
         }
     }
-    
-    
-  
-      
+
+    onSubmit(): void {
+        const userId = 1; // ID do usuário
+        const file: File = this.selectedFile;
+
+        if (file) {
+            this.profileService.updateProfilePic(userId, file).subscribe(
+                (response) => {
+                    console.log(response);
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+        }
+    }
+
     confirmDeleteUserProfilePic() {
         this.confirmationService.confirm({
             target: new EventTarget(),
@@ -229,14 +220,85 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     generoOptions = [
-        { label: 'Masculino', value: 'masculino' },
-        { label: 'Feminino', value: 'feminino' }
-      ];
-      atividadeFisicaOptions = [
-        { label: 'Sedentário (pouco ou nenhum exercício)', value: 1.2 },
-        { label: 'Levemente ativo (exercício leve/sessões de esporte de 1 a 3 dias por semana)', value: 1.375 },
-        { label: 'Moderadamente ativo (exercício moderado/sessões de esporte de 3 a 5 dias por semana)', value: 1.55 },
-        { label: 'Muito ativo (exercício intenso/sessões de esporte de 6 a 7 dias por semana)', value: 1.725 },
-        { label: 'Extremamente ativo (exercício físico muito intenso/trabalho físico, sessões de esporte, etc.)', value: 1.9 }
-      ];
+        { label: 'Masculino', value: 'M' },
+        { label: 'Feminino', value: 'F' },
+    ];
+
+    atividadeFisicaOptions = [
+        { label: 'Sedentário (pouco ou nenhum exercício)', value: '1.2' },
+        {
+            label: 'Levemente ativo (exercício leve/sessões de esporte de 1 a 3 dias por semana)',
+            value: '1.375',
+        },
+        {
+            label: 'Moderadamente ativo (exercício moderado/sessões de esporte de 3 a 5 dias por semana)',
+            value: '1.55',
+        },
+        {
+            label: 'Muito ativo (exercício intenso/sessões de esporte de 6 a 7 dias por semana)',
+            value: '1.725',
+        },
+        {
+            label: 'Extremamente ativo (exercício físico muito intenso/trabalho físico, sessões de esporte, etc.)',
+            value: '1.9',
+        },
+    ];
+
+    // Método para calcular a TMB e o GET
+    calculateBasalMetabolicRate(): void {
+        const peso = this.formProfile.get('peso')?.value;
+        const altura = this.formProfile.get('altura')?.value;
+        const genero = this.formProfile.get('genero')?.value;
+        const dataNascimento = this.formProfile.get('data_nascimento')?.value;
+        const nivelAtividade = this.formProfile.get('nivel_atividade')?.value;
+
+        if (peso && altura && genero && dataNascimento && nivelAtividade) {
+            const idade = this.calculateAge(dataNascimento);
+
+            let tmb: number;
+
+            if (genero === 'M') {
+                tmb = 66.47 + 13.75 * peso + 5.003 * altura - 6.755 * idade;
+            } else if (genero === 'F') {
+                tmb = 655.1 + 9.563 * peso + 1.85 * altura - 4.676 * idade;
+            } else {
+                return;
+            }
+
+            const get = tmb * parseFloat(nivelAtividade);
+            this.get = get;
+            this.tmb = tmb;
+            console.log(`TMB: ${tmb.toFixed(2)} kcal/day`);
+            console.log(`GET: ${get.toFixed(2)} kcal/day`);
+        }
+    }
+
+    // Método para calcular a idade com base na data de nascimento
+    calculateAge(birthDate: Date): number {
+        const today = new Date();
+        const birth = new Date(birthDate);
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birth.getDate())
+        ) {
+            age--;
+        }
+        return age;
+    }
+    tmb: number | undefined;
+    get: number | undefined;
+
+    proteinasRecomendadas(): number {
+        return (this.get * 0.3) / 4; // 30% das calorias totais, 1 grama de proteína tem cerca de 4 calorias
+    }
+
+    gordurasRecomendadas(): number {
+        return (this.get * 0.3) / 9; // 30% das calorias totais, 1 grama de gordura tem cerca de 9 calorias
+    }
+
+    carboidratosRecomendados(): number {
+        return (this.get * 0.4) / 4; // 40% das calorias totais, 1 grama de carboidrato tem cerca de 4 calorias
+    }
 }

@@ -17,6 +17,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { PanelModule } from 'primeng/panel';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TooltipModule } from 'primeng/tooltip';
+import { BadgeModule } from 'primeng/badge';
 
 @NgModule({
     declarations: [CheckListComponent],
@@ -37,6 +38,7 @@ import { TooltipModule } from 'primeng/tooltip';
         PanelModule,
         ProgressBarModule,
         TooltipModule,
+        BadgeModule,
 
         CheckboxModule,
     ],

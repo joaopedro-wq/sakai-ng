@@ -25,7 +25,8 @@ import { ButtonModule } from 'primeng/button';
 import { MegaMenuModule } from 'primeng/megamenu';
 import { MenuModule } from 'primeng/menu';
 import { TooltipModule } from 'primeng/tooltip';
-
+import { MenubarModule } from 'primeng/menubar';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 @NgModule({
     declarations: [
         AppMenuitemComponent,
@@ -35,7 +36,7 @@ import { TooltipModule } from 'primeng/tooltip';
         AppBreadcrumbComponent,
         AppSidebarComponent,
         AppLayoutComponent,
-        AppBreadcrumbComponent
+        AppBreadcrumbComponent,
     ],
     imports: [
         BrowserModule,
@@ -55,8 +56,10 @@ import { TooltipModule } from 'primeng/tooltip';
         ButtonModule,
         MenuModule,
         AppConfigModule,
-        SharedModule
+        SharedModule,
+        MenubarModule,
+        OverlayPanelModule,
     ],
-    exports: [AppLayoutComponent]
+    exports: [AppLayoutComponent],
 })
-export class AppLayoutModule { }
+export class AppLayoutModule {}

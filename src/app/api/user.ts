@@ -9,6 +9,8 @@ export interface User {
     updated_at?: Date;
     data_nascimento: Date | string;
     avatar?: string | null;
-
-  
+    nivel_atividade?: string | null;
+    genero?: string | null;
+    altura?: number | null;
+    peso?: number | null;
 }
