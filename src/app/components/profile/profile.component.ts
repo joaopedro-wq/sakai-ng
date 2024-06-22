@@ -26,6 +26,7 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
         altura: ['', [Validators.required]],
         nivel_atividade: ['', [Validators.required]],
         data_nascimento: [null, [Validators.required]],
+        objetivo: [null, [Validators.required]],
     });
 
     constructor(
@@ -50,6 +51,7 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
                     altura: res.altura,
                     peso: res.peso,
                     nivel_atividade: res.nivel_atividade,
+                    objetivo: res.objetivo,
                 });
                 let userId: number = this.formProfile.get('id')?.value;
                 this.formUserPassword.get('id')?.setValue(userId);
@@ -218,7 +220,11 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             .updateUserPassword(this.formUserPassword.getRawValue())
             .subscribe();
     }
-
+    objetivoOptions = [
+        { label: 'Perda de Peso', value: 'perda_peso' },
+        { label: 'Ganho de Massa', value: 'ganho_massa' },
+        { label: 'Manutenção de Peso', value: 'manutencao_peso' },
+    ];
     generoOptions = [
         { label: 'Masculino', value: 'M' },
         { label: 'Feminino', value: 'F' },
@@ -268,8 +274,6 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             const get = tmb * parseFloat(nivelAtividade);
             this.get = get;
             this.tmb = tmb;
-            console.log(`TMB: ${tmb.toFixed(2)} kcal/day`);
-            console.log(`GET: ${get.toFixed(2)} kcal/day`);
         }
     }
 
@@ -300,5 +304,19 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
 
     carboidratosRecomendados(): number {
         return (this.get * 0.4) / 4; // 40% das calorias totais, 1 grama de carboidrato tem cerca de 4 calorias
+    }
+
+    displayHelpDialog: boolean = false;
+    helpText: string = '';
+
+    showHelp(type: string) {
+        if (type === 'TMB') {
+            this.helpText =
+                'A Taxa Metabólica Basal (TMB) é a quantidade mínima de energia (calorias) que seu corpo precisa para realizar suas funções vitais em repouso.';
+        } else if (type === 'GET') {
+            this.helpText =
+                'O Gasto Energético Total (GET) é a quantidade total de calorias que você precisa por dia, levando em consideração seu nível de atividade física.';
+        }
+        this.displayHelpDialog = true;
     }
 }

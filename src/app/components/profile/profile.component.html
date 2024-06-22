@@ -27,9 +27,14 @@
             <label for="altura">Altura (cm)</label>
             <input pInputText id="altura" type="number" formControlName="altura" />
           </div>
-          <div class="field col-12 md:col-12">
+          <div class="field col-12 md:col-6">
             <label for="atividade_fisica">Nível de Atividade Física</label>
             <p-dropdown id="atividade_fisica" formControlName="nivel_atividade" [options]="atividadeFisicaOptions"></p-dropdown>
+          </div>
+
+          <div class="field col-12 md:col-6">
+            <label for="atividade_fisica">Objetivo</label>
+            <p-dropdown id="objetivo" formControlName="objetivo" [options]="objetivoOptions"></p-dropdown>
           </div>
         </div>
       </div>
@@ -42,36 +47,35 @@
   <p-accordionTab header="Recomendações Nutricionais">
     <p-fieldset legend="Taxa Metabólica Basal (TMB)"
       [style]="{'border-color': '#4CAF50', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center">
-     
+      <div class="p-d-flex p-ai-center justify-content-between">
         <span>{{ tmb | number:'1.2-2' }} kcal/dia</span>
+        <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
+          (click)="showHelp('TMB')"></button>
       </div>
     </p-fieldset>
     <p-fieldset legend="Gasto Energético Total (GET)"
       [style]="{'border-color': '#2196F3', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center">
-       
+      <div class="p-d-flex p-ai-center justify-content-between">
         <span>{{ get | number:'1.2-2' }} kcal/dia</span>
+        <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
+          (click)="showHelp('GET')"></button>
       </div>
     </p-fieldset>
     <p-fieldset legend="Proteínas Recomendadas"
       [style]="{'border-color': '#FFC107', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center">
-       
+      <div class="p-d-flex p-ai-center justify-content-between">
         <span>{{ proteinasRecomendadas() | number:'1.2-2' }} g/dia</span>
       </div>
     </p-fieldset>
     <p-fieldset legend="Gorduras Recomendadas"
       [style]="{'border-color': '#F44336', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center">
-       
+      <div class="p-d-flex p-ai-center justify-content-between">
         <span>{{ gordurasRecomendadas() | number:'1.2-2' }} g/dia</span>
       </div>
     </p-fieldset>
     <p-fieldset legend="Carboidratos Recomendados"
       [style]="{'border-color': '#9C27B0', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center">
-       
+      <div class="p-d-flex p-ai-center justify-content-between">
         <span>{{ carboidratosRecomendados() | number:'1.2-2' }} g/dia</span>
       </div>
     </p-fieldset>
@@ -80,8 +84,10 @@
 
 
 
-    
-  </div>
+
+
+
+</div>
 </div>
 
 <p-dialog [(visible)]="profileService.showModalChangePassword" (onHide)="formUserPassword.reset()" [style]="{width: '450px'}" header="Alteração de senha" [modal]="true" class="p-fluid">
@@ -97,11 +103,15 @@
       </div>
     </form>
   </ng-template>
-
+  
   <ng-template pTemplate="footer">
     <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-outlined" (click)="profileService.toggleModalChangePassword()"></button>
     <button pButton pRipple label="Salvar" icon="pi pi-save" class="p-button-success" (click)="saveUserPassword()" [disabled]="!formUserPassword.valid"></button>
   </ng-template>
 </p-dialog>
 
+<p-dialog header="Ajuda" [(visible)]="displayHelpDialog" [modal]="true" [closable]="true" [responsive]="true"
+  styleClass="help-dialog">
+  <p>{{ helpText }}</p>
+</p-dialog>
 <p-confirmDialog></p-confirmDialog>

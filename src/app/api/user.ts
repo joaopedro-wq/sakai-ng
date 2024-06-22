@@ -13,4 +13,5 @@ export interface User {
     genero?: string | null;
     altura?: number | null;
     peso?: number | null;
+    objetivo: string | null;
 }
