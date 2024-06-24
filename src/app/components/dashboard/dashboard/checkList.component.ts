@@ -26,7 +26,8 @@ export class CheckListComponent implements OnInit, OnDestroy {
     dayOfWeek: string;
     goal: Metas[] = [];
     loggedUser!: User;
-
+    data: any;
+    options: any;
     constructor(
         public registerService: RegisterService,
         public snackService: SnackService,
@@ -46,6 +47,7 @@ export class CheckListComponent implements OnInit, OnDestroy {
                 this.calculateproteina();
                 this.calculatecarbos();
                 this.calculategordura();
+                this.data = this.getDataForChart();
             });
 
         this.snackService.obsListSnacks
@@ -78,7 +80,77 @@ export class CheckListComponent implements OnInit, OnDestroy {
         });
         this.updateTime();
         setInterval(() => this.updateTime(), 1000);
+
+        this.data = this.getDataForChart();
     }
+
+    getDataForChart() {
+        const totalNutrients = {
+            proteina: 0,
+            gordura: 0,
+            carbo: 0,
+            caloria: 0,
+        };
+
+        const todayDate = new Date();
+        const formattedTodayDate = todayDate.toISOString().split('T')[0];
+
+        this.register.forEach((registro) => {
+            if (registro.data == formattedTodayDate) {
+                totalNutrients.proteina += registro.nutrientes_totais.proteina;
+                totalNutrients.gordura += registro.nutrientes_totais.gordura;
+                totalNutrients.carbo += registro.nutrientes_totais.carbo;
+                totalNutrients.caloria += registro.nutrientes_totais.caloria;
+            }
+        });
+
+        const data = {
+            labels: ['Calorias', 'Proteínas', 'Carboidratos', 'Gorduras'],
+            datasets: [
+                {
+                    label: 'Consumo',
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)', 
+                        'rgba(54, 162, 235, 0.6)', 
+                        'rgba(255, 206, 86, 0.6)', 
+                        'rgba(75, 192, 192, 0.6)', 
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', 
+                        'rgba(54, 162, 235, 1)', 
+                        'rgba(255, 206, 86, 1)', 
+                        'rgba(75, 192, 192, 1)', 
+                    ],
+                    borderWidth: 1,
+                    hoverBorderColor: '#000000',
+                    data: [
+                        totalNutrients.caloria.toFixed(2),
+                        totalNutrients.proteina.toFixed(2),
+                        totalNutrients.carbo.toFixed(2),
+                        totalNutrients.gordura.toFixed(2),
+                    ],
+                    fill: true,
+                },
+            ],
+        };
+
+        this.options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutoutPercentage: 70,
+            legend: {
+                position: 'bottom',
+            },
+            elements: {
+                arc: {
+                    borderWidth: 0,
+                },
+            },
+        };
+
+        return data;
+    }
+
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();

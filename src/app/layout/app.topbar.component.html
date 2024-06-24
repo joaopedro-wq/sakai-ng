@@ -12,122 +12,39 @@
         <i class="pi pi-ellipsis-v"></i>
     </button>
 
-    <div #topbarmenu class="layout-topbar-menu"
+    <div #topbarmenu class="layout-topbar-menu" 
         [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="position: relative; display: inline-block;">
-                <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text"
-                    (click)="overlayPanel.toggle($event)"></button>
-                <p-badge    [value]="notifications.length > 0 ? notifications.length : ''" size="small" (click)="clearNotifications()"
-                    style="position: absolute; top: -5px; right: 7px; width: 10px; height: 15px; font-size: 2px; padding: 0;"></p-badge>
-            </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 70%;">
 
-            <div style="align-items: center; display: flex; position: relative;">
-            <p-overlayPanel #overlayPanel [showCloseIcon]="false" [dismissable]="true" appendTo="body">
-                <ul class="notifications-list">
-                    <li *ngFor="let notification of notifications">{{ notification }}</li>
-                </ul>
-            </p-overlayPanel>
 
+            <p-menu #menu [popup]="true" [model]="menuItems" ></p-menu>
+
+
+            <a *ngIf="!isMobile()" (click)="menu.toggle($event)">
+                <img [src]="formProfile.get('avatar')?.value" alt="avatar" class="avatar-img">
+            </a>
+            <img *ngIf="isMobile()"  [src]="formProfile.get('avatar')?.value" alt="avatar" class="avatar-img">
+            <span *ngIf="isMobile()" style="align-items: center;">
                 <button pButton type="button" icon="pi pi-cog" class="p-button-rounded p-button-text"
                     (click)="navigateToProfile()"></button>
                 <button pButton type="button" icon="pi pi-power-off" class="p-button-rounded p-button-text"
                     (click)="onLogout()"></button>
-            </div>
+            </span>
+
         </div>
     </div>
 </div>
 
 
 <style>
- 
-.notifications-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.notifications-list li {
-    border-bottom: 1px solid #333;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    background-color: #222;
-    color: #fff;
-}
-
-.notifications-list li:first-child {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.notifications-list li:last-child {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-bottom: none;
-}
-
-.notifications-list li:hover {
-    background-color: #333;
-}
-
-.notification-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #666;
-    margin-right: 10px;
-}
-
-.notification-content {
-    flex: 1;
-}
-
-.notification-title {
-    font-weight: bold;
-}
-
-.notification-message {
-    color: #ccc;
-}
-
-
- .p-overlay-badge {
-    position: absolute;
-    top: -8px;
-    right: 0;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 50%;
-    padding: 4px 8px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-
-    .avatar {
+    .avatar-img {
+        width: 3rem;
+        height: 3rem;
         border-radius: 50%;
         object-fit: cover;
+        cursor: pointer;
     }
 
-    .notification-badge {
-        margin-right: 1rem;
-    }
-    .notification-button {
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    position: relative;
-    padding: 0.5rem;
-}
-
-.notification-button .p-badge {
-    position: absolute;
-    top: -0.5rem;
-    right: -0.5rem;
-    font-size: 0.8rem;
-}
+    
 
 </style>

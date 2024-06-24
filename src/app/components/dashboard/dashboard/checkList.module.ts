@@ -18,7 +18,7 @@ import { PanelModule } from 'primeng/panel';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { BadgeModule } from 'primeng/badge';
-import { TabViewModule } from 'primeng/tabview';
+import { ChartModule } from 'primeng/chart';
 import { FieldsetModule } from 'primeng/fieldset';
 
 @NgModule({
@@ -42,8 +42,9 @@ import { FieldsetModule } from 'primeng/fieldset';
         TooltipModule,
         BadgeModule,
         FieldsetModule,
-        
+
         CheckboxModule,
+        ChartModule,
     ],
 })
 export class CheckListModule {}

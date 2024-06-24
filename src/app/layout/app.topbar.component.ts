@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from './service/app.layout.service';
 import { User } from '../api/user';
@@ -10,6 +10,8 @@ import { SnackService } from '../service/refeicao.service';
 import { Refeicao } from '../api/refeicao';
 import { Registro } from '../api/registro';
 import { RegisterService } from '../service/registro.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 
 @Component({
     selector: 'app-topbar',
@@ -17,6 +19,7 @@ import { RegisterService } from '../service/registro.service';
 })
 export class AppTopBarComponent {
     items!: MenuItem[];
+    @ViewChild('overlayPanel') overlayPanel: OverlayPanel;
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -27,24 +30,25 @@ export class AppTopBarComponent {
     loggedUser!: User;
     avatarUrl: string = '';
     private unsubscribe = new Subject<void>();
-    @ViewChild('overlayPanel') overlayPanel: OverlayPanel;
+
     notifications: string[] = [];
     snack: Refeicao[] = [];
     register: Registro[] = [];
     todayRegisters: Registro[] = [];
+
     constructor(
         public layoutService: LayoutService,
         public el: ElementRef,
         private authService: AuthService,
         public snackService: SnackService,
         public registerService: RegisterService,
+        private formBuilder: FormBuilder,
 
         private router: Router
     ) {
         this.authService.obsGetLoggedUser
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
-              
                 this.loggedUser = res;
                 this.avatarUrl = res.avatar
                     ? res.avatar
@@ -65,8 +69,59 @@ export class AppTopBarComponent {
 
                 this.getLateMeals();
             });
+
+        this.authService.obsGetLoggedUser
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.formProfile.patchValue({
+                    id: res.id ? res.id : null,
+                    name: res.name,
+                    email: res.email,
+                    avatar: res.avatar,
+                    data_nascimento: new Date(res.data_nascimento),
+                });
+            });
     }
 
+    public formProfile: FormGroup = this.formBuilder.group({
+        id: [null],
+        name: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        avatar: [''],
+        peso: ['', [Validators.required]],
+        genero: ['', [Validators.required]],
+        altura: ['', [Validators.required]],
+        nivel_atividade: ['', [Validators.required]],
+        data_nascimento: [null, [Validators.required]],
+        objetivo: [null, [Validators.required]],
+    });
+    menuItems: MenuItem[] = [
+        {
+            label: 'Configurações',
+            icon: 'pi pi-cog',
+            command: () => this.navigateToProfile(),
+        },
+        {
+            label: 'Sair',
+            icon: 'pi pi-power-off',
+            command: () => this.onLogout(),
+        },
+    ];
+    menuVisible: boolean = false;
+
+    toggleMenu(event: Event) {
+        event.preventDefault(); // Prevent default anchor behavior
+        this.menuVisible = !this.menuVisible; // Toggle menu visibility
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
+        this.isMobile();
+    }
+
+    isMobile(): boolean {
+        return window.innerWidth <= 991; // Define a largura máxima para considerar como mobile
+    }
     ngOnInit() {
         this.avatarUrl = this.getUserAvatar();
     }
@@ -110,11 +165,11 @@ export class AppTopBarComponent {
                 }
             }
         }
-     
+
         this.notifications = filteredLateMeals.map(
             (descricao) => `Refeição ${descricao.descricao} não cadastrada.`
         );
-       
+
         return filteredLateMeals;
     }
 
@@ -130,7 +185,6 @@ export class AppTopBarComponent {
             return yesterdayFormatted === registerFormatted;
         });
 
-       
         this.todayRegisters.forEach((register) => (register.checked = true));
     }
 }

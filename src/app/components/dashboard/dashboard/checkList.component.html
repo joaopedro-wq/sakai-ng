@@ -9,19 +9,19 @@
                     <p>Acompanhe seu progresso diário e mantenha-se saudável.</p>
                 </div>
             </p-panel>
-            <div *ngIf="!loggedUser.peso">
-            <p-panel header="Perfil">
-                <div class="progress-history">
-                    <p-card class="diet-card" (click)="navigateToProfile() ">
-                        <span class="card-content empty-card">
-                            <i class="pi pi-plus pi-plus-circle" style="font-size: 2rem"></i>
-                            <p class="empty-card">Termine de concluir seu perfil.</p>
-                        </span>
-                    </p-card>
+            <div *ngIf="!loggedUser?.peso">
+                <p-panel header="Perfil">
+                    <div class="progress-history">
+                        <p-card class="diet-card" (click)="navigateToProfile() ">
+                            <span class="card-content empty-card">
+                                <i class="pi pi-plus pi-plus-circle" style="font-size: 2rem"></i>
+                                <p class="empty-card">Termine de concluir seu perfil.</p>
+                            </span>
+                        </p-card>
 
-                </div>  
-            </p-panel>
-        </div>
+                    </div>
+                </p-panel>
+            </div>
             <p-panel header="Meta Diária">
                 <div class="daily-goals">
                     <ng-container *ngIf="goal && goal.length > 0; else noGoals">
@@ -111,6 +111,24 @@
                     </ng-template>
                 </div>
             </p-panel>
+
+            <p-panel header="Relatório do Dia">
+                <ng-container *ngIf="todayRegisters.length > 0; else ter">
+
+                    <p-chart type="doughnut" [data]="data" [options]="options"></p-chart>
+
+                </ng-container>
+                <ng-template #ter>
+
+                    <span class="card-content empty-card">
+
+                        <p class="empty-card">Nenhum Relatório encontrado no dia de hoje.</p>
+                    </span>
+
+                </ng-template>
+
+            </p-panel>
+
 
 
 
