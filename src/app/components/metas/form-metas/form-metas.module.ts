@@ -16,6 +16,7 @@ import { CardModule } from 'primeng/card';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { DialogService } from 'primeng/dynamicdialog';
 @NgModule({
     declarations: [FormMetasComponent],
     imports: [
@@ -36,6 +37,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
         CardModule,
         MultiSelectModule,
         InputSwitchModule,
+       
     ],
 })
 export class FormMetasModule {}

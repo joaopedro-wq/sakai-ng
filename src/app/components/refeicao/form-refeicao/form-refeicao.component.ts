@@ -75,7 +75,7 @@ export class FormRefeicaoComponent
   
     ngAfterContentInit(): void {
         this.formSnack.statusChanges.subscribe((res) => {
-            console.log('res',res)
+           
             if (res == 'INVALID') {
                 this.snackService.buttonState('disabled', 'salvar', true);
                 this.snackService.buttonState('visible', 'salvar', false);

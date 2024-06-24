@@ -8,6 +8,8 @@ import { DatePipe } from '@angular/common';
 
 import { ValidatorCustomService } from '../../validators/validator-custom.service';
 import { ProfileService } from 'src/app/service/profile.service';
+import { NutritionService } from 'src/app/service/recomendacao.service';
+import { Recomendacao } from 'src/app/api/recomendacao';
 
 @Component({
     templateUrl: './profile.component.html',
@@ -15,6 +17,7 @@ import { ProfileService } from 'src/app/service/profile.service';
 })
 export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
     private unsubscribe = new Subject<void>();
+    nutrition: Recomendacao[] = [];
 
     public formProfile: FormGroup = this.formBuilder.group({
         id: [null],
@@ -29,10 +32,22 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
         objetivo: [null, [Validators.required]],
     });
 
+    public formNutrition: FormGroup = this.formBuilder.group({
+        id: [null],
+        get: ['', [Validators.required]],
+        tmb: ['', [Validators.required, Validators.email]],
+        caloria: ['', [Validators.required]],
+        proteina: ['', [Validators.required]],
+        carbo: ['', [Validators.required]],
+        gordura: ['', [Validators.required]],
+    });
+
     constructor(
         private messageService: MessageService,
         public authService: AuthService,
         public profileService: ProfileService,
+        public nutritionService: NutritionService,
+
         private formBuilder: FormBuilder,
         private datePipe: DatePipe,
         private confirmationService: ConfirmationService,
@@ -46,7 +61,9 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
                     name: res.name,
                     email: res.email,
                     avatar: res.avatar,
-                    data_nascimento: new Date(res.data_nascimento),
+                    data_nascimento: res.data_nascimento
+                        ? new Date(res.data_nascimento)
+                        : null,
                     genero: res.genero,
                     altura: res.altura,
                     peso: res.peso,
@@ -67,6 +84,7 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
                         detail: 'Perfil atualizado com sucesso!',
                     });
                 }
+                this.nutritionService.loadButtons('form');
             });
 
         this.profileService.obsSaveUserPassword
@@ -89,9 +107,51 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
                     });
                 }
             });
+
+        this.nutritionService.obsListNutritions
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.nutrition = res;
+               
+                this.calculateBasalMetabolicRate();
+            });
+
+        this.nutritionService.obsLoadNutrition
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.formNutrition.patchValue({
+                    id: res.id,
+                    get: res.get,
+                    tmb: res.tmb,
+                    caloria: res.caloria,
+                    proteina: res.proteina,
+                    gordura: res.gordura,
+                    carbo: res.carbo,
+                });
+
+                this.nutrition;
+               
+                this.profileService.loadButtons('form');
+            });
+
+        this.nutritionService.obsSaveNutrition
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+                this.messageService.add({
+                    severity: res.success ? 'success' : 'error',
+                    summary: res.success ? 'Sucesso' : 'Erro',
+                    detail: res.message,
+                });
+                this.profileService.loadButtons('form');
+            });
     }
 
     ngOnInit(): void {
+        const avatarUrl = localStorage.getItem('avatarUrl');
+        if (avatarUrl) {
+            // Define a URL da imagem como a imagem exibida
+            this.imageSrc = avatarUrl;
+        }
         this.profileService.loadButtons('form');
     }
 
@@ -106,7 +166,7 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
 
         this.formProfile.valueChanges.subscribe((res) => {
             this.profileService.setformUserProfile(res);
-            this.calculateBasalMetabolicRate(); // Calcular TMB e GET sempre que os valores mudarem
+            this.calculateBasalMetabolicRate();
         });
     }
 
@@ -123,6 +183,10 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
                 summary: 'Successo',
                 detail: 'Imagem carregada com sucesso!',
             });
+            localStorage.setItem(
+                'avatarUrl',
+                this.formProfile.get('avatar').value
+            );
         } else {
             this.messageService.add({
                 severity: 'error',
@@ -132,48 +196,56 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
         }
     }
 
-    getUserAvatar(): string {
-        if (this.formProfile.get('avatar')?.value) {
-            return (
-                'http://127.0.0.1:8000' + this.formProfile.get('avatar')?.value
-            );
-        } else {
-            return 'assets/contents/images/default-profile.png';
-        }
-    }
+    uploadMode: boolean = false;
 
-    getUrlToUpload(): string {
-        return `http://127.0.0.1:8000/api/user/update-profile-pic/${
-            this.formProfile.get('id')?.value
-        }`;
-    }
-
+  
     selectedFile: File | null = null;
-
-    onFileSelected(event: any): void {
-        const file: File = event.target.files[0];
-        if (file) {
-            this.selectedFile = file;
+    imageSrc: string | ArrayBuffer | null = null;
+    onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files[0]) {
+            this.selectedFile = input.files[0];
+            this.uploadMode = true;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.imageSrc = e.target?.result;
+            };
+            reader.readAsDataURL(this.selectedFile);
         }
     }
 
-    onSubmit(): void {
-        const userId = 1; // ID do usuário
-        const file: File = this.selectedFile;
-
-        if (file) {
-            this.profileService.updateProfilePic(userId, file).subscribe(
-                (response) => {
-                    console.log(response);
-                },
-                (error) => {
-                    console.error(error);
-                }
-            );
+    onSubmit() {
+        if (this.selectedFile) {
+            const userId = this.formProfile.get('id')?.value;
+            this.profileService
+                .updateProfilePic(userId, this.selectedFile)
+                .subscribe(
+                    (response) => {
+            this.uploadMode = false;
+                        
+                        this.authService.getLoggedUserWithToken().subscribe();
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Sucesso',
+                            detail: 'Imagem carregada com sucesso!',
+                        });
+                    },
+                    (error) => {
+                      
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Erro',
+                            detail: 'Erro ao carregar imagem.',
+                        });
+                    }
+                );
+        } else {
+            
         }
     }
 
     confirmDeleteUserProfilePic() {
+        this.uploadMode = false;
         this.confirmationService.confirm({
             target: new EventTarget(),
             message: 'Realmente deseja excluir a foto de perfil?',
@@ -249,7 +321,7 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             value: '1.9',
         },
     ];
-
+    createdNutritionId: number | null = null;
     // Método para calcular a TMB e o GET
     calculateBasalMetabolicRate(): void {
         const peso = this.formProfile.get('peso')?.value;
@@ -257,7 +329,7 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
         const genero = this.formProfile.get('genero')?.value;
         const dataNascimento = this.formProfile.get('data_nascimento')?.value;
         const nivelAtividade = this.formProfile.get('nivel_atividade')?.value;
-
+        const id = this.formProfile.get('id')?.value;
         if (peso && altura && genero && dataNascimento && nivelAtividade) {
             const idade = this.calculateAge(dataNascimento);
 
@@ -272,8 +344,56 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
             }
 
             const get = tmb * parseFloat(nivelAtividade);
-            this.get = get;
-            this.tmb = tmb;
+            const objetivo = this.formProfile.get('objetivo')?.value;
+            /* this.get = get
+            this.tmb = tmb; */
+            let caloria: number;
+            if (objetivo === 'perda_peso') {
+                caloria = get - 500;
+            } else if (objetivo === 'ganho_massa') {
+                caloria = get + 500;
+            } else {
+                caloria = get;
+            }
+
+            const proteina = peso * 2.2;
+            const gordura = (caloria * 0.25) / 9;
+            const carbo = (caloria - (proteina * 4 + gordura * 9)) / 4;
+
+            let proteinaPercentual: number;
+            let gorduraPercentual: number;
+            let carboPercentual: number;
+
+            if (caloria < get) {
+                // Aumento calórico
+                proteinaPercentual = ((proteina * 4) / caloria) * 100;
+                gorduraPercentual = ((gordura * 9) / caloria) * 100;
+                carboPercentual = ((carbo * 4) / caloria) * 100;
+            } else if (caloria > get) {
+                // Diminuição calórica
+                proteinaPercentual = ((proteina * 4) / caloria) * 100;
+                gorduraPercentual = ((gordura * 9) / caloria) * 100;
+                carboPercentual = ((carbo * 4) / caloria) * 100;
+            } else {
+                // Manutenção calórica
+                proteinaPercentual = ((proteina * 4) / caloria) * 100;
+                gorduraPercentual = ((gordura * 9) / caloria) * 100;
+                carboPercentual = ((carbo * 4) / caloria) * 100;
+            }
+           
+            this.formNutrition.patchValue({
+                
+                tmb: tmb.toFixed(2),
+                get: get.toFixed(2),
+                caloria: caloria.toFixed(2),
+                proteina: proteina.toFixed(2),
+                gordura: gordura.toFixed(2),
+                carbo: carbo.toFixed(2),
+                proteinaPercentual: proteinaPercentual.toFixed(2),
+                gorduraPercentual: gorduraPercentual.toFixed(2),
+                carboPercentual: carboPercentual.toFixed(2),
+            });
+            this.nutritionService.setformGoal(this.formNutrition.value);
         }
     }
 

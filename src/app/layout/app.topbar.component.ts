@@ -44,7 +44,7 @@ export class AppTopBarComponent {
         this.authService.obsGetLoggedUser
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
-                console.log('res', res);
+              
                 this.loggedUser = res;
                 this.avatarUrl = res.avatar
                     ? res.avatar
@@ -110,11 +110,11 @@ export class AppTopBarComponent {
                 }
             }
         }
-        console.log('final', filteredLateMeals);
+     
         this.notifications = filteredLateMeals.map(
             (descricao) => `Refeição ${descricao.descricao} não cadastrada.`
         );
-        console.log('this.notifications', this.notifications);
+       
         return filteredLateMeals;
     }
 
@@ -130,7 +130,7 @@ export class AppTopBarComponent {
             return yesterdayFormatted === registerFormatted;
         });
 
-        console.log('this.todayRegisters', this.todayRegisters);
+       
         this.todayRegisters.forEach((register) => (register.checked = true));
     }
 }

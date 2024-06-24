@@ -1,7 +1,7 @@
 <div class="grid" style="margin-top: 1%;">
-    
+
     <div class="col-12">
-        
+
         <div class="card">
             <p-panel header="Bem-vindo(a) a Vitality PLUS" [style]="{'font-family': 'Arial, sans-serif'}">
                 <div class="welcome-message">
@@ -9,7 +9,19 @@
                     <p>Acompanhe seu progresso diário e mantenha-se saudável.</p>
                 </div>
             </p-panel>
+            <div *ngIf="!loggedUser.peso">
+            <p-panel header="Perfil">
+                <div class="progress-history">
+                    <p-card class="diet-card" (click)="navigateToProfile() ">
+                        <span class="card-content empty-card">
+                            <i class="pi pi-plus pi-plus-circle" style="font-size: 2rem"></i>
+                            <p class="empty-card">Termine de concluir seu perfil.</p>
+                        </span>
+                    </p-card>
 
+                </div>  
+            </p-panel>
+        </div>
             <p-panel header="Meta Diária">
                 <div class="daily-goals">
                     <ng-container *ngIf="goal && goal.length > 0; else noGoals">
@@ -61,13 +73,13 @@
                                     pTooltip="{{ calculateTotalNutrient('carbo') }} g" tooltipPosition="top">
                                     <ng-template pTemplate="content"></ng-template>
                                 </p-progressBar>
-                             
-                                  
-                                  <span class="progress-label"
-                                  [ngStyle]="{ 'color': getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo')) > 100 ? '' : '' }">
-                                  {{ getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo')) }}%
-                                    </span>
-                              
+
+
+                                <span class="progress-label"
+                                    [ngStyle]="{ 'color': getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo')) > 100 ? '' : '' }">
+                                    {{ getGoalProgress(goalItem.meta_carboidratos, calculateTotalNutrient('carbo')) }}%
+                                </span>
+
                             </div>
 
                             <br>
@@ -102,18 +114,18 @@
 
 
 
-<p-panel header="Próxima Refeição">
-    <div class="next-meal">
-        <ng-container *ngIf="nextMealId; else noNextMeal">
-            <p>Sua próxima refeição é {{ getMealName(nextMealId) }} às {{ getMealTime(nextMealId) }}.
-            </p>
+            <p-panel header="Próxima Refeição">
+                <div class="next-meal">
+                    <ng-container *ngIf="nextMealId; else noNextMeal">
+                        <p>Sua próxima refeição é {{ getMealName(nextMealId) }} às {{ getMealTime(nextMealId) }}.
+                        </p>
 
-        </ng-container>
-        <ng-template #noNextMeal>
-            <p>Nenhuma refeição próxima agendada.</p>
-        </ng-template>
-    </div>
-</p-panel>
+                    </ng-container>
+                    <ng-template #noNextMeal>
+                        <p>Nenhuma refeição próxima agendada.</p>
+                    </ng-template>
+                </div>
+            </p-panel>
 
 
 
@@ -243,13 +255,13 @@
 
     <style>
         .header-with-notification {
-    display: flex;
-    align-items: center;
-}
+            display: flex;
+            align-items: center;
+        }
 
-.notification-badge {
-    cursor: pointer;
-}
+        .notification-badge {
+            cursor: pointer;
+        }
 
         .progress-label {
             position: absolute;
@@ -376,5 +388,4 @@
             font-weight: bold;
             color: #c72f2f;
         }
-
     </style>

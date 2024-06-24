@@ -125,8 +125,8 @@ export class ProfileService {
 
      setformUserProfile(formUserProfile: User) {
          this.formUserProfile = formUserProfile;
-         console.log('this.formUserProfile', this.formUserProfile);
-    }
+         
+        }
 
 
     registerUser(formUserPassword: User): Observable<any> {
@@ -177,6 +177,8 @@ export class ProfileService {
                 })
             );
     }
+
+
     updateProfilePic(userId: number, file: File): Observable<any> {
         const formData: FormData = new FormData();
         formData.append('avatar', file, file.name);
@@ -184,7 +186,7 @@ export class ProfileService {
         return this.http.post(`/api/user/update-profile-pic/${userId}`, formData).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
-                console.log('Foto de perfil atualizada com sucesso', res);
+               
             }),
             catchError((error: any) => {
                 // Trata o erro da requisição e propaga o erro através de um Observable de erro

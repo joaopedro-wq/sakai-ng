@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit{
             this.profileService.registerUser(this.formLogin.value).subscribe(
                 (res) => {
                     // Handle success, e.g., show a success message or navigate to another page
-                    console.log('Registration successful', res);
+                   
                     this.navigateToLogin()
                 },
                 (error) => {

@@ -5,12 +5,12 @@
     <form class="p-fluid p-formgrid grid" [formGroup]="formGoal">
       <div class="field col-12 md:col-6">
         <label htmlFor="descricao">Calorias (kcal) *</label>
-        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade calorias" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_calorias"/>
+        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade calorias" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_calorias" [ngModel]="nutritionData?.get"/>
 
       </div>
       <div class="field col-6 md-6" [ngClass]="{'field-spacing': formGoal.get('meta_proteinas').hasError('nutrientSumExceeded')}">
         <label htmlFor="descricao">Proteinas (g)*</label>
-        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade Proteinas" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_proteinas"/>
+        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade Proteinas" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_proteinas" [ngModel]="nutritionData?.proteina "/>
         <span *ngIf="formGoal.get('meta_proteinas').hasError('nutrientSumExceeded')" class="text-danger">
             A soma de Proteínas, Carboidratos e Gorduras não pode exceder as Calorias.
         </span>
@@ -19,14 +19,14 @@
     <div class="field col-6 md-6" [ngClass]="{'field-spacing': formGoal.get('meta_carboidratos').hasError('nutrientSumExceeded')}">
   
         <label htmlFor="descricao">Carboidratos (g) *</label>
-        <p-inputNumber id="cal" mode="decimal"  placeholder="Definir quantidade Carboidratos" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_carboidratos"/>
+        <p-inputNumber id="cal" mode="decimal"  placeholder="Definir quantidade Carboidratos" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_carboidratos" [ngModel]="nutritionData?.carbo"/>
         <span *ngIf="formGoal.get('meta_carboidratos').hasError('nutrientSumExceeded')" class="text-danger">
           A soma de Proteínas, Carboidratos e Gorduras não pode exceder as Calorias.
       </span>  
       </div>
       <div class="field col-6 md-6" [ngClass]="{'field-spacing': formGoal.get('meta_gorduras').hasError('nutrientSumExceeded')}">
         <label htmlFor="descricao">Gorduras (g) *</label>
-        <p-inputNumber  id="cal" mode="decimal" placeholder="Definir quantidade Gorduras" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_gorduras" />
+        <p-inputNumber  id="cal" mode="decimal" placeholder="Definir quantidade Gorduras" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_gorduras" [ngModel]="nutritionData?.gordura"/>
         <span *ngIf="formGoal.get('meta_gorduras').hasError('nutrientSumExceeded')" class="text-danger">
           A soma de Proteínas, Carboidratos e Gorduras não pode exceder as Calorias.
       </span> 
@@ -43,4 +43,17 @@
   .text-danger{
     color: rgb(238, 16, 16);
   }
+
+  .custom-accept-button {
+    background-color: green;
+    border-color: green;
+    color: white;
+}
+
+.custom-reject-button {
+    background-color: red;
+    border-color: red;
+    color: white;
+}
+
 </style>

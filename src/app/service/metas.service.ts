@@ -49,6 +49,7 @@ export class GoalService {
             routerLink: [],
             tooltip: '',
         },
+       
     ];
 
     private buttonsList: Array<Button> = [
@@ -75,14 +76,7 @@ export class GoalService {
             routerLink: [],
             tooltip: '',
         },
-
-
-
-
-
-
     ];
-    
 
     private barButton: BarButton = {
         keyService: 'GoalService',
@@ -134,17 +128,14 @@ export class GoalService {
         const hasGoals = this.goalsList && this.goalsList.length > 0;
         this.buttonState('visible', 'cadastrar', !hasGoals);
         this.buttonState('visible', 'filtro', hasGoals);
-
     }
     execActionButton(action: string) {
         switch (action) {
             case 'salvar':
                 let saveFormGoal: Metas = this.formGoal;
-                
-                if (saveFormGoal.id) {
-                   
-                    this.updateGoal(saveFormGoal).subscribe();
 
+                if (saveFormGoal.id) {
+                    this.updateGoal(saveFormGoal).subscribe();
                 } else {
                     this.createGoal(saveFormGoal).subscribe();
                 }
@@ -152,12 +143,12 @@ export class GoalService {
             case 'excluir':
                 this.confirmDeleteDiet();
                 break;
-           case 'filtro':
-           this.openModalFilter = true; 
-           break;
+            case 'filtro':
+                this.openModalFilter = true;
+                break;
         }
     }
-   
+
     openModalFilter: boolean = false;
 
     loadButtons(nmListButtons: string) {
@@ -165,7 +156,7 @@ export class GoalService {
             this.barButton.buttons = this.buttonsForm;
         } else if (nmListButtons == 'list') {
             this.barButton.buttons = this.buttonsList;
-        } 
+        }
 
         this.barButtonsService.startBarraButtons(this.barButton);
     }
@@ -214,22 +205,19 @@ export class GoalService {
     }
 
     updateGoal(formGoal: Metas): Observable<any> {
-        return this.http
-            .put(`/api/meta/${formGoal.id}`, formGoal)
-            .pipe(
-                tap((res: any) => {
-                    // Executa uma ação quando a requisição for bem-sucedida
-                    this.obsSaveGoal.emit(res);
-                }),
-                catchError((error: any) => {
-                    // Trata o erro da requisição e propaga o erro através de um Observable de erro
-                    return throwError(() => new Error(error));
-                })
-            );
+        return this.http.put(`/api/meta/${formGoal.id}`, formGoal).pipe(
+            tap((res: any) => {
+                // Executa uma ação quando a requisição for bem-sucedida
+                this.obsSaveGoal.emit(res);
+            }),
+            catchError((error: any) => {
+                // Trata o erro da requisição e propaga o erro através de um Observable de erro
+                return throwError(() => new Error(error));
+            })
+        );
     }
 
     createGoal(formGoal: Metas): Observable<any> {
-        
         return this.http.post('/api/meta', formGoal).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
@@ -242,11 +230,8 @@ export class GoalService {
         );
     }
 
-    
     public setformGoal(formRegister: Metas) {
-        
         this.formGoal = formRegister;
-       
     }
 
     confirmDeleteDiet() {

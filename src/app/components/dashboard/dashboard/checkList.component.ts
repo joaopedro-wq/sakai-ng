@@ -186,7 +186,9 @@ export class CheckListComponent implements OnInit, OnDestroy {
     navigateToNewRegister() {
         this.router.navigate(['/registros/registro']);
     }
-
+    navigateToProfile() {
+        this.router.navigate(['/profile']);
+    }
     navigateToNewGoal() {
         this.router.navigate(['/metas/registro']);
     }
@@ -239,8 +241,6 @@ export class CheckListComponent implements OnInit, OnDestroy {
                 !snack.checked &&
                 parseInt(snack.horario.split(':')[0]) < currentHours
         );
-
-       
 
         return lateMeals;
     }

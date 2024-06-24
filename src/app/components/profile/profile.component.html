@@ -1,14 +1,47 @@
 <div class="col-12">
   <div class="card">
     <form class="p-fluid p-formgrid grid" [formGroup]="formProfile">
-      <div class="col-12 md:col-4">
-        <img [src]="getUserAvatar()" alt="Avatar" class="col" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 50%;" >
-        <div class="flex justify-content-center items-center gap-2 mt-2">
-          <p-fileUpload mode="basic" name="avatar" accept="image/*" [maxFileSize]="1000000" [url]="getUrlToUpload()" [auto]="true" chooseLabel="Carregar foto" method="post" (onUpload)="authService.getLoggedUserWithToken().subscribe()"></p-fileUpload>
-          <button class="w-auto" pButton pRipple label="Excluir foto" icon="pi pi-trash" (click)="confirmDeleteUserProfilePic()" [disabled]="!formProfile.get('avatar')?.value"></button>
-          
-        </div>
+<div class="col-12 md:col-4">
+  <div *ngIf="formProfile" class="card" >
+    <form (ngSubmit)="onSubmit()" [formGroup]="formProfile">
+      <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+      <div style="display: flex; justify-content: center; margin-top: 5%;"  >
+        <img *ngIf="formProfile.get('avatar')?.value" [src]="formProfile.get('avatar')?.value" alt="Avatar"
+          class="avatar-img" style="align-items: center; max-width: 100%;">
+            <img *ngIf="!formProfile.get('avatar')?.value" src="assets/default-profile.png" alt="Avatar" class="avatar-img"
+              style="align-items: center; max-width: 100%;">
       </div>
+      <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+    </form>
+  </div>
+</div>
+
+<ng-template #headerTemplate >
+  <ng-container *ngTemplateOutlet="headerContent"></ng-container>
+</ng-template>
+<ng-template #headerContent>
+  <p-panel header="{{ formProfile.get('name')?.value }}">
+    <input pInputText type="email" [value]="formProfile.get('email')?.value" disabled>
+  </p-panel>
+</ng-template>
+
+
+
+<ng-template #footerTemplate>
+  <div style="display: flex; justify-content: center; margin-top: 10%;">
+    <p-button [outlined]="true" *ngIf="!uploadMode" (click)="fileInput.click()" icon="pi pi-image"
+      label="Carregar" class="mr-2"></p-button>
+    <input #fileInput style="display: none" type="file" (change)="onFileSelected($event)" accept="image/*" required>
+    <p-button *ngIf="uploadMode" label="Upload" [outlined]="true" severity="contrast" icon="pi pi-upload" type="submit"
+      class="mr-2"></p-button>
+    <p-button *ngIf="formProfile.get('avatar')?.value" label="Excluir" [outlined]="false" severity="danger" icon="pi pi-trash"
+      (click)="confirmDeleteUserProfilePic()" class="mr-2"></p-button>
+  </div>
+</ng-template>
+
+
+
+
       <div class="col-12 md:col-8">
         <div class="p-fluid grid">
           <div class="field col-12 md:col-6">
@@ -43,44 +76,49 @@
         </div>
         
       </form>
-<p-accordion>
-  <p-accordionTab header="Recomendações Nutricionais">
-    <p-fieldset legend="Taxa Metabólica Basal (TMB)"
-      [style]="{'border-color': '#4CAF50', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center justify-content-between">
-        <span>{{ tmb | number:'1.2-2' }} kcal/dia</span>
-        <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
-          (click)="showHelp('TMB')"></button>
+      <div *ngIf="nutrition.length  > 0">
+
+          <p-accordion  *ngFor="let item of nutrition">
+            <p-accordionTab header="Recomendações Nutricionais">
+              <p-fieldset legend="Taxa Metabólica Basal (TMB)"
+                [style]="{'border-color': '#4CAF50', 'border-width': '2px', 'border-style': 'solid'}">
+                <div class="p-d-flex p-ai-center justify-content-between">
+                  <span>{{ item.tmb }} kcal/dia</span>
+                  <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
+                    (click)="showHelp('TMB')"></button>
+                </div>
+              </p-fieldset>
+              <p-fieldset legend="Gasto Energético Total (GET)"
+                [style]="{'border-color': '#2196F3', 'border-width': '2px', 'border-style': 'solid'}">
+                <div class="p-d-flex p-ai-center justify-content-between">
+                  <span>{{ item.get }} kcal/dia</span>
+                  <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
+                    (click)="showHelp('GET')"></button>
+                </div>
+              </p-fieldset>
+              <p-fieldset legend="Proteínas Recomendadas"
+                [style]="{'border-color': '#FFC107', 'border-width': '2px', 'border-style': 'solid'}">
+                <div class="p-d-flex p-ai-center justify-content-between">
+                  <span>{{ item.proteina }} g/dia</span>
+                </div>
+              </p-fieldset>
+              <p-fieldset legend="Gorduras Recomendadas"
+                [style]="{'border-color': '#F44336', 'border-width': '2px', 'border-style': 'solid'}">
+                <div class="p-d-flex p-ai-center justify-content-between">
+                  <span>{{ item.gordura }} g/dia</span>
+                </div>
+              </p-fieldset>
+              <p-fieldset legend="Carboidratos Recomendados"
+                [style]="{'border-color': '#9C27B0', 'border-width': '2px', 'border-style': 'solid'}">
+                <div class="p-d-flex p-ai-center justify-content-between">
+                  <span>{{ item.carbo }} g/dia</span>
+                </div>
+              </p-fieldset>
+            </p-accordionTab>
+          </p-accordion>
+        
       </div>
-    </p-fieldset>
-    <p-fieldset legend="Gasto Energético Total (GET)"
-      [style]="{'border-color': '#2196F3', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center justify-content-between">
-        <span>{{ get | number:'1.2-2' }} kcal/dia</span>
-        <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
-          (click)="showHelp('GET')"></button>
-      </div>
-    </p-fieldset>
-    <p-fieldset legend="Proteínas Recomendadas"
-      [style]="{'border-color': '#FFC107', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center justify-content-between">
-        <span>{{ proteinasRecomendadas() | number:'1.2-2' }} g/dia</span>
-      </div>
-    </p-fieldset>
-    <p-fieldset legend="Gorduras Recomendadas"
-      [style]="{'border-color': '#F44336', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center justify-content-between">
-        <span>{{ gordurasRecomendadas() | number:'1.2-2' }} g/dia</span>
-      </div>
-    </p-fieldset>
-    <p-fieldset legend="Carboidratos Recomendados"
-      [style]="{'border-color': '#9C27B0', 'border-width': '2px', 'border-style': 'solid'}">
-      <div class="p-d-flex p-ai-center justify-content-between">
-        <span>{{ carboidratosRecomendados() | number:'1.2-2' }} g/dia</span>
-      </div>
-    </p-fieldset>
-  </p-accordionTab>
-</p-accordion>
+
 
 
 
@@ -115,3 +153,30 @@
   <p>{{ helpText }}</p>
 </p-dialog>
 <p-confirmDialog></p-confirmDialog>
+
+<style>
+  .avatar-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+
+.profile-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#avatar-upload {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+</style>
