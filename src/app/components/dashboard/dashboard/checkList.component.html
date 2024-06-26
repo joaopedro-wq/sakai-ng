@@ -7,6 +7,8 @@
                 <div class="welcome-message">
                     <h2>Olá, {{ loggedUser?.name }}!</h2>
                     <p>Acompanhe seu progresso diário e mantenha-se saudável.</p>
+                    <p-calendar [(ngModel)]="selectedDate" dateFormat="dd/mm/yy" [showIcon]="true"
+                        (ngModelChange)="filterTodayRegisters(selectedDate)"></p-calendar>
                 </div>
             </p-panel>
             <div *ngIf="!loggedUser?.peso">
@@ -112,22 +114,16 @@
                 </div>
             </p-panel>
 
-            <p-panel header="Relatório do Dia">
-                <ng-container *ngIf="todayRegisters.length > 0; else ter">
-
-                    <p-chart type="doughnut" [data]="data" [options]="options"></p-chart>
-
-                </ng-container>
-                <ng-template #ter>
-
-                    <span class="card-content empty-card">
-
-                        <p class="empty-card">Nenhum Relatório encontrado no dia de hoje.</p>
-                    </span>
-
-                </ng-template>
-
-            </p-panel>
+        <p-panel header="Relatório do Dia">
+            <ng-container *ngIf="todayRegisters.length > 0; else noReport">
+                <p-chart type="doughnut" [data]="data" [options]="options"></p-chart>
+            </ng-container>
+            <ng-template #noReport>
+                <span class="card-content empty-card">
+                    <p class="empty-card">Nenhum Relatório encontrado no dia de hoje.</p>
+                </span>
+            </ng-template>
+        </p-panel>
 
 
 

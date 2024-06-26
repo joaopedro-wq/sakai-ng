@@ -96,6 +96,12 @@
                     (click)="showHelp('GET')"></button>
                 </div>
               </p-fieldset>
+              <p-fieldset legend="Calorias Recomendadas"
+                [style]="{'border-color': '#8BC34A', 'border-width': '2px', 'border-style': 'solid'}">
+                <div class="p-d-flex p-ai-center justify-content-between">
+                  <span>{{ item.caloria }} kcal/dia</span>
+                </div>
+              </p-fieldset>
               <p-fieldset legend="Proteínas Recomendadas"
                 [style]="{'border-color': '#FFC107', 'border-width': '2px', 'border-style': 'solid'}">
                 <div class="p-d-flex p-ai-center justify-content-between">

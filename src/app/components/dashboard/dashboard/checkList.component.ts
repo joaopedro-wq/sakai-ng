@@ -28,6 +28,7 @@ export class CheckListComponent implements OnInit, OnDestroy {
     loggedUser!: User;
     data: any;
     options: any;
+    selectedDate = new Date();
     constructor(
         public registerService: RegisterService,
         public snackService: SnackService,
@@ -40,22 +41,27 @@ export class CheckListComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.register = res;
-                this.filterTodayRegisters();
-                this.markRegisteredSnacks();
+                this.filterTodayRegisters(this.selectedDate);
+                
+               this.markRegisteredSnacks(this.todayRegisters);
+
                 this.calculateNextMeal();
                 this.calculateTotalCalories();
                 this.calculateproteina();
                 this.calculatecarbos();
                 this.calculategordura();
-                this.data = this.getDataForChart();
+                this.data = this.getDataForChart(this.todayRegisters);
             });
 
         this.snackService.obsListSnacks
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((res) => {
                 this.snack = res;
+                this.filterTodayRegisters(this.selectedDate);
+
                 this.sortSnacksByTime();
-                this.markRegisteredSnacks();
+                this.markRegisteredSnacks(this.todayRegisters);
+
                 this.calculateNextMeal();
             });
 
@@ -72,19 +78,12 @@ export class CheckListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const todayDate = new Date();
-        this.today = todayDate.toLocaleDateString();
-
-        this.dayOfWeek = todayDate.toLocaleDateString('pt-BR', {
-            weekday: 'long',
-        });
-        this.updateTime();
-        setInterval(() => this.updateTime(), 1000);
-
-        this.data = this.getDataForChart();
+      
+     
+        this.data = this.getDataForChart(this.todayRegisters);
     }
 
-    getDataForChart() {
+    getDataForChart(todayRegisters) {
         const totalNutrients = {
             proteina: 0,
             gordura: 0,
@@ -92,16 +91,11 @@ export class CheckListComponent implements OnInit, OnDestroy {
             caloria: 0,
         };
 
-        const todayDate = new Date();
-        const formattedTodayDate = todayDate.toISOString().split('T')[0];
-
-        this.register.forEach((registro) => {
-            if (registro.data == formattedTodayDate) {
-                totalNutrients.proteina += registro.nutrientes_totais.proteina;
-                totalNutrients.gordura += registro.nutrientes_totais.gordura;
-                totalNutrients.carbo += registro.nutrientes_totais.carbo;
-                totalNutrients.caloria += registro.nutrientes_totais.caloria;
-            }
+        todayRegisters.forEach((registro) => {
+            totalNutrients.proteina += registro.nutrientes_totais.proteina;
+            totalNutrients.gordura += registro.nutrientes_totais.gordura;
+            totalNutrients.carbo += registro.nutrientes_totais.carbo;
+            totalNutrients.caloria += registro.nutrientes_totais.caloria;
         });
 
         const data = {
@@ -110,16 +104,16 @@ export class CheckListComponent implements OnInit, OnDestroy {
                 {
                     label: 'Consumo',
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)', 
-                        'rgba(54, 162, 235, 0.6)', 
-                        'rgba(255, 206, 86, 0.6)', 
-                        'rgba(75, 192, 192, 0.6)', 
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
                     ],
                     borderColor: [
-                        'rgba(255, 99, 132, 1)', 
-                        'rgba(54, 162, 235, 1)', 
-                        'rgba(255, 206, 86, 1)', 
-                        'rgba(75, 192, 192, 1)', 
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
                     ],
                     borderWidth: 1,
                     hoverBorderColor: '#000000',
@@ -134,6 +128,7 @@ export class CheckListComponent implements OnInit, OnDestroy {
             ],
         };
 
+        this.data = data;
         this.options = {
             responsive: true,
             maintainAspectRatio: false,
@@ -169,20 +164,37 @@ export class CheckListComponent implements OnInit, OnDestroy {
             : 0;
     }
 
-    filterTodayRegisters() {
+  
+    
+    filtroHoje() {
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayFormatted = yesterday.toLocaleDateString();
-
-        this.todayRegisters = this.register.filter((r) => {
-            const registerDate = new Date(r.data);
-            const registerFormatted = registerDate.toLocaleDateString();
-            return yesterdayFormatted === registerFormatted;
-        });
-
-        this.todayRegisters.forEach((register) => (register.checked = true));
+        this.selectedDate = yesterday;
+       
+        
     }
+    
+    
+   filterTodayRegisters(selectedDate: Date) {
+    const formattedSelectedDate = `${selectedDate.getFullYear()}-${('0' + (selectedDate.getMonth() + 1)).slice(-2)}-${('0' + selectedDate.getDate()).slice(-2)}`;
+    
+    // Filtrar registros com base na data selecionada
+    this.todayRegisters = this.register.filter((r) => {
+        return formattedSelectedDate === r.data;
+    });
+
+    // Marcar registros como selecionados
+    this.todayRegisters.forEach((register) => (register.checked = true));
+    
+
+    // Chamar a função para marcar lanches registrados
+    this.markRegisteredSnacks(this.todayRegisters);
+    this.calculateNextMeal()
+    this.sortSnacksByTime() 
+                this.data = this.getDataForChart(this.todayRegisters);
+}
+
 
     sortSnacksByTime() {
         this.snack.sort((a, b) => {
@@ -245,15 +257,16 @@ export class CheckListComponent implements OnInit, OnDestroy {
     formatarHorario(horario: string): string {
         return horario.slice(0, 5);
     }
-    markRegisteredSnacks() {
-        this.snack.forEach((snack) => {
-            snack.checked = this.todayRegisters.some(
-                (register) =>
-                    register.descricao_refeicao.trim() ===
-                    snack.descricao.trim()
-            );
-        });
-    }
+   markRegisteredSnacks(todayRegisters: any[]) {
+    
+
+    this.snack.forEach((snack) => {
+        snack.checked = todayRegisters.some((register) =>
+            register.descricao_refeicao.trim() === snack.descricao.trim()
+        );
+    });
+}
+
 
     navigateToNewRegister() {
         this.router.navigate(['/registros/registro']);

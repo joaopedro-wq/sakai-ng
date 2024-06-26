@@ -42,7 +42,6 @@ import { FieldsetModule } from 'primeng/fieldset';
         TooltipModule,
         BadgeModule,
         FieldsetModule,
-
         CheckboxModule,
         ChartModule,
     ],

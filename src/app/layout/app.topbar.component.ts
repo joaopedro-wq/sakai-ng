@@ -120,12 +120,12 @@ export class AppTopBarComponent {
     }
 
     isMobile(): boolean {
-        return window.innerWidth <= 991; // Define a largura máxima para considerar como mobile
+        return window.innerWidth <= 991; 
     }
     ngOnInit() {
-        this.avatarUrl = this.getUserAvatar();
+        this.avatarUrl =
+            localStorage.getItem('avatar') || 'assets/default-profile.png';
     }
-
     navigateToProfile() {
         this.router.navigate(['/profile']);
     }
@@ -135,13 +135,14 @@ export class AppTopBarComponent {
     }
 
     getUserAvatar(): string {
+        let avatarUrl = 'assets/default-profile.png'; // Padrão caso não haja avatar
         if (this.authService.loggedUser && this.authService.loggedUser.avatar) {
-            console.log('entrei', this.authService.loggedUser.avatar);
-            return this.authService.loggedUser.avatar;
-        } else {
-            return 'assets/default-profile.png';
+            avatarUrl = this.authService.loggedUser.avatar;
+            localStorage.setItem('avatar', avatarUrl); // Armazena a URL da imagem no local storage
         }
+        return avatarUrl;
     }
+
     clearNotifications() {
         this.notifications = [];
     }

@@ -5,7 +5,7 @@
     <form class="p-fluid p-formgrid grid" [formGroup]="formGoal">
       <div class="field col-12 md:col-6">
         <label htmlFor="descricao">Calorias (kcal) *</label>
-        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade calorias" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_calorias" [ngModel]="nutritionData?.get"/>
+        <p-inputNumber id="cal" mode="decimal" placeholder="Definir quantidade calorias" locale="pt-BR" [minFractionDigits]="1" formControlName="meta_calorias" [ngModel]="nutritionData?.caloria"/>
 
       </div>
       <div class="field col-6 md-6" [ngClass]="{'field-spacing': formGoal.get('meta_proteinas').hasError('nutrientSumExceeded')}">
@@ -44,16 +44,6 @@
     color: rgb(238, 16, 16);
   }
 
-  .custom-accept-button {
-    background-color: green;
-    border-color: green;
-    color: white;
-}
 
-.custom-reject-button {
-    background-color: red;
-    border-color: red;
-    color: white;
-}
 
 </style>
