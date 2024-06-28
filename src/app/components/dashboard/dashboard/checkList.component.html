@@ -1,16 +1,21 @@
 <div class="grid" style="margin-top: 1%;">
 
     <div class="col-12">
-
         <div class="card">
-            <p-panel header="Bem-vindo(a) a Vitality PLUS" [style]="{'font-family': 'Arial, sans-serif'}">
-                <div class="welcome-message">
-                    <h2>Olá, {{ loggedUser?.name }}!</h2>
-                    <p>Acompanhe seu progresso diário e mantenha-se saudável.</p>
+        <p-panel [header]="'Bem-vindo(a) a Vitality PLUS'" [style]="{'font-family': 'Arial, sans-serif', 'position': 'relative'}">
+            <span style="position: absolute; top: 0; right: 0; ">
+                
                     <p-calendar [(ngModel)]="selectedDate" dateFormat="dd/mm/yy" [showIcon]="true"
                         (ngModelChange)="filterTodayRegisters(selectedDate)"></p-calendar>
-                </div>
-            </p-panel>
+                
+            </span>
+           
+            <div class="welcome-message">
+                <h2>Olá, {{ loggedUser?.name }}!</h2>
+                <p>Acompanhe seu progresso diário e mantenha-se saudável.</p>
+            </div>
+        </p-panel>
+
             <div *ngIf="!loggedUser?.peso">
                 <p-panel header="Perfil">
                     <div class="progress-history">
@@ -233,16 +238,26 @@
                                         <i class="pi pi-check-circle text-green-500" style="margin-right: 0.5rem;"></i>
                                         Registrada
                                     </td>
-                                    <td *ngIf="snack.id === nextMealId && !snack.checked" class="next-meal-msg">
+                                    <td *ngIf="snack.id === nextMealId && !snack.checked && (today !=selectedDate) && areDatesEqual(today, selectedDate)" class="next-meal-msg">
                                         <i class="pi pi-clock" style="margin-right: 0.5rem;"></i> Próxima refeição
+                                    </td>
+
+                                    <td *ngIf="snack.id === nextMealId && !snack.checked && (today !=selectedDate) && !areDatesEqual(today, selectedDate)"
+                                       class="not-registered-meal-msg">
+                                        <i class="pi pi-exclamation-triangle text-red-500" style="margin-right: 0.5rem;"></i> Não registrada
                                     </td>
                                     <td *ngIf="snack.notRegistered" class="not-registered-meal-msg">
                                         <i class="pi pi-exclamation-triangle text-red-500"
                                             style="margin-right: 0.5rem;"></i> Não registrada
                                     </td>
-                                    <td *ngIf="snack.id !== nextMealId && !snack.checked && !snack.notRegistered"
+                                    <td *ngIf="snack.id !== nextMealId && !snack.checked && !snack.notRegistered && areDatesEqual(today, selectedDate)"
                                         class="not-completed-meal-msg">
                                         <i class="pi pi-hourglass" style="margin-right: 0.5rem;"></i> Aguarde
+                                    </td>
+
+                                    <td *ngIf="snack.id !== nextMealId && !snack.checked && !snack.notRegistered && !areDatesEqual(today, selectedDate)"
+                                        class="not-registered-meal-msg">
+                                        <i class="pi pi-exclamation-triangle text-red-500" style="margin-right: 0.5rem;"></i> Não registrada
                                     </td>
                                 </tr>
                             </ng-template>

@@ -20,7 +20,7 @@ export class CheckListComponent implements OnInit, OnDestroy {
     todayRegisters: Registro[] = [];
     snack: Refeicao[] = [];
     nextMealId: number | null = null;
-    today: string;
+    today: Date;
     currentTime: string;
     location: string;
     dayOfWeek: string;
@@ -29,6 +29,7 @@ export class CheckListComponent implements OnInit, OnDestroy {
     data: any;
     options: any;
     selectedDate = new Date();
+$event: Date;
     constructor(
         public registerService: RegisterService,
         public snackService: SnackService,
@@ -42,8 +43,8 @@ export class CheckListComponent implements OnInit, OnDestroy {
             .subscribe((res) => {
                 this.register = res;
                 this.filterTodayRegisters(this.selectedDate);
-                
-               this.markRegisteredSnacks(this.todayRegisters);
+
+                this.markRegisteredSnacks(this.todayRegisters);
 
                 this.calculateNextMeal();
                 this.calculateTotalCalories();
@@ -78,10 +79,15 @@ export class CheckListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-      
-     
-        this.data = this.getDataForChart(this.todayRegisters);
+        this.today = new Date();
+        this.selectedDate = new Date();
+        this.filterTodayRegisters(this.selectedDate);
     }
+    onDateChange(event: Date) {
+        this.selectedDate = event;
+        this.filterTodayRegisters(this.selectedDate);
+    }
+    
 
     getDataForChart(todayRegisters) {
         const totalNutrients = {
@@ -164,37 +170,41 @@ export class CheckListComponent implements OnInit, OnDestroy {
             : 0;
     }
 
-  
-    
     filtroHoje() {
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
         this.selectedDate = yesterday;
-       
-        
     }
-    
-    
-   filterTodayRegisters(selectedDate: Date) {
-    const formattedSelectedDate = `${selectedDate.getFullYear()}-${('0' + (selectedDate.getMonth() + 1)).slice(-2)}-${('0' + selectedDate.getDate()).slice(-2)}`;
-    
-    // Filtrar registros com base na data selecionada
-    this.todayRegisters = this.register.filter((r) => {
-        return formattedSelectedDate === r.data;
-    });
 
-    // Marcar registros como selecionados
-    this.todayRegisters.forEach((register) => (register.checked = true));
-    
+    filterTodayRegisters(selectedDate: Date) {
+        const formattedSelectedDate = `${selectedDate.getFullYear()}-${(
+            '0' +
+            (selectedDate.getMonth() + 1)
+        ).slice(-2)}-${('0' + selectedDate.getDate()).slice(-2)}`;
 
-    // Chamar a função para marcar lanches registrados
-    this.markRegisteredSnacks(this.todayRegisters);
-    this.calculateNextMeal()
-    this.sortSnacksByTime() 
-                this.data = this.getDataForChart(this.todayRegisters);
-}
+        // Filtrar registros com base na data selecionada
+        this.todayRegisters = this.register.filter((r) => {
+            return formattedSelectedDate === r.data;
+        });
 
+        // Marcar registros como selecionados
+        this.todayRegisters.forEach((register) => (register.checked = true));
+
+        // Chamar a função para marcar lanches registrados
+        this.markRegisteredSnacks(this.todayRegisters);
+        this.calculateNextMeal();
+        this.sortSnacksByTime();
+        this.data = this.getDataForChart(this.todayRegisters);
+    }
+
+    areDatesEqual(date1: Date, date2: Date): boolean {
+        return (
+            date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate()
+        );
+    }
 
     sortSnacksByTime() {
         this.snack.sort((a, b) => {
@@ -221,6 +231,7 @@ export class CheckListComponent implements OnInit, OnDestroy {
 
         let closestMeal: Refeicao | null = null;
         let closestTimeDiff = Infinity;
+        
 
         this.snack.forEach((snack) => {
             const [hours, minutes, seconds] = snack.horario
@@ -257,16 +268,15 @@ export class CheckListComponent implements OnInit, OnDestroy {
     formatarHorario(horario: string): string {
         return horario.slice(0, 5);
     }
-   markRegisteredSnacks(todayRegisters: any[]) {
-    
-
-    this.snack.forEach((snack) => {
-        snack.checked = todayRegisters.some((register) =>
-            register.descricao_refeicao.trim() === snack.descricao.trim()
-        );
-    });
-}
-
+    markRegisteredSnacks(todayRegisters: any[]) {
+        this.snack.forEach((snack) => {
+            snack.checked = todayRegisters.some(
+                (register) =>
+                    register.descricao_refeicao.trim() ===
+                    snack.descricao.trim()
+            );
+        });
+    }
 
     navigateToNewRegister() {
         this.router.navigate(['/registros/registro']);
