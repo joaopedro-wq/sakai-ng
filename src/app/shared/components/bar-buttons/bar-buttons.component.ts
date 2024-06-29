@@ -37,6 +37,7 @@ export class BarButtonsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.tamPag = window.innerWidth;
       
         this.router.events
             .pipe(filter((event: any) => event instanceof NavigationEnd))

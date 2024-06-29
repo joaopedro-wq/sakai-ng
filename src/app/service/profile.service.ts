@@ -13,7 +13,7 @@ import { HttpPersonService } from './http-person.service';
 })
 export class ProfileService {
     private buttonsForm: Array<Button> = [
-        {
+       /*  {
             title: 'alterar_senha',
             label: 'Alterar senha',
             id: 'profile_alterar_senha',
@@ -23,7 +23,7 @@ export class ProfileService {
             icon: 'pi pi-key',
             routerLink: [],
             tooltip: '',
-        },
+        }, */
         {
             title: 'salvar',
             label: 'Salvar',

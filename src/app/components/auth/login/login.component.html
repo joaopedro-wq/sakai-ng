@@ -19,12 +19,12 @@
                     </p-inputGroupAddon>
                     <input type="text" pInputText formControlName="email" placeholder="Email" />
                 </p-inputGroup>
-                <p-inputGroup>
-                    <p-inputGroupAddon>
-                        <i class="pi pi-key"></i>
-                    </p-inputGroupAddon>
-                    <input type="password" pInputText formControlName="password" placeholder="Senha" />
-                </p-inputGroup>
+           
+                     <p-inputGroup>
+                        <p-inputGroupAddon><i class="pi pi-key"></i></p-inputGroupAddon>
+                        <p-password id="password" placeholder="Password" styleClass="w-full"  [toggleMask]="true" [feedback]="true" formControlName="password"></p-password>
+                    </p-inputGroup>
+             
                 <span class="block mt-2" style="color: red;">{{messageInvalid}}</span>
                 <button pButton pRipple class="w-full valueCenterButton" (click)="sendLogin()" [disabled]="formLogin.invalid">
                     <label *ngIf="!loading">ENTRAR</label>
@@ -34,9 +34,9 @@
                     <label *ngIf="!loading">REGISTRE-SE</label>
                     <i *ngIf="loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
                 </button>
-                <button pButton pRipple class="p-button-text text-primary-500" label="ESQUECEU SUA SENHA?"
+             <!--    <button pButton pRipple class="p-button-text text-primary-500" label="ESQUECEU SUA SENHA?"
                 [routerLink]="'/auth/forgotpassword'"></button>
-
+ -->
             </form>
         </div>
     </div>

@@ -1,5 +1,5 @@
 import { Injectable, effect, signal } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject, fromEvent, map } from 'rxjs';
 
 export interface AppConfig {
     menuProfilePosition: string;
@@ -35,7 +35,7 @@ export class LayoutService {
         colorScheme: 'light',
         theme: 'lara-light-indigo',
         scale: 14,
-        menuProfilePosition: ''
+        menuProfilePosition: '',
     };
 
     config = signal<AppConfig>(this.loadConfig());
@@ -49,8 +49,12 @@ export class LayoutService {
         menuHoverActive: false,
         anchored: undefined,
         sidebarActive: false,
-        topbarMenuActive: false
+        topbarMenuActive: false,
     };
+    layoutResol: Observable<Event> = fromEvent(window, 'resize').pipe(
+        map((e: any) => e.target)
+    );
+
     private topbarMenuOpen = new Subject<any>();
 
     private configUpdate = new Subject<AppConfig>();

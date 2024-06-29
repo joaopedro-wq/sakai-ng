@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { LayoutService } from './service/app.layout.service';
 
 
 interface Breadcrumb {
@@ -15,20 +16,24 @@ interface Breadcrumb {
 })
 export class AppBreadcrumbComponent {
     private readonly _breadcrumbs$ = new BehaviorSubject<Breadcrumb[]>([]);
-   
+    tamPagResol: number = 0;
 
     readonly breadcrumbs$ = this._breadcrumbs$.asObservable();
 
-    constructor(private router: Router) {
-        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(event => {
-            const root = this.router.routerState.snapshot.root;
-            const breadcrumbs: Breadcrumb[] = [];
-            this.addBreadcrumb(root, [], breadcrumbs);
+    constructor(private router: Router, private layoutService: LayoutService) {
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .subscribe((event) => {
+                const root = this.router.routerState.snapshot.root;
+                const breadcrumbs: Breadcrumb[] = [];
+                this.addBreadcrumb(root, [], breadcrumbs);
 
-            this._breadcrumbs$.next(breadcrumbs);
-       
+                this._breadcrumbs$.next(breadcrumbs);
+            });
 
-         
+        this.layoutService.layoutResol.subscribe((res: any) => {
+            this.tamPagResol = res.innerWidth;
+            console.log('this.tamPagResol', this.tamPagResol);
         });
     }
 
@@ -54,12 +59,5 @@ export class AppBreadcrumbComponent {
         if (route.firstChild) {
             this.addBreadcrumb(route.firstChild, routeUrl, breadcrumbs);
         }
-
-       
-
     }
-
-    
-
-    
 }

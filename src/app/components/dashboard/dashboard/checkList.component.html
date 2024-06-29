@@ -1,19 +1,25 @@
 <div class="grid" style="margin-top: 1%;">
-
+    
     <div class="col-12">
+        
         <div class="card">
-        <p-panel [header]="'Bem-vindo(a) a Vitality PLUS'" [style]="{'font-family': 'Arial, sans-serif', 'position': 'relative'}">
-            <span style="position: absolute; top: 0; right: 0; ">
-                
-                    <p-calendar [(ngModel)]="selectedDate" dateFormat="dd/mm/yy" [showIcon]="true"
-                        (ngModelChange)="filterTodayRegisters(selectedDate)"></p-calendar>
-                
-            </span>
+          
+        <p-panel [header]="'Bem-vindo(a) a Vitality PLUS'" [style]="{'font-family': 'Arial, sans-serif'}">
+         
            
             <div class="welcome-message">
                 <h2>Olá, {{ loggedUser?.name }}!</h2>
                 <p>Acompanhe seu progresso diário e mantenha-se saudável.</p>
             </div>
+        </p-panel>
+        <p-panel [header]="'Relatorio do Dia'">
+            <p-fieldset legend="Dia" [style]="{'border-color': '#4CAF50', 'border-width': '2px', 'border-style': 'solid'}">
+                <div>
+                    <p-calendar [(ngModel)]="selectedDate" dateFormat="dd/mm/yy" showIcon="true"
+                        style="width: 100%; padding: 10px; font-size: 1rem; border-radius: 5px;">
+                    </p-calendar>
+                </div>
+            </p-fieldset>
         </p-panel>
 
             <div *ngIf="!loggedUser?.peso">
@@ -130,12 +136,10 @@
             </ng-template>
         </p-panel>
 
-
-
-
             <p-panel header="Próxima Refeição">
+              
                 <div class="next-meal">
-                    <ng-container *ngIf="nextMealId; else noNextMeal">
+                    <ng-container *ngIf="nextMealId && areDatesEqual(today, selectedDate); else noNextMeal">
                         <p>Sua próxima refeição é {{ getMealName(nextMealId) }} às {{ getMealTime(nextMealId) }}.
                         </p>
 

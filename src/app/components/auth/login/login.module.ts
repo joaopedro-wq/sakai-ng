@@ -10,6 +10,7 @@ import { RippleModule } from 'primeng/ripple';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { AppConfigModule } from 'src/app/layout/config/config.module';
+import { PasswordModule } from 'primeng/password';
 @NgModule({
     imports: [
         CommonModule,
@@ -22,6 +23,7 @@ import { AppConfigModule } from 'src/app/layout/config/config.module';
         AppConfigModule,
         RippleModule,
         InputGroupModule,
+        PasswordModule,
         InputGroupAddonModule,
     ],
     declarations: [LoginComponent],

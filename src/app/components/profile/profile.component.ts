@@ -147,6 +147,25 @@ export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        /*   this.confirmationService.confirm({
+                        message:
+                            'Deseja salvar as recomendações geradas pelo sistema com base no seu perfil?',
+                        header: 'Confirmação',
+                        icon: 'pi pi-exclamation-triangle',
+                        acceptLabel: 'Sim',
+                        rejectLabel: 'Não',
+                        
+                        accept: () => {
+                            
+                        
+                        },
+                        reject: () => {
+                            
+                        },
+                    }); */
+                
+
+            
         const avatarUrl = localStorage.getItem('avatarUrl');
         if (avatarUrl) {
             // Define a URL da imagem como a imagem exibida

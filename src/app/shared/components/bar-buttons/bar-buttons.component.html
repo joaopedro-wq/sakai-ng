@@ -1,8 +1,16 @@
 
-<ng-template ngFor let-button [ngForOf]="buttons">
+<ng-template  *ngIf="tamPag > 1000" ngFor let-button [ngForOf]="buttons">
     <button pButton pRipple type="button" *ngIf="button.visible"
     [id]="button.id" [icon]="button.icon" [label]="button.label"
     [class]="button.class" (click)="actionButton(button)" [disabled]="button.disabled"
     [routerLink]="button.routerLink" routerLinkActive="router-link-active"
     [pTooltip]="button.tooltip" tooltipPosition="bottom" [loading]="button.loading!" queryParamsHandling='preserve'></button>
+</ng-template>
+
+<ng-template *ngIf=" tamPag <= 1000" ngFor let-button [ngForOf]="buttons">
+    <button pButton pRipple type="button" *ngIf="button.visible" [id]="button.id" [icon]="button.icon"
+        [label]="" [class]="button.class" (click)="actionButton(button)" [disabled]="button.disabled"
+        [routerLink]="button.routerLink" routerLinkActive="router-link-active" [pTooltip]="button.tooltip"
+        tooltipPosition="bottom" [loading]="button.loading!" queryParamsHandling='preserve'></button>
+
 </ng-template>
