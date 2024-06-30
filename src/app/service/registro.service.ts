@@ -11,8 +11,6 @@ import { HttpPersonService } from './http-person.service';
 import { Registro } from '../api/registro';
 import * as XLSX from 'xlsx';
 
-
-
 @Injectable({
     providedIn: 'root',
 })
@@ -125,7 +123,8 @@ export class RegisterService {
                 break;
         }
     }
-
+    modalOptions: boolean = false;
+    modalFIlter: boolean = false;
     public registersList!: Registro[];
     private formRegister!: Registro;
     obsListRegister: EventEmitter<Registro[]> = new EventEmitter();
@@ -176,15 +175,34 @@ export class RegisterService {
 
                 break;
             case 'excel':
-                this.modalExportExcel = true;            
-               /*  this.generateExcel();  */
+                this.modalExportExcel = true;
+                /*  this.generateExcel();  */
                 break;
         }
     }
 
     modalExportExcel: boolean = false;
     generateExcel() {
-        const formattedData = this.registersList.map((item) => ({
+        const formattedData = this.formatData(this.registersList);
+        this.exportToExcel(formattedData);
+    }
+    generateExcelByDate(startDate: Date | null, endDate: Date | null) {
+        if (!startDate || !endDate) {
+            alert('Por favor, selecione as datas de início e término.');
+            return;
+        }
+
+        const filteredData = this.registersList.filter((item) => {
+            const itemDate = new Date(item.data);
+            return itemDate >= startDate && itemDate <= endDate;
+        });
+
+        const formattedData = this.formatData(filteredData);
+        this.exportToExcel(formattedData);
+    }
+
+    formatData(data: any[]) {
+        return data.map((item) => ({
             Data: this.formatDate(item.data),
             'Descrição da Refeição': item.descricao_refeicao,
             Alimentos: item.alimentos
@@ -195,22 +213,23 @@ export class RegisterService {
             'Calorias Totais': item.nutrientes_totais.caloria,
             'Carboidratos Totais': item.nutrientes_totais.carbo,
         }));
+    }
+    exportToExcel(data: any[]) {
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
 
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
-
-        
+        // Definindo largura das colunas
         ws['!cols'] = [
-            { wpx: 100 }, 
-            { wpx: 150 }, 
-            { wpx: 350 }, 
-            { wpx: 75 }, 
-            { wpx: 75 }, 
-            { wpx: 75 }, 
-            { wpx: 75 }, 
+            { wpx: 100 },
+            { wpx: 150 },
+            { wpx: 350 },
+            { wpx: 75 },
+            { wpx: 75 },
+            { wpx: 75 },
+            { wpx: 75 },
         ];
 
         // Estilizando o cabeçalho da planilha
-        const headerCellStyle: any = {
+        const headerCellStyle = {
             font: { bold: true },
             fill: { fgColor: { rgb: 'FFFFAA00' } },
             alignment: { horizontal: 'center' },
@@ -219,28 +238,28 @@ export class RegisterService {
         // Aplicando estilos ao cabeçalho
         const range = XLSX.utils.decode_range(ws['!ref']!);
         for (let C = range.s.c; C <= range.e.c; ++C) {
-            const address = XLSX.utils.encode_col(C) + '1'; 
-            if (!ws[address]) continue;
-            ws[address].s = headerCellStyle;
+            const headerCellAddress = XLSX.utils.encode_col(C) + '1';
+            if (!ws[headerCellAddress]) continue;
+            Object.assign(ws[headerCellAddress], headerCellStyle);
         }
 
-        // Criando estilos para os dados
-        const dataCellStyle: any = {
+        // Estilizando os dados da planilha
+        const dataCellStyle = {
             border: {
                 top: { style: 'thin', color: { rgb: '000000' } },
                 bottom: { style: 'thin', color: { rgb: '000000' } },
                 left: { style: 'thin', color: { rgb: '000000' } },
                 right: { style: 'thin', color: { rgb: '000000' } },
             },
-            alignment: { horizontal: 'center' }, // Alinhamento ao centro
+            alignment: { horizontal: 'center' },
         };
 
         // Aplicando estilos aos dados
         for (let R = range.s.r + 1; R <= range.e.r; ++R) {
             for (let C = range.s.c; C <= range.e.c; ++C) {
-                const address = XLSX.utils.encode_cell({ r: R, c: C });
-                if (!ws[address]) continue;
-                ws[address].s = dataCellStyle;
+                const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                if (!ws[cellAddress]) continue;
+                Object.assign(ws[cellAddress], dataCellStyle);
             }
         }
 
@@ -258,8 +277,6 @@ export class RegisterService {
         return `${day}/${month}/${year}`;
     }
 
-    modalOptions: boolean = false;
-    modalFIlter: boolean = false;
     loadButtons(nmListButtons: string) {
         if (nmListButtons == 'form') {
             this.barButton.buttons = this.buttonsForm;

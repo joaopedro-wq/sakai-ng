@@ -354,9 +354,20 @@ export class DashboardRelatorioComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-    startDate: string = '';
-    endDate: string = '';
+    exportAllRecords: boolean = false;
+    startDate: Date | null = null;
+    endDate: Date | null = null;
     exportExcel() {
-        this.registerService.generateExcel();
+        if (!this.exportAllRecords) {
+            this.registerService.generateExcel();
+        } else {
+            this.registerService.generateExcelByDate(
+                this.startDate,
+                this.endDate
+            );
+        }
+        this.registerService.modalExportExcel = false;
+        this.registerService.loadButtons('dashboard');
+
     }
 }
