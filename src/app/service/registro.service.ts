@@ -9,7 +9,9 @@ import { BarButton } from '../shared/api/bar-button';
 import { ActionButton } from '../shared/api/action-button';
 import { HttpPersonService } from './http-person.service';
 import { Registro } from '../api/registro';
-import { FormArray } from '@angular/forms';
+import * as XLSX from 'xlsx';
+
+
 
 @Injectable({
     providedIn: 'root',
@@ -82,12 +84,22 @@ export class RegisterService {
             id: 'Alimento_Opcao',
             visible: true,
             disabled: false,
-            class: 'inline-block',
+            class: 'p-button-outlined',
             icon: 'pi pi-filter',
             routerLink: [],
             tooltip: '',
         },
-       
+        {
+            title: 'excel',
+            label: 'Exportar',
+            id: 'Alimento_Opcao',
+            visible: true,
+            disabled: false,
+            class: 'button-custom button-excel',
+            icon: 'pi pi-file-excel',
+            routerLink: [],
+            tooltip: '',
+        },
     ];
 
     private barButton: BarButton = {
@@ -111,7 +123,6 @@ export class RegisterService {
                     }
                 });
                 break;
-            
         }
     }
 
@@ -152,21 +163,101 @@ export class RegisterService {
                 } else {
                     this.createRegister(saveFormFood).subscribe();
                 }
+
                 break;
             case 'excluir':
                 this.confirmDeleteRegister();
                 break;
             case 'Opcao':
-            this.modalOptions = true;
+                this.modalOptions = true;
                 break;
-                case 'filtro':
-            this.modalFIlter = true;
+            case 'filtro':
+                this.modalFIlter = true;
 
-                    break
-
+                break;
+            case 'excel':
+                this.modalExportExcel = true;            
+               /*  this.generateExcel();  */
+                break;
         }
     }
-   
+
+    modalExportExcel: boolean = false;
+    generateExcel() {
+        const formattedData = this.registersList.map((item) => ({
+            Data: this.formatDate(item.data),
+            'Descrição da Refeição': item.descricao_refeicao,
+            Alimentos: item.alimentos
+                .map((alimento) => alimento.descricao)
+                .join(', '),
+            'Proteína Total': item.nutrientes_totais.proteina,
+            'Gordura Total': item.nutrientes_totais.gordura,
+            'Calorias Totais': item.nutrientes_totais.caloria,
+            'Carboidratos Totais': item.nutrientes_totais.carbo,
+        }));
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
+
+        
+        ws['!cols'] = [
+            { wpx: 100 }, 
+            { wpx: 150 }, 
+            { wpx: 350 }, 
+            { wpx: 75 }, 
+            { wpx: 75 }, 
+            { wpx: 75 }, 
+            { wpx: 75 }, 
+        ];
+
+        // Estilizando o cabeçalho da planilha
+        const headerCellStyle: any = {
+            font: { bold: true },
+            fill: { fgColor: { rgb: 'FFFFAA00' } },
+            alignment: { horizontal: 'center' },
+        };
+
+        // Aplicando estilos ao cabeçalho
+        const range = XLSX.utils.decode_range(ws['!ref']!);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const address = XLSX.utils.encode_col(C) + '1'; 
+            if (!ws[address]) continue;
+            ws[address].s = headerCellStyle;
+        }
+
+        // Criando estilos para os dados
+        const dataCellStyle: any = {
+            border: {
+                top: { style: 'thin', color: { rgb: '000000' } },
+                bottom: { style: 'thin', color: { rgb: '000000' } },
+                left: { style: 'thin', color: { rgb: '000000' } },
+                right: { style: 'thin', color: { rgb: '000000' } },
+            },
+            alignment: { horizontal: 'center' }, // Alinhamento ao centro
+        };
+
+        // Aplicando estilos aos dados
+        for (let R = range.s.r + 1; R <= range.e.r; ++R) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const address = XLSX.utils.encode_cell({ r: R, c: C });
+                if (!ws[address]) continue;
+                ws[address].s = dataCellStyle;
+            }
+        }
+
+        // Criando e salvando o arquivo Excel
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Registros');
+        XLSX.writeFile(wb, 'Registros.xlsx');
+    }
+
+    formatDate(dateInput: string | Date): string {
+        const date = new Date(dateInput);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
     modalOptions: boolean = false;
     modalFIlter: boolean = false;
     loadButtons(nmListButtons: string) {
@@ -174,9 +265,8 @@ export class RegisterService {
             this.barButton.buttons = this.buttonsForm;
         } else if (nmListButtons == 'list') {
             this.barButton.buttons = this.buttonsList;
-        } else if(nmListButtons == 'dashboard'){
+        } else if (nmListButtons == 'dashboard') {
             this.barButton.buttons = this.buttonsDashboard;
-            
         }
 
         this.barButtonsService.startBarraButtons(this.barButton);
@@ -213,7 +303,6 @@ export class RegisterService {
     }
 
     createRegister(formRegister: Registro): Observable<any> {
-        
         return this.http.post('/api/registro', formRegister).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
@@ -256,7 +345,6 @@ export class RegisterService {
 
     public setformFood(formRegister: Registro) {
         this.formRegister = formRegister;
-       
     }
 
     confirmDeleteRegister() {

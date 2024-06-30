@@ -354,4 +354,9 @@ export class DashboardRelatorioComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
+    startDate: string = '';
+    endDate: string = '';
+    exportExcel() {
+        this.registerService.generateExcel();
+    }
 }
