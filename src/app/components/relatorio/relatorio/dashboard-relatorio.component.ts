@@ -82,6 +82,7 @@ export class DashboardRelatorioComponent implements OnInit, OnDestroy {
         const dataFim = this.filtroForm.get('dataFim')?.value;
 
         if (data && dataFim) {
+            
             let saveFormFood = data;
             let dataFims = dataFim;
             saveFormFood = this.datePipe.transform(saveFormFood, 'yyyy-MM-dd')!;
@@ -122,32 +123,60 @@ export class DashboardRelatorioComponent implements OnInit, OnDestroy {
             this.setupChart();
             this.setupChartLine();
         } else {
-            this.labelsGraficos = this.register.map((item: any) =>
-                this.formatDate(item.data)
-            );
-            this.registroProteina = this.register.map(
-                (item: any) => item.nutrientes_totais.proteina
-            );
-            this.registroCarbo = this.register.map(
-                (item: any) => item.nutrientes_totais.carbo
-            );
-            this.registroGordura = this.register.map(
-                (item: any) => item.nutrientes_totais.gordura
-            );
-
-            this.nomeALimento = this.register.map((item: any) => {
-                return item.alimentos.map(
-                    (alimento: any) => alimento.descricao
-                );
+            this.register.sort((a, b) => {
+                const dateA = new Date(a.data).getTime();
+                const dateB = new Date(b.data).getTime();
+                return dateB - dateA;
             });
+            const ultimaData =
+                this.register.length > 0 ? this.register[0].data : null;
 
-            this.registroCaloria = this.register.map(
-                (item: any) => item.nutrientes_totais.caloria
-            );
+           
+            if (ultimaData) {
+                const registrosFiltrados = this.register.filter((item) => {
+                    const dataItem = this.datePipe.transform(
+                        item.data,
+                        'yyyy-MM-dd'
+                    )!;
+                    return (
+                        dataItem ===
+                        this.datePipe.transform(ultimaData, 'yyyy-MM-dd')!
+                    );
+                });
 
-            this.labelsDescricao_refeicao = this.register.map(
-                (item: any) => item.descricao_refeicao
-            );
+                this.labelsGraficos = registrosFiltrados.map((item: any) =>
+                    this.formatDate(item.data)
+                );
+                this.registroProteina = registrosFiltrados.map(
+                    (item: any) => item.nutrientes_totais.proteina
+                );
+                this.registroCarbo = registrosFiltrados.map(
+                    (item: any) => item.nutrientes_totais.carbo
+                );
+                this.registroGordura = registrosFiltrados.map(
+                    (item: any) => item.nutrientes_totais.gordura
+                );
+                this.nomeALimento = registrosFiltrados.map((item: any) => {
+                    return item.alimentos.map(
+                        (alimento: any) => alimento.descricao
+                    );
+                });
+                this.registroCaloria = registrosFiltrados.map(
+                    (item: any) => item.nutrientes_totais.caloria
+                );
+                this.labelsDescricao_refeicao = registrosFiltrados.map(
+                    (item: any) => item.descricao_refeicao
+                );
+            } else {
+                // Caso não haja registros, limpar os dados dos gráficos
+                this.labelsGraficos = [];
+                this.registroProteina = [];
+                this.registroCarbo = [];
+                this.registroGordura = [];
+                this.nomeALimento = [];
+                this.registroCaloria = [];
+                this.labelsDescricao_refeicao = [];
+            }
             this.setupChartLine();
             this.setupChart();
         }
@@ -368,6 +397,18 @@ export class DashboardRelatorioComponent implements OnInit, OnDestroy {
         }
         this.registerService.modalExportExcel = false;
         this.registerService.loadButtons('dashboard');
+    }
 
+    exportPDF() {
+        if (!this.exportAllRecords) {
+            this.registerService.generatePDF();
+        } else {
+            this.registerService.generatePDFByDate(
+                this.startDate,
+                this.endDate
+            );
+        }
+        this.registerService.modalExportPdf = false;
+        this.registerService.loadButtons('dashboard');
     }
 }

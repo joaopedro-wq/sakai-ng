@@ -10,6 +10,8 @@ import { ActionButton } from '../shared/api/action-button';
 import { HttpPersonService } from './http-person.service';
 import { Registro } from '../api/registro';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Injectable({
     providedIn: 'root',
@@ -89,14 +91,25 @@ export class RegisterService {
         },
         {
             title: 'excel',
-            label: 'Exportar',
+            label: 'Excel',
             id: 'Alimento_Opcao',
             visible: true,
             disabled: false,
             class: 'button-custom button-excel',
             icon: 'pi pi-file-excel',
             routerLink: [],
-            tooltip: '',
+            tooltip: 'Exportação via Excel',
+        },
+        {
+            title: 'pdf',
+            label: 'PDF',
+            id: 'Alimento_Opcao',
+            visible: true,
+            disabled: false,
+            class: 'p-button-danger',
+            icon: 'pi pi-file-pdf',
+            routerLink: [],
+            tooltip: 'Exportação via PDF',
         },
     ];
 
@@ -176,19 +189,31 @@ export class RegisterService {
                 break;
             case 'excel':
                 this.modalExportExcel = true;
-                /*  this.generateExcel();  */
+
+                break;
+            case 'pdf':
+                this.modalExportPdf = true;
                 break;
         }
     }
 
     modalExportExcel: boolean = false;
+    modalExportPdf: boolean = false;
+
     generateExcel() {
         const formattedData = this.formatData(this.registersList);
         this.exportToExcel(formattedData);
     }
+
     generateExcelByDate(startDate: Date | null, endDate: Date | null) {
         if (!startDate || !endDate) {
-            alert('Por favor, selecione as datas de início e término.');
+          this.confirmationService.confirm({
+              message: 'Por favor, selecione as datas de início e término.',
+              header: 'Erro de Exportação',
+              icon: 'pi pi-exclamation-triangle',
+              acceptLabel: 'OK',
+              rejectVisible: false, 
+          });
             return;
         }
 
@@ -208,27 +233,34 @@ export class RegisterService {
             Alimentos: item.alimentos
                 .map((alimento) => alimento.descricao)
                 .join(', '),
-            'Proteína Total': item.nutrientes_totais.proteina,
-            'Gordura Total': item.nutrientes_totais.gordura,
-            'Calorias Totais': item.nutrientes_totais.caloria,
-            'Carboidratos Totais': item.nutrientes_totais.carbo,
+            'Proteínas (g)': item.nutrientes_totais.proteina,
+            'Gorduras (g)': item.nutrientes_totais.gordura,
+            'Carboidratos (g)': item.nutrientes_totais.carbo,
+            'Calorias (kcal)': item.nutrientes_totais.caloria,
         }));
+    }
+
+    calculateTotal(data: any[], columnName: string): number {
+        return data.reduce(
+            (acc, curr) => acc + parseFloat(curr[columnName] || 0),
+            0
+        );
     }
     exportToExcel(data: any[]) {
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
 
-        // Definindo largura das colunas
+        
         ws['!cols'] = [
             { wpx: 100 },
             { wpx: 150 },
             { wpx: 350 },
             { wpx: 75 },
             { wpx: 75 },
-            { wpx: 75 },
+            { wpx: 80 },
             { wpx: 75 },
         ];
 
-        // Estilizando o cabeçalho da planilha
+        
         const headerCellStyle = {
             font: { bold: true },
             fill: { fgColor: { rgb: 'FFFFAA00' } },
@@ -243,6 +275,19 @@ export class RegisterService {
             Object.assign(ws[headerCellAddress], headerCellStyle);
         }
 
+        // Adicionando linha de totais
+        const totalRow = [
+            '',
+            '',
+            'Totais',
+            this.calculateTotal(data, 'Proteínas (g)'),
+            this.calculateTotal(data, 'Gorduras (g)'),
+            this.calculateTotal(data, 'Carboidratos (g)'),
+            this.calculateTotal(data, 'Calorias (kcal)'),
+        ];
+
+        XLSX.utils.sheet_add_aoa(ws, [totalRow], { origin: -1 });
+
         // Estilizando os dados da planilha
         const dataCellStyle = {
             border: {
@@ -255,7 +300,7 @@ export class RegisterService {
         };
 
         // Aplicando estilos aos dados
-        for (let R = range.s.r + 1; R <= range.e.r; ++R) {
+        for (let R = range.s.r + 1; R <= range.e.r + 1; ++R) {
             for (let C = range.s.c; C <= range.e.c; ++C) {
                 const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
                 if (!ws[cellAddress]) continue;
@@ -267,6 +312,127 @@ export class RegisterService {
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Registros');
         XLSX.writeFile(wb, 'Registros.xlsx');
+    }
+    generatePDF() {
+        const formattedData = this.formatData(this.registersList);
+        this.exportToPDF(formattedData);
+    }
+
+    generatePDFByDate(startDate: Date | null, endDate: Date | null) {
+        if (!startDate || !endDate) {
+           this.confirmationService.confirm({
+               message: 'Por favor, selecione as datas de início e término.',
+               header: 'Erro de Exportação',
+               icon: 'pi pi-exclamation-triangle',
+               acceptLabel: 'OK',
+               rejectVisible: false,
+           });
+            return;
+        }
+
+        const filteredData = this.registersList.filter((item) => {
+            const itemDate = new Date(item.data);
+            return itemDate >= startDate && itemDate <= endDate;
+        });
+
+        const formattedData = this.formatData(filteredData);
+        this.exportToPDF(formattedData);
+    }
+    exportToPDF(data: any[]) {
+        const doc = new jsPDF();
+
+        // Adicionando uma imagem e título na mesma linha
+        const imageUrl = '../../assets/layout/images/OficialLogo1.png'; // Adicione aqui a sua imagem
+        const imgWidth = 70;
+        const imgHeight = 70;
+        const margin = 10;
+
+        // Posição da imagem
+        const imgX = doc.internal.pageSize.getWidth() - imgWidth - margin;
+        const imgY = 10;
+
+        // Posição do título
+        const titleX = margin;
+        const titleY = imgY + imgHeight / 2;
+
+        doc.addImage(imageUrl, 'PNG', imgX, imgY, imgWidth, imgHeight);
+        doc.setFontSize(18);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Relatório de Registros de Refeições', titleX, titleY);
+
+        // Estilos para a tabela
+        const tableColumn = [
+            'Data',
+            'Descrição da Refeição',
+            'Alimentos',
+            'Proteína (g)',
+            'Gordura (g)',
+            'Carboidrato (g)',
+            'Calorias (kcal)',
+        ];
+
+        const tableRows: any[] = [];
+
+        // Inicializando os totais
+        let totalProteina = 0;
+        let totalGordura = 0;
+        let totalCarboidrato = 0;
+        let totalCalorias = 0;
+
+        data.forEach((item) => {
+            const row = [
+                item.Data,
+                item['Descrição da Refeição'],
+                item.Alimentos,
+                item['Proteínas (g)'],
+                item['Gorduras (g)'],
+                item['Carboidratos (g)'],
+                item['Calorias (kcal)'],
+            ];
+            tableRows.push(row);
+
+            // Somando os totais
+            totalProteina += parseFloat(item['Proteínas (g)']);
+            totalGordura += parseFloat(item['Gorduras (g)']);
+            totalCarboidrato += parseFloat(item['Carboidratos (g)']);
+            totalCalorias += parseFloat(item['Calorias (kcal)']);
+        });
+
+        // Adicionando a linha de totais
+        const totalRow = [
+            '', // Data
+            '', // Descrição da Refeição
+            'Totais', // Alimentos
+            totalProteina.toFixed(2),
+            totalGordura.toFixed(2),
+            totalCarboidrato.toFixed(2),
+            totalCalorias.toFixed(2),
+        ];
+
+        tableRows.push(totalRow);
+
+        // AutoTable plugin para gerar a tabela
+        (doc as any).autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: imgY + imgHeight + 10,
+            styles: { fontSize: 8, halign: 'center' },
+            headStyles: {
+                fillColor: [0, 128, 0],
+                textColor: 255,
+                fontSize: 10,
+                halign: 'center',
+            },
+            bodyStyles: { lineColor: [0, 0, 0], lineWidth: 0.1 },
+            footStyles: {
+                fillColor: [0, 128, 0],
+                textColor: 255,
+                fontSize: 10,
+                halign: 'center',
+            },
+        });
+
+        doc.save('RelatorioRegistros.pdf');
     }
 
     formatDate(dateInput: string | Date): string {
