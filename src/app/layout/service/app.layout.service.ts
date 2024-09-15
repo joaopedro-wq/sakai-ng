@@ -3,6 +3,7 @@ import { Observable, Subject, fromEvent, map } from 'rxjs';
 
 export interface AppConfig {
     menuProfilePosition: string;
+    menuProfilePosition: string;
     inputStyle: string;
     colorScheme: string;
     theme: string;
@@ -21,7 +22,6 @@ interface LayoutState {
     staticMenuMobileActive: boolean;
     menuHoverActive: boolean;
     topbarMenuActive: boolean;
-
 }
 
 @Injectable({

@@ -1,6 +1,9 @@
 <style>
 
 </style>
+<style>
+
+</style>
 <button class="layout-config-button p-link" type="button" (click)="onConfigButtonClick()">
     <i class="pi pi-cog"></i>
 </button>
@@ -60,28 +63,29 @@
 
     <h5>Temas</h5>
     <div class="grid">
-        
-        <div class="col-12">
-            <p-radioButton name="theme"   [(ngModel)]="selectedTheme"  class="p-link w-2rem h-2rem" (click)="changeTheme('vela-blue', 'dark')"></p-radioButton>
-            <label for="">Blue Blue</label>
-        </div>
-        <div class="col-12">
-            <p-radioButton  name="theme"  [(ngModel)]="selectedTheme"  class="p-link w-2rem h-2rem" (click)="changeTheme('vela-green', 'dark')"></p-radioButton>
-            <label for="">Blue Green</label>
-        </div>
 
         <div class="col-12">
-            <p-radioButton name="theme"  [(ngModel)]="selectedTheme"  class="p-link w-2rem h-2rem" (click)="changeTheme('arya-green', 'dark')"></p-radioButton>
+            <p-radioButton name="theme" [(ngModel)]="selectedTheme" class="p-link w-2rem h-2rem"
+                (click)="changeTheme('vela-blue', 'dark')"></p-radioButton>
+            <label for="">Blue </label>
+        </div>
+        
+
+        <div class="col-12">
+            <p-radioButton name="theme" [(ngModel)]="selectedTheme" class="p-link w-2rem h-2rem"
+                (click)="changeTheme('arya-green', 'dark')"></p-radioButton>
             <label for="">Dark Green</label>
 
 
         </div>
         <div class="col-12">
-            <p-radioButton name="theme"  [(ngModel)]="selectedTheme"  class="p-link w-2rem h-2rem" (click)="changeTheme('arya-orange', 'dark')"></p-radioButton>
-            <label for="">Dark Orange</label>
+            <p-radioButton name="theme" [(ngModel)]="selectedTheme" class="p-link w-2rem h-2rem"
+                (click)="changeTheme('md-dark-indigo', 'dark')"></p-radioButton>
+            <label for="">Dark </label>
         </div>
 
-      
+
 
     </div>
+
 </p-sidebar>
