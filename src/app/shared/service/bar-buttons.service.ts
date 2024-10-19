@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ActionButton } from '../api/action-button';
-import { BarButton } from '../api/bar-button';
+import { ActionButton } from '../components/api/action-button';
+import { BarButton } from '../components/api/bar-button';
 
 @Injectable({
     providedIn: 'root',

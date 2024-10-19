@@ -4,9 +4,9 @@ import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { BarButtonsService } from '../shared/service/bar-buttons.service';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { Button } from 'src/app/shared/api/button';
-import { BarButton } from '../shared/api/bar-button';
-import { ActionButton } from '../shared/api/action-button';
+import { Button } from 'src/app/shared/components/api/button';
+import { BarButton } from '../shared/components/api/bar-button';
+import { ActionButton } from '../shared/components/api/action-button';
 import { HttpPersonService } from './http-person.service';
 import { Registro } from '../api/registro';
 import * as XLSX from 'xlsx';
@@ -207,13 +207,13 @@ export class RegisterService {
 
     generateExcelByDate(startDate: Date | null, endDate: Date | null) {
         if (!startDate || !endDate) {
-          this.confirmationService.confirm({
-              message: 'Por favor, selecione as datas de início e término.',
-              header: 'Erro de Exportação',
-              icon: 'pi pi-exclamation-triangle',
-              acceptLabel: 'OK',
-              rejectVisible: false, 
-          });
+            this.confirmationService.confirm({
+                message: 'Por favor, selecione as datas de início e término.',
+                header: 'Erro de Exportação',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: 'OK',
+                rejectVisible: false,
+            });
             return;
         }
 
@@ -249,7 +249,6 @@ export class RegisterService {
     exportToExcel(data: any[]) {
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
 
-        
         ws['!cols'] = [
             { wpx: 100 },
             { wpx: 150 },
@@ -260,7 +259,6 @@ export class RegisterService {
             { wpx: 75 },
         ];
 
-        
         const headerCellStyle = {
             font: { bold: true },
             fill: { fgColor: { rgb: 'FFFFAA00' } },
@@ -320,13 +318,13 @@ export class RegisterService {
 
     generatePDFByDate(startDate: Date | null, endDate: Date | null) {
         if (!startDate || !endDate) {
-           this.confirmationService.confirm({
-               message: 'Por favor, selecione as datas de início e término.',
-               header: 'Erro de Exportação',
-               icon: 'pi pi-exclamation-triangle',
-               acceptLabel: 'OK',
-               rejectVisible: false,
-           });
+            this.confirmationService.confirm({
+                message: 'Por favor, selecione as datas de início e término.',
+                header: 'Erro de Exportação',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: 'OK',
+                rejectVisible: false,
+            });
             return;
         }
 

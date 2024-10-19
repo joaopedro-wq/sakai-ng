@@ -55,9 +55,7 @@ export class ListAlimentosComponent implements OnInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
-    /*  deleteCompany(id: number) {
-        this.categoryService.deleteCategory(id).subscribe(() => {});
-    } */
+    
 
     navigateToCompanyEdit(id: number) {
         this.router.navigate([`/alimentos/registro/${id}`]);

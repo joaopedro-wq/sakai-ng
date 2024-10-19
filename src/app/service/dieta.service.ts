@@ -3,9 +3,9 @@ import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { BarButtonsService } from '../shared/service/bar-buttons.service';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { Button } from 'src/app/shared/api/button';
-import { BarButton } from '../shared/api/bar-button';
-import { ActionButton } from '../shared/api/action-button';
+import { Button } from 'src/app/shared/components/api/button';
+import { BarButton } from '../shared/components/api/bar-button';
+import { ActionButton } from '../shared/components/api/action-button';
 import { HttpPersonService } from './http-person.service';
 import { Registro } from '../api/registro';
 import { Dieta } from '../api/dieta';
@@ -63,7 +63,6 @@ export class DietService {
             tooltip: '',
         },
     ];
-    
 
     private barButton: BarButton = {
         keyService: 'DietService',
@@ -116,11 +115,9 @@ export class DietService {
         switch (action) {
             case 'salvar':
                 let saveFormFood: Dieta = this.formDiet;
-                
-                if (saveFormFood.id) {
-                   
-                    this.updateDiet(saveFormFood).subscribe();
 
+                if (saveFormFood.id) {
+                    this.updateDiet(saveFormFood).subscribe();
                 } else {
                     this.createRegister(saveFormFood).subscribe();
                 }
@@ -129,12 +126,12 @@ export class DietService {
                 this.confirmDeleteDiet();
                 break;
             case 'Opcao':
-            this.modalOptions = true;
+                this.modalOptions = true;
 
                 break;
         }
     }
-   
+
     modalOptions: boolean = false;
 
     loadButtons(nmListButtons: string) {
@@ -142,7 +139,7 @@ export class DietService {
             this.barButton.buttons = this.buttonsForm;
         } else if (nmListButtons == 'list') {
             this.barButton.buttons = this.buttonsList;
-        } 
+        }
 
         this.barButtonsService.startBarraButtons(this.barButton);
     }
@@ -191,22 +188,19 @@ export class DietService {
     }
 
     updateDiet(formDiet: Dieta): Observable<any> {
-        return this.http
-            .put(`/api/dieta/${formDiet.id}`, formDiet)
-            .pipe(
-                tap((res: any) => {
-                    // Executa uma ação quando a requisição for bem-sucedida
-                    this.obsSaveDiet.emit(res);
-                }),
-                catchError((error: any) => {
-                    // Trata o erro da requisição e propaga o erro através de um Observable de erro
-                    return throwError(() => new Error(error));
-                })
-            );
+        return this.http.put(`/api/dieta/${formDiet.id}`, formDiet).pipe(
+            tap((res: any) => {
+                // Executa uma ação quando a requisição for bem-sucedida
+                this.obsSaveDiet.emit(res);
+            }),
+            catchError((error: any) => {
+                // Trata o erro da requisição e propaga o erro através de um Observable de erro
+                return throwError(() => new Error(error));
+            })
+        );
     }
 
     createRegister(formDiet: Dieta): Observable<any> {
-        
         return this.http.post('/api/dieta', formDiet).pipe(
             tap((res: any) => {
                 // Executa uma ação quando a requisição for bem-sucedida
@@ -219,11 +213,8 @@ export class DietService {
         );
     }
 
-    
     public setformDiet(formRegister: Dieta) {
-        
         this.formDiet = formRegister;
-       
     }
 
     confirmDeleteDiet() {

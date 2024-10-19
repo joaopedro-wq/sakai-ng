@@ -1,15 +1,14 @@
-import { EventEmitter, Injectable } from "@angular/core";
-import { Alimento } from "../api/alimento";
-import { DatePipe } from "@angular/common";
-import { ConfirmationService } from "primeng/api";
-import { BarButtonsService } from "../shared/service/bar-buttons.service";
-import { HttpClient } from "@angular/common/http";
-import { Observable, catchError, tap, throwError } from "rxjs";
-import { Button } from 'src/app/shared/api/button';
-import { BarButton } from "../shared/api/bar-button";
-import { ActionButton } from "../shared/api/action-button";
- import { HttpPersonService } from "./http-person.service"; 
-
+import { EventEmitter, Injectable } from '@angular/core';
+import { Alimento } from '../api/alimento';
+import { DatePipe } from '@angular/common';
+import { ConfirmationService } from 'primeng/api';
+import { BarButtonsService } from '../shared/service/bar-buttons.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Button } from 'src/app/shared/components/api/button';
+import { BarButton } from '../shared/components/api/bar-button';
+import { ActionButton } from '../shared/components/api/action-button';
+import { HttpPersonService } from './http-person.service';
 
 @Injectable({
     providedIn: 'root',
@@ -49,7 +48,6 @@ export class FoodService {
             routerLink: [],
             tooltip: '',
         },
-        
     ];
 
     private buttonsList: Array<Button> = [
@@ -70,7 +68,6 @@ export class FoodService {
         keyService: 'AlimentoService',
         buttons: [],
     };
-   
 
     buttonState(action: string, nmButton: string, value: boolean) {
         switch (action) {
@@ -89,9 +86,9 @@ export class FoodService {
                 });
                 break;
         }
-    } 
+    }
 
-    public foodsList!: Alimento [];
+    public foodsList!: Alimento[];
     private formFood!: Alimento;
     obsListFoods: EventEmitter<Alimento[]> = new EventEmitter();
     obsLoadFood: EventEmitter<Alimento> = new EventEmitter();
@@ -101,23 +98,23 @@ export class FoodService {
     constructor(
         private http: HttpPersonService,
         private barButtonsService: BarButtonsService,
-        
+
         private confirmationService: ConfirmationService
     ) {
-       this.barButtonsService.execActionButton.subscribe(
+        this.barButtonsService.execActionButton.subscribe(
             (res: ActionButton) => {
                 if (res.keyService == 'AlimentoService') {
                     this.execActionButton(res.actionButton);
                 }
             }
-        ); 
+        );
     }
 
     execActionButton(action: string) {
         switch (action) {
             case 'salvar':
                 let saveFormFood: Alimento = this.formFood;
-                
+
                 if (saveFormFood.id) {
                     this.updateFood(saveFormFood).subscribe();
                 } else {
@@ -135,12 +132,10 @@ export class FoodService {
             this.barButton.buttons = this.buttonsForm;
         } else if (nmListButtons == 'list') {
             this.barButton.buttons = this.buttonsList;
-           
-            
         }
 
         this.barButtonsService.startBarraButtons(this.barButton);
-    } 
+    }
 
     loadFoods(): Observable<any> {
         return this.http.get('/api/food').pipe(
@@ -148,7 +143,6 @@ export class FoodService {
                 if (res.success) {
                     this.foodsList = res.data;
                     this.obsListFoods.emit(this.foodsList);
-                   
                 }
             }),
             catchError((error: any) => {
@@ -157,7 +151,6 @@ export class FoodService {
             })
         );
     }
-    
 
     loadFood(id: number): Observable<any> {
         return this.http.get(`/api/food/${id}`).pipe(
@@ -188,18 +181,16 @@ export class FoodService {
     }
 
     updateFood(formFood: Alimento): Observable<any> {
-        return this.http
-            .put(`/api/food/${formFood.id}`, formFood)
-            .pipe(
-                tap((res: any) => {
-                    // Executa uma ação quando a requisição for bem-sucedida
-                    this.obsSaveFood.emit(res);
-                }),
-                catchError((error: any) => {
-                    // Trata o erro da requisição e propaga o erro através de um Observable de erro
-                    return throwError(() => new Error(error));
-                })
-            );
+        return this.http.put(`/api/food/${formFood.id}`, formFood).pipe(
+            tap((res: any) => {
+                // Executa uma ação quando a requisição for bem-sucedida
+                this.obsSaveFood.emit(res);
+            }),
+            catchError((error: any) => {
+                // Trata o erro da requisição e propaga o erro através de um Observable de erro
+                return throwError(() => new Error(error));
+            })
+        );
     }
 
     deleteFood(id: number): Observable<any> {
@@ -217,7 +208,6 @@ export class FoodService {
 
     public setformFood(formFood: Alimento) {
         this.formFood = formFood;
-      
     }
 
     confirmDeleteFood() {

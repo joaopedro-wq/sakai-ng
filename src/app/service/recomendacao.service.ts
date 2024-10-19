@@ -6,9 +6,9 @@ import { Observable, catchError, tap, throwError } from 'rxjs';
 import { HttpPersonService } from './http-person.service';
 import { Metas } from '../api/metas';
 import { Recomendacao } from '../api/recomendacao';
-import { Button } from '../shared/api/button';
-import { BarButton } from '../shared/api/bar-button';
-import { ActionButton } from '../shared/api/action-button';
+import { Button } from '../shared/components/api/button';
+import { BarButton } from '../shared/components/api/bar-button';
+import { ActionButton } from '../shared/components/api/action-button';
 
 @Injectable({
     providedIn: 'root',
@@ -75,60 +75,39 @@ export class NutritionService {
         switch (action) {
             case 'salvar':
                 let saveFormGoal: Recomendacao = this.formNutrition;
-               
+
                 if (this.nutritionList.length > 0) {
-                            
-                   const nutritionItem = this.nutritionList[0];
+                    const nutritionItem = this.nutritionList[0];
 
-                   
                     saveFormGoal.id = nutritionItem.id;
-                
-                   
-                       
-                      
-                            this.updateNutrition(saveFormGoal).subscribe(
-                                (res: any) => {
-                                    if (res.success) {
-                                        
-                                        const index =
-                                            this.nutritionList.findIndex(
-                                                (item) =>
-                                                    item.id === res.data.id
-                                            );
-                                        if (index !== -1) {
-                                            this.nutritionList[index] =
-                                                res.data; 
-                                        } else {
-                                            this.nutritionList.push(res.data); 
-                                        }
-                                        
-                                    }
-                                }
-                            );
 
-                        
-                    }else {
-                            
-                            this.createNutrition(saveFormGoal).subscribe(
-                                (res: any) => {
-                                    if (res.success) {
-                                        this.nutritionList.push(res.data); 
-                                       
-                                    }
-                                }
+                    this.updateNutrition(saveFormGoal).subscribe((res: any) => {
+                        if (res.success) {
+                            const index = this.nutritionList.findIndex(
+                                (item) => item.id === res.data.id
                             );
-
+                            if (index !== -1) {
+                                this.nutritionList[index] = res.data;
+                            } else {
+                                this.nutritionList.push(res.data);
+                            }
                         }
-         
-        
-                    break;
+                    });
+                } else {
+                    this.createNutrition(saveFormGoal).subscribe((res: any) => {
+                        if (res.success) {
+                            this.nutritionList.push(res.data);
+                        }
+                    });
                 }
-        
+
+                break;
+        }
     }
     loadButtons(nmListButtons: string) {
         if (nmListButtons == 'form') {
             this.barButton.buttons = this.buttonsForm;
-        } 
+        }
 
         this.barButtonsService.startBarraButtons(this.barButton);
     }
@@ -204,7 +183,6 @@ export class NutritionService {
 
     public setformGoal(formRegister: Recomendacao) {
         this.formNutrition = formRegister;
-        
     }
 
     confirmDeleteNutrition() {

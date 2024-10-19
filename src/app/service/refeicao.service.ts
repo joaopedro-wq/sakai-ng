@@ -1,13 +1,12 @@
-import { EventEmitter, Injectable } from "@angular/core";
-import { ConfirmationService } from "primeng/api";
-import { BarButtonsService } from "../shared/service/bar-buttons.service";
-import { Observable, catchError, tap, throwError } from "rxjs";
-import { Button } from 'src/app/shared/api/button';
-import { BarButton } from "../shared/api/bar-button";
-import { ActionButton } from "../shared/api/action-button";
-import { HttpPersonService } from "./http-person.service"; 
-import { Refeicao } from "../api/refeicao";
-
+import { EventEmitter, Injectable } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
+import { BarButtonsService } from '../shared/service/bar-buttons.service';
+import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Button } from 'src/app/shared/components/api/button';
+import { BarButton } from '../shared/components/api/bar-button';
+import { ActionButton } from '../shared/components/api/action-button';
+import { HttpPersonService } from './http-person.service';
+import { Refeicao } from '../api/refeicao';
 
 @Injectable({
     providedIn: 'root',
@@ -47,7 +46,6 @@ export class SnackService {
             routerLink: [],
             tooltip: '',
         },
-        
     ];
 
     private buttonsList: Array<Button> = [
@@ -68,7 +66,6 @@ export class SnackService {
         keyService: 'RefeicaoService',
         buttons: [],
     };
-   
 
     buttonState(action: string, nmButton: string, value: boolean) {
         switch (action) {
@@ -81,16 +78,16 @@ export class SnackService {
                 break;
             case 'visible':
                 this.barButton.buttons.filter((button) => {
-                    console.log('button',button)
+                    console.log('button', button);
                     if (button.title == nmButton) {
                         button.visible = value;
                     }
                 });
                 break;
         }
-    } 
+    }
 
-    public snacksList!: Refeicao [];
+    public snacksList!: Refeicao[];
     private formSnack!: Refeicao;
     obsListSnacks: EventEmitter<Refeicao[]> = new EventEmitter();
     obsLoadSnack: EventEmitter<Refeicao> = new EventEmitter();
@@ -100,16 +97,16 @@ export class SnackService {
     constructor(
         private http: HttpPersonService,
         private barButtonsService: BarButtonsService,
-        
+
         private confirmationService: ConfirmationService
     ) {
-       this.barButtonsService.execActionButton.subscribe(
+        this.barButtonsService.execActionButton.subscribe(
             (res: ActionButton) => {
                 if (res.keyService == 'RefeicaoService') {
                     this.execActionButton(res.actionButton);
                 }
             }
-        ); 
+        );
     }
     convertToTimeString(date: Date): string {
         const hours = date.getHours().toString().padStart(2, '0');
@@ -120,10 +117,10 @@ export class SnackService {
     execActionButton(action: string) {
         switch (action) {
             case 'salvar':
-                
                 let saveFormSnack: Refeicao = this.formSnack;
-                saveFormSnack.horario = this.convertToTimeString(saveFormSnack.horario as unknown as Date);
-             
+                saveFormSnack.horario = this.convertToTimeString(
+                    saveFormSnack.horario as unknown as Date
+                );
 
                 if (saveFormSnack.id) {
                     this.updateSnack(saveFormSnack).subscribe();
@@ -142,12 +139,10 @@ export class SnackService {
             this.barButton.buttons = this.buttonsForm;
         } else if (nmListButtons == 'list') {
             this.barButton.buttons = this.buttonsList;
-           
-            
         }
 
         this.barButtonsService.startBarraButtons(this.barButton);
-    } 
+    }
 
     loadSnackies(): Observable<any> {
         return this.http.get('/api/refeicao').pipe(
@@ -155,7 +150,6 @@ export class SnackService {
                 if (res.success) {
                     this.snacksList = res.data;
                     this.obsListSnacks.emit(this.snacksList);
-        
                 }
             }),
             catchError((error: any) => {
@@ -164,7 +158,6 @@ export class SnackService {
             })
         );
     }
-    
 
     loadSnack(id: number): Observable<any> {
         return this.http.get(`/api/refeicao/${id}`).pipe(
@@ -195,18 +188,16 @@ export class SnackService {
     }
 
     updateSnack(formSnack: Refeicao): Observable<any> {
-        return this.http
-            .put(`/api/refeicao/${formSnack.id}`, formSnack)
-            .pipe(
-                tap((res: any) => {
-                    // Executa uma ação quando a requisição for bem-sucedida
-                    this.obsSaveSnack.emit(res);
-                }),
-                catchError((error: any) => {
-                    // Trata o erro da requisição e propaga o erro através de um Observable de erro
-                    return throwError(() => new Error(error));
-                })
-            );
+        return this.http.put(`/api/refeicao/${formSnack.id}`, formSnack).pipe(
+            tap((res: any) => {
+                // Executa uma ação quando a requisição for bem-sucedida
+                this.obsSaveSnack.emit(res);
+            }),
+            catchError((error: any) => {
+                // Trata o erro da requisição e propaga o erro através de um Observable de erro
+                return throwError(() => new Error(error));
+            })
+        );
     }
 
     deleteSnack(id: number): Observable<any> {
@@ -223,9 +214,7 @@ export class SnackService {
     }
 
     public setformSnack(formSnack: Refeicao) {
-       
         this.formSnack = formSnack;
-      
     }
 
     confirmDeleteSnack() {

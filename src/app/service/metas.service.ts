@@ -3,9 +3,9 @@ import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { BarButtonsService } from '../shared/service/bar-buttons.service';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { Button } from 'src/app/shared/api/button';
-import { BarButton } from '../shared/api/bar-button';
-import { ActionButton } from '../shared/api/action-button';
+import { Button } from 'src/app/shared/components/api/button';
+import { BarButton } from '../shared/components/api/bar-button';
+import { ActionButton } from '../shared/components/api/action-button';
 import { HttpPersonService } from './http-person.service';
 import { Registro } from '../api/registro';
 import { Dieta } from '../api/dieta';
@@ -49,7 +49,6 @@ export class GoalService {
             routerLink: [],
             tooltip: '',
         },
-       
     ];
 
     private buttonsList: Array<Button> = [

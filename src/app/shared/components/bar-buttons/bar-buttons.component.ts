@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { Button } from '../../api/button';
+import { Button } from '../api/button';
 import { filter } from 'rxjs';
-import { ActionButton } from '../../api/action-button';
-import { BarButton } from '../../api/bar-button';
+import { ActionButton } from '../api/action-button';
+import { BarButton } from '../api/bar-button';
 import { BarButtonsService } from '../../service/bar-buttons.service';
 
 @Component({
@@ -31,14 +31,12 @@ export class BarButtonsComponent implements OnInit {
         this.service.loadButtons.subscribe((res: BarButton) => {
             this.keyService = res.keyService;
             this.buttons = res.buttons;
-            
-            
-        }); 
+        });
     }
 
     ngOnInit(): void {
         this.tamPag = window.innerWidth;
-      
+
         this.router.events
             .pipe(filter((event: any) => event instanceof NavigationEnd))
             .subscribe(() => {
