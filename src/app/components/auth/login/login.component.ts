@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/service/auth.service';
 
 
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit{
     constructor(
         private formBuilder: FormBuilder,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        public messageService: MessageService
     ) {}
 
     ngOnInit(): void {
@@ -40,7 +42,12 @@ export class LoginComponent implements OnInit{
             this.authService.login(this.formLogin.value).subscribe({
                 error: (error) => {
                     this.loading = false;
-                    this.messageInvalid = error.message;
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.message
+                    })
+                   /*  this.messageInvalid = error.message; */
                 }
             });
         }

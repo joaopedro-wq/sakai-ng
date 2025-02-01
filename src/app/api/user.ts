@@ -1,6 +1,6 @@
 export interface User {
     id?: number;
-    name: string;
+    name?: string;
     email: string;
     password?: string;
     password_confirmation?: string;
@@ -13,5 +13,5 @@ export interface User {
     genero?: string | null;
     altura?: number | null;
     peso?: number | null;
-    objetivo: string | null;
+    objetivo?: string | null;
 }

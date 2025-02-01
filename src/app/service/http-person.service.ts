@@ -1,38 +1,85 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class HttpPersonService {
+    constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
+    private urlBase = environment.urlBase;
 
-  private urlBase = "http://localhost:8000";
-  private header = { withCredentials: true };
+    private httpOptions = {
+        withCredentials: true,
+    };
 
-  get(url: string = "", options: any = this.header): Observable<Object> {
-    let formatURL = url.startsWith("/") ? url.substring(1) : url;
-   
-    return this.http.get(`${this.urlBase}/${formatURL}`, options);
-  }
+    get<T = any>(url: string = '', options: any = {}): Observable<Object> {
+        let formatURL = url.startsWith('/') ? url.substring(1) : url;
+        // Mescla httpOptions padrão com as opções fornecidas, garantindo que observe: 'body' seja usado
+        const mergedOptions = {
+            ...this.httpOptions,
+            ...options,
+            observe: 'body' as const,
+        };
+        return this.http.get<T>(`${this.urlBase}/${formatURL}`, mergedOptions);
+    }
 
-  post(url: string = "", parameter: any, options: any = this.header): Observable<Object> {
-    let formatURL = url.startsWith("/") ? url.substring(1) : url;
-    
-    return this.http.post(`${this.urlBase}/${formatURL}`, parameter, options);
-  }
+    post<T = any>(
+        url: string = '',
+        parameter: any,
+        options: any = {}
+    ): Observable<any> {
+        let formatURL = url.startsWith('/') ? url.substring(1) : url;
+        const mergedOptions = {
+            ...this.httpOptions,
+            ...options,
+            observe: options.observe ?? 'body', // preserva o observe passado em options
+        };
 
-  put(url: string = "", parameter: any, options: any = this.header): Observable<Object> {
-    let formatURL = url.startsWith("/") ? url.substring(1) : url;
-   
-    return this.http.put(`${this.urlBase}/${formatURL}`, parameter, options);
-  }
+        return this.http.post<T>(
+            `${this.urlBase}/${formatURL}`,
+            parameter,
+            mergedOptions
+        );
+    }
 
-  delete(url: string = "", options: any = this.header): Observable<Object> {
-    let formatURL = url.startsWith("/") ? url.substring(1) : url;
-   
-    return this.http.delete(`${this.urlBase}/${formatURL}`, options);
-  }
+    put<T = any>(
+        url: string = '',
+        parameter: any,
+        options: any = {}
+    ): Observable<any> {
+        let formatURL = url.startsWith('/') ? url.substring(1) : url;
+        const mergedOptions = {
+            ...this.httpOptions,
+            ...options,
+            observe: 'body' as const,
+        };
+        return this.http.put<T>(
+            `${this.urlBase}/${formatURL}`,
+            parameter,
+            mergedOptions
+        );
+    }
+
+    delete<T = any>(url: string = '', options: any = {}): Observable<any> {
+        let formatURL = url.startsWith('/') ? url.substring(1) : url;
+        const mergedOptions = {
+            ...this.httpOptions,
+            ...options,
+            observe: 'body' as const,
+        };
+        return this.http.delete<T>(
+            `${this.urlBase}/${formatURL}`,
+            mergedOptions
+        );
+    }
+
+    getURL(relativeURL: string) {
+        let formatURL = relativeURL.startsWith('/')
+            ? relativeURL.substring(1)
+            : relativeURL;
+        return `${this.urlBase}/${formatURL}`;
+    }
 }

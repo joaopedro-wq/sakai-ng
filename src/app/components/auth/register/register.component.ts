@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/service/auth.service';
 import { ProfileService } from 'src/app/service/profile.service';
+import { ValidatorCustomService } from 'src/app/validators/validator-custom.service';
 
 
 @Component({
@@ -11,7 +13,7 @@ import { ProfileService } from 'src/app/service/profile.service';
 export class RegisterComponent implements OnInit{
     confirmed: boolean = false;
 
-    constructor( private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private profileService: ProfileService ) {}
+    constructor( private formBuilder: FormBuilder, private authService: AuthService, private router: Router, public messageService: MessageService, public validatorCustomService: ValidatorCustomService) {}
 
     ngOnInit(): void {
        
@@ -21,41 +23,50 @@ export class RegisterComponent implements OnInit{
         name: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
-        password_confirmation: ['', [Validators.required, Validators.minLength(8)]]
-
+        password_confirmation: ['', [Validators.required, Validators.minLength(8), this.validatorCustomService.confirmPasswordValidator]]
     });
+    
 
-   /*  ngAfterContentInit(): void {
-      
-
-        this.formLogin.valueChanges.subscribe((res) => {
-            
-            this.profileService.setformUserProfile(res);
-            console.log('res',res)
-        });
-    } */
 
     navigateToLogin() {
         this.router.navigate([`/auth/login`]);
     }
     registerUser() {
         if (this.formLogin.valid) {
-            this.profileService.registerUser(this.formLogin.value).subscribe(
-                (res) => {
-                    // Handle success, e.g., show a success message or navigate to another page
-                   
-                    this.navigateToLogin()
+            console.log('this.formLogin.value', this.formLogin.value);
+            
+            // Obter o token CSRF antes de tentar criar o usuário
+            this.authService.getCrsfToken().subscribe({
+                next: () => {
+                    // Após obter o token, fazemos a requisição para criar o usuário
+                    this.authService.criarUsuario(this.formLogin.value).subscribe({
+                        next: () => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Sucesso',
+                                detail: 'Usuário cadastrado com sucesso',
+                            });
+                            // Se necessário, redireciona ou faz outra ação
+                             this.navigateToLogin(); 
+                        },
+                        error: (error) => {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Erro',
+                                detail: error.message,
+                            });
+                        }
+                    });
                 },
-                (error) => {
-                    // Handle error, e.g., show an error message
-                    console.error('Registration failed', error);
+                error: (error) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Erro ao obter CSRF Token',
+                        detail: error.message,
+                    });
                 }
-            );
-        } else {
-            // Form is invalid, handle accordingly
-            console.error('Form is invalid');
+            });
         }
     }
-
-
+    
 }

@@ -86,4 +86,17 @@ export class AuthService {
             })
         );
     }
+
+    criarUsuario(formUser: User): Observable<any> {
+        return this.http.post('/criar-usuario', formUser).pipe(
+            tap((res: any) => {
+                // Sucesso
+            }),
+            catchError((error: any) => {
+                // Trata o erro da requisição e propaga o erro através de um Observable de erro
+                return throwError(() => new Error(error));
+            })
+        );
+    }
+    
 }
