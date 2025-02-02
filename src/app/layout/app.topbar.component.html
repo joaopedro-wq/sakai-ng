@@ -1,8 +1,7 @@
 <div class="layout-topbar">
-    <!-- <a class="layout-topbar-logo" routerLink="">
-        <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
-        <span>SAKAI</span>
-    </a> -->
+    <a class="layout-topbar-logo" routerLink="/">
+        <img src="../../assets/layout/images/Layer2.png" alt="FattoOS logo" style="width: 30%; height: auto;">
+    </a>
 
     <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
         <i class="pi pi-bars"></i>
@@ -13,20 +12,27 @@
         <i class="pi pi-ellipsis-v"></i>
     </button>
 
-   <!--  <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-calendar"></i>
-            <span>Calendar</span>
-        </button>
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-user"></i>
-            <span>Profile</span>
-        </button>
-        <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-            <i class="pi pi-cog"></i>
-            <span>Settings</span>
-        </button>
-    </div> -->
+    <div #topbarmenu class="layout-topbar-menu" 
+        [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 70%;">
+
+
+            <p-menu #menu [popup]="true" [model]="menuItems" ></p-menu>
+
+
+            <a *ngIf="!isMobile()" (click)="menu.toggle($event)">
+                <img [src]="formProfile.get('avatar')?.value" alt="avatar" class="avatar-img">
+            </a>
+            <img *ngIf="isMobile()"  [src]="formProfile.get('avatar')?.value" alt="avatar" class="avatar-img">
+            <span *ngIf="isMobile()" style="align-items: center;">
+                <button pButton type="button" icon="pi pi-cog" class="p-button-rounded p-button-text"
+                    (click)="navigateToProfile()"></button>
+                <button pButton type="button" icon="pi pi-power-off" class="p-button-rounded p-button-text"
+                    (click)="onLogout()"></button>
+            </span>
+
+        </div>
+    </div>
 </div>
 
 
