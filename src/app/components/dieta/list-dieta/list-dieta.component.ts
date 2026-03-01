@@ -15,6 +15,7 @@ import { DietService } from 'src/app/service/dieta.service';
 @Component({
     templateUrl: './list-dieta.component.html',
     providers: [ConfirmationService],
+    standalone: false
 })
 export class ListDietaComponent implements OnInit, OnDestroy {
     @ViewChild('filter') filter!: ElementRef;

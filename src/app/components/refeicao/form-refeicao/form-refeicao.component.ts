@@ -9,6 +9,7 @@ import { SnackService } from 'src/app/service/refeicao.service';
 @Component({
     templateUrl: './form-refeicao.component.html',
     providers: [],
+    standalone: false
 })
 export class FormRefeicaoComponent
     implements OnInit, OnDestroy

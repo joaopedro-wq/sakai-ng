@@ -16,6 +16,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
     selector: 'app-topbar',
     templateUrl: './app.topbar.component.html',
+    standalone: false
 })
 export class AppTopBarComponent {
     items!: MenuItem[];

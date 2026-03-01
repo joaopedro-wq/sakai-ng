@@ -13,6 +13,7 @@ import { RegisterService } from 'src/app/service/registro.service';
 
 @Component({
     templateUrl: './checkList.component.html',
+    standalone: false
 })
 export class CheckListComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();

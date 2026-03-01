@@ -26,6 +26,7 @@ import { RegisterService } from 'src/app/service/registro.service';
 @Component({
     templateUrl: './list-registros.component.html',
     providers: [ConfirmationService, PhotoService],
+    standalone: false
 })
 export class ListRegistrosComponent implements OnInit, OnDestroy {
     @ViewChild('filter') filter!: ElementRef;

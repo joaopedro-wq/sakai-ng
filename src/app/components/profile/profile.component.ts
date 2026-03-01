@@ -14,6 +14,7 @@ import { Recomendacao } from 'src/app/api/recomendacao';
 @Component({
     templateUrl: './profile.component.html',
     providers: [],
+    standalone: false
 })
 export class ProfileComponent implements OnInit, AfterContentInit, OnDestroy {
     private unsubscribe = new Subject<void>();

@@ -9,7 +9,8 @@ import { AuthService } from 'src/app/service/auth.service';
     styles: `
         .textSucess { color: #00b604}
         .textError { color: #ee0f0f}
-    `
+    `,
+    standalone: false
 })
 export class ForgotPasswordComponent  {
 

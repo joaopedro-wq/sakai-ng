@@ -21,6 +21,7 @@ import { consumerPollProducersForChange } from '@angular/core/primitives/signals
 @Component({
     templateUrl: './form-metas.component.html',
     providers: [DialogService],
+    standalone: false
 })
 export class FormMetasComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();

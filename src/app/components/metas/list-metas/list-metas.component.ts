@@ -13,6 +13,7 @@ import { RegisterService } from 'src/app/service/registro.service';
 @Component({
     templateUrl: './list-metas.component.html',
     providers: [ConfirmationService],
+    standalone: false
 })
 export class ListMetasComponent implements OnInit, OnDestroy {
     @ViewChild('filter') filter!: Table;

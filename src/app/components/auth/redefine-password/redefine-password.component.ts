@@ -6,8 +6,9 @@ import { ValidatorCustomService } from 'src/app/validators/validator-custom.serv
 
 
 @Component({
-  selector: 'app-redefine-password',
-  templateUrl: './redefine-password.component.html'
+    selector: 'app-redefine-password',
+    templateUrl: './redefine-password.component.html',
+    standalone: false
 })
 export class RedefinePasswordComponent implements OnInit{
     messageInvalid: string = "";

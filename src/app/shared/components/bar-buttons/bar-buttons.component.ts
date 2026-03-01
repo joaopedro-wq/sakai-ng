@@ -10,6 +10,7 @@ import { BarButtonsService } from '../../service/bar-buttons.service';
 @Component({
     selector: 'app-bar-buttons',
     templateUrl: './bar-buttons.component.html',
+    standalone: false
 })
 export class BarButtonsComponent implements OnInit {
     keyService!: string;

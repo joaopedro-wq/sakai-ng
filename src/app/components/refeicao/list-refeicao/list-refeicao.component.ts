@@ -15,6 +15,7 @@ import { SnackService } from 'src/app/service/refeicao.service';
 @Component({
     templateUrl: './list-refeicao.component.html',
     providers: [ConfirmationService],
+    standalone: false
 })
 export class ListRefeicaoComponent implements OnInit, OnDestroy {
     @ViewChild('filter') filter!: ElementRef;

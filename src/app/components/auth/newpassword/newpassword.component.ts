@@ -9,6 +9,7 @@ import { ValidatorCustomService } from 'src/app/validators/validator-custom.serv
 @Component({
     selector: 'app-newpassword',
     templateUrl: './newpassword.component.html',
+    standalone: false
 })
 export class NewPasswordComponent implements OnInit {
     forcedClickLogin: boolean = false;

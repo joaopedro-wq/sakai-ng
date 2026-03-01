@@ -9,6 +9,7 @@ import { ValidatorCustomService } from 'src/app/validators/validator-custom.serv
 
 @Component({
     templateUrl: './register.component.html',
+    standalone: false
 })
 export class RegisterComponent implements OnInit{
     confirmed: boolean = false;

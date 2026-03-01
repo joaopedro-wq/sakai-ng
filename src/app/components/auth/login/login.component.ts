@@ -11,7 +11,8 @@ import { AuthService } from 'src/app/service/auth.service';
         .valueCenterButton{
             justify-content: center;
         }
-    `
+    `,
+    standalone: false
 })
 export class LoginComponent implements OnInit{
     rememberMe: boolean = false;

@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 @Component({
     templateUrl: './form-alimentos.component.html',
     providers: [],
+    standalone: false
 })
 export class FormAlimentosComponent
     implements OnInit, OnDestroy

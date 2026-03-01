@@ -24,6 +24,7 @@ import { DatePipe } from '@angular/common';
 @Component({
     templateUrl: './dashboard-relatorio.component.html',
     providers: [],
+    standalone: false
 })
 export class DashboardRelatorioComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();

@@ -23,6 +23,7 @@ import { RegisterService } from 'src/app/service/registro.service';
 @Component({
     templateUrl: './form-registro.component.html',
     providers: [],
+    standalone: false
 })
 export class FormRegistroComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();

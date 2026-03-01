@@ -20,6 +20,7 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 @Component({
     templateUrl: './form-dieta.component.html',
     providers: [],
+    standalone: false
 })
 export class FormDietaComponent implements OnInit, OnDestroy {
     private unsubscribe = new Subject<void>();
