@@ -1,75 +1,89 @@
 <div style="margin-top: 1%;  display: flex;
 justify-content: flex-end;">
-    <p-button icon="pi pi-chevron-up" severity="info" label="Ordenar data" outlined="true" (click)="sortRegistersByDate('asc')" class="mr-2">
-    </p-button >
-    <p-button  label="Ordenar data" outlined="true" severity="help" (click)="sortRegistersByDate('desc')" class="mr-2" icon=" pi pi-chevron-down">
-    </p-button> 
-  
+  <p-button icon="pi pi-chevron-up" severity="info" label="Ordenar data" outlined="true" (click)="sortRegistersByDate('asc')" class="mr-2">
+  </p-button >
+  <p-button  label="Ordenar data" outlined="true" severity="help" (click)="sortRegistersByDate('desc')" class="mr-2" icon=" pi pi-chevron-down">
+  </p-button>
+
 </div>
 
 <div class="grid" style="margin-top: 1%;">
-    <ng-container *ngIf="register.length > 0; else emptyState">
-    <p-card *ngFor="let register of register" (click)="navigateToCompanyEdit(register.id)"
-            header="{{register.descricao_refeicao}}" class="diet-card">
+  @if (register.length > 0) {
+    @for (register of register; track register) {
+      <p-card (click)="navigateToCompanyEdit(register.id)"
+        header="{{register.descricao_refeicao}}" class="diet-card">
         <ng-template pTemplate="header">
-            <div *ngIf="['Jantar', 'Café da manhã', 'Lanche da tarde', 'Ceia', 'Almoço'].indexOf(register.descricao_refeicao) === -1"
-                class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
-                <div class="overlay"></div>
+          @if (['Jantar', 'Café da manhã', 'Lanche da tarde', 'Ceia', 'Almoço'].indexOf(register.descricao_refeicao) === -1) {
+            <div
+              class="card-image-container" style="background-image: url('../../../../assets/layout/images/img01.png');">
+              <div class="overlay"></div>
             </div>
-            <div *ngIf="register.descricao_refeicao == 'Jantar'" class="card-image-container"
-                 style="background-image: url('../../../../assets/layout/images/jantar.jpg');">
-                <div class="overlay"></div>
+          }
+          @if (register.descricao_refeicao == 'Jantar') {
+            <div class="card-image-container"
+              style="background-image: url('../../../../assets/layout/images/jantar.jpg');">
+              <div class="overlay"></div>
             </div>
-            <div *ngIf="register.descricao_refeicao == 'Café da manhã'" class="card-image-container"
-                 style="background-image: url('../../../../assets/layout/images/cafeManha.jpg');">
-                <div class="overlay"></div>
+          }
+          @if (register.descricao_refeicao == 'Café da manhã') {
+            <div class="card-image-container"
+              style="background-image: url('../../../../assets/layout/images/cafeManha.jpg');">
+              <div class="overlay"></div>
             </div>
-            <div *ngIf="register.descricao_refeicao == 'Lanche da tarde'" class="card-image-container" style="background-image: url('../../../../assets/layout/images/lanche-da-tarde.jpg');">
-				<div class="overlay"></div>
-			</div>
-            <div *ngIf="register.descricao_refeicao == 'Ceia'" class="card-image-container"
-                 style="background-image: url('../../../../assets/layout/images/ceia.jpg');">
-                <div class="overlay"></div>
+          }
+          @if (register.descricao_refeicao == 'Lanche da tarde') {
+            <div class="card-image-container" style="background-image: url('../../../../assets/layout/images/lanche-da-tarde.jpg');">
+              <div class="overlay"></div>
             </div>
-            <div *ngIf="register.descricao_refeicao == 'Almoço'" class="card-image-container"
-                 style="background-image: url('../../../../assets/layout/images/almoco.jpeg');">
-                <div class="overlay"></div>
+          }
+          @if (register.descricao_refeicao == 'Ceia') {
+            <div class="card-image-container"
+              style="background-image: url('../../../../assets/layout/images/ceia.jpg');">
+              <div class="overlay"></div>
             </div>
+          }
+          @if (register.descricao_refeicao == 'Almoço') {
+            <div class="card-image-container"
+              style="background-image: url('../../../../assets/layout/images/almoco.jpeg');">
+              <div class="overlay"></div>
+            </div>
+          }
         </ng-template>
         <ng-template pTemplate="content">
-            <div class="alimentos-list">
-                <div *ngFor="let alimento of register.alimentos">
-                    <br>{{ alimento.descricao }}
+          <div class="alimentos-list">
+            @for (alimento of register.alimentos; track alimento) {
+              <div>
+                <br>{{ alimento.descricao }}
                 </div>
+              }
             </div>
-        </ng-template>
-        <ng-template pTemplate="subtitle">
+          </ng-template>
+          <ng-template pTemplate="subtitle">
             <p><strong>Data:</strong> {{register.data | date: 'dd/MM/yyyy'}}</p>
             <p><strong>Porção:</strong> {{register.nutrientes_totais.qtd}} (g)</p>
             <p><strong>Calorias:</strong> {{register.nutrientes_totais.caloria}} (Kcal)</p>
-            
-        </ng-template>
-        <ng-template pTemplate="footer">
+          </ng-template>
+          <ng-template pTemplate="footer">
             <div class="flex gap-3 mt-1"></div>
-        </ng-template>
-    </p-card>
-</ng-container>
-<ng-template #emptyState>
-    <p-card class="card">
+          </ng-template>
+        </p-card>
+      }
+    } @else {
+      <p-card class="card">
         <div class="card-content empty-card">
-            <p style="text-align: center;">Nenhum registro encontrado</p>
+          <p style="text-align: center;">Nenhum registro encontrado</p>
         </div>
-    </p-card>
-</ng-template>
-</div>
+      </p-card>
+    }
+  </div>
 
 
 
 
-<p-galleria #galleria [(value)]="images" [(activeIndex)]="activeIndex" [numVisible]="5"
+  <p-galleria #galleria [(value)]="images" [(activeIndex)]="activeIndex" [numVisible]="5"
     [showThumbnails]="showThumbnails" [showItemNavigators]="true" [circular]="true" [autoPlay]="true"
     [containerStyle]="{ 'max-width': '640px' }">
-</p-galleria>
+  </p-galleria>
 
 
 
@@ -87,126 +101,126 @@ justify-content: flex-end;">
 
 
 
-<style>
+  <style>
     .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1rem;
-    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
 
-    .diet-card {
-        margin: 1rem;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        display: flex;
-		max-width: 300px;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-        height: auto;
-        cursor: pointer;
-    }
-
-    .diet-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-image-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 1rem;
-        background-size: cover;
-        background-position: center;
-        height: 200px;
-        position: relative;
-    }
-
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.4);
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-    }
-
-    .diet-card .alimentos-list {
-        height: calc(150px - 50px);
-        overflow-y: auto;
-    }
-
-    .sorting-dropdown {
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: flex-end;
+  .diet-card {
+  margin: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  max-width: 300px;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+  cursor: pointer;
 }
- :host ::ng-deep {
-                .custom-galleria {
-                    &.p-galleria {
-                        &.fullscreen {
-                            display: flex;
-                            flex-direction: column;
 
-                            .p-galleria-content {
-                                flex-grow: 1;
-                                justify-content: center;
-                            }
-                        }
+.diet-card:hover {
+transform: translateY(-10px);
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
 
-                        .p-galleria-content {
-                            position: relative;
-                        }
+.card-image-container {
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 1rem;
+background-size: cover;
+background-position: center;
+height: 200px;
+position: relative;
+}
 
-                        .p-galleria-thumbnail-wrapper {
-                            position: absolute;
-                            bottom: 0;
-                            left: 0;
-                            width: 100%;
-                        }
+.overlay {
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.4);
+border-top-left-radius: 15px;
+border-top-right-radius: 15px;
+}
 
-                        .p-galleria-thumbnail-items-container {
-                            width: 100%;
-                        }
+.diet-card .alimentos-list {
+height: calc(150px - 50px);
+overflow-y: auto;
+}
 
-                        .custom-galleria-footer {
-                            display: flex;
-                            align-items: center;
-                            background-color: rgba(0, 0, 0, 0.9);
-                            color: #ffffff;
+.sorting-dropdown {
+margin-bottom: 1rem;
+display: flex;
+justify-content: flex-end;
+}
+:host ::ng-deep {
+.custom-galleria {
+&.p-galleria {
+&.fullscreen {
+display: flex;
+flex-direction: column;
 
-                            > button {
-                                background-color: transparent;
-                                color: #ffffff;
-                                border: 0 none;
-                                border-radius: 0;
-                                margin: 0.2rem 0;
+.p-galleria-content {
+flex-grow: 1;
+justify-content: center;
+}
+}
 
-                                &.fullscreen-button {
-                                    margin-left: auto;
-                                }
+.p-galleria-content {
+position: relative;
+}
 
-                                &:hover {
-                                    background-color: rgba(255, 255, 255, 0.1);
-                                }
-                            }
-                        }
+.p-galleria-thumbnail-wrapper {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+}
 
-                        .title-container {
-                            > span {
-                                font-size: 0.9rem;
-                                padding-left: 0.829rem;
+.p-galleria-thumbnail-items-container {
+width: 100%;
+}
 
-                                &.title {
-                                    font-weight: bold;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+.custom-galleria-footer {
+display: flex;
+align-items: center;
+background-color: rgba(0, 0, 0, 0.9);
+color: #ffffff;
+
+> button {
+background-color: transparent;
+color: #ffffff;
+border: 0 none;
+border-radius: 0;
+margin: 0.2rem 0;
+
+&.fullscreen-button {
+margin-left: auto;
+}
+
+&:hover {
+background-color: rgba(255, 255, 255, 0.1);
+}
+}
+}
+
+.title-container {
+> span {
+font-size: 0.9rem;
+padding-left: 0.829rem;
+
+&.title {
+font-weight: bold;
+}
+}
+}
+}
+}
+}
 </style>
