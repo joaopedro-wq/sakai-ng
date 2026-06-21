@@ -5,7 +5,7 @@ import { User } from '../api/user';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { Popover } from 'primeng/popover';
 import { SnackService } from '../service/refeicao.service';
 import { Refeicao } from '../api/refeicao';
 import { Registro } from '../api/registro';
@@ -20,7 +20,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AppTopBarComponent {
     items!: MenuItem[];
-    @ViewChild('overlayPanel') overlayPanel: OverlayPanel;
+    @ViewChild('overlayPanel') overlayPanel: Popover;
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 

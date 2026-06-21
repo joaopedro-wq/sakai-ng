@@ -5,13 +5,13 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ListMetasComponent } from './list-metas.component';
 import { ListMetasRoutingModule } from './list-metas-routing.module';
 import { DialogModule } from 'primeng/dialog';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { CardModule } from 'primeng/card';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PopoverModule } from 'primeng/popover';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 @NgModule({
@@ -24,11 +24,11 @@ import { ToastModule } from 'primeng/toast';
         ButtonModule,
         InputTextModule,
         RippleModule,
-        DropdownModule,
+        SelectModule,
         DialogModule,
-        CalendarModule,
+        DatePickerModule,
         CardModule,
-        OverlayPanelModule,
+        PopoverModule,
         ProgressBarModule,
         ToastModule
     ],

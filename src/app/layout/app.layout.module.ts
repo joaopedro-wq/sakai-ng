@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InputTextModule } from 'primeng/inputtext';
-import { SidebarModule } from 'primeng/sidebar';
+import { DrawerModule } from 'primeng/drawer';
 import { BadgeModule } from 'primeng/badge';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RippleModule } from 'primeng/ripple';
 import { AppMenuComponent } from './app.menu.component';
 import { AppMenuitemComponent } from './app.menuitem.component';
@@ -26,7 +26,7 @@ import { MegaMenuModule } from 'primeng/megamenu';
 import { MenuModule } from 'primeng/menu';
 import { TooltipModule } from 'primeng/tooltip';
 import { MenubarModule } from 'primeng/menubar';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PopoverModule } from 'primeng/popover';
 
 @NgModule({
     declarations: [
@@ -46,10 +46,10 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
         BrowserAnimationsModule,
         StyleClassModule,
         InputTextModule,
-        SidebarModule,
+        DrawerModule,
         BadgeModule,
         RadioButtonModule,
-        InputSwitchModule,
+        ToggleSwitchModule,
         TooltipModule,
         MegaMenuModule,
         RippleModule,
@@ -59,7 +59,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
         AppConfigModule,
         SharedModule,
         MenubarModule,
-        OverlayPanelModule,
+        PopoverModule,
     ],
     exports: [AppLayoutComponent],
 })

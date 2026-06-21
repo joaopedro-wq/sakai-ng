@@ -1,7 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, switchMap, tap, throwError } from 'rxjs';
 import { HttpPersonService } from './http-person.service';
+import { UserService } from './user.service';
 import { User } from '../api/user';
 import { ResetPassword } from '../api/reset-password';
 import { RedefinePassword } from '../api/redefine-password';
@@ -16,18 +17,20 @@ export class AuthService {
 
     obsGetLoggedUser: EventEmitter<User> = new EventEmitter();
 
-    constructor(private router: Router, private http: HttpPersonService) {}
+    constructor(private router: Router, private http: HttpPersonService, private userService: UserService) {}
 
     login(formLogin: Login): Observable<any> {
-        return this.http.post('login', formLogin).pipe( tap((res: any) => {
-            // Executa uma ação quando a requisição for bem-sucedida
+        return this.getCrsfToken().pipe(
+            switchMap(() => this.http.post('login', formLogin)),
+            switchMap(() => this.getLoggedUserWithToken()),
+            tap(() => {
+                this.isAuthenticatedSubject.next(true);
                 this.router.navigate(['/']);
-        }),
+            }),
             catchError(error => {
-                const errorMessage = error?.message || 'Erro desconhecido';
-                this.router.navigate(['/auth/login']);
+                const errorMessage = error?.error?.message ?? error?.message ?? 'Credenciais inválidas.';
                 return throwError(() => new Error(errorMessage));
-              })
+            })
         );
     }
 
@@ -35,6 +38,7 @@ export class AuthService {
         return this.http.post('logout', {}).pipe(
             tap(() => {
                 this.isAuthenticatedSubject.next(false);
+                this.userService.clearUserId();
                 this.router.navigate(['/auth/login']);
             }),
             catchError((error: any) => {
@@ -76,7 +80,8 @@ export class AuthService {
                 // Executa uma ação quando a requisição for bem-sucedida
                 if (res.success) {
                     this.loggedUser = res.data;
-                   
+                    // Persistir o ID do usuário para uso durante toda a sessão
+                    if (res.data?.id) this.userService.saveUserId(res.data.id);
                     this.obsGetLoggedUser.emit(this.loggedUser);
                 }
             }),

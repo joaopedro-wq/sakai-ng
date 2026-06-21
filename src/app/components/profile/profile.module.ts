@@ -5,17 +5,18 @@ import { ProfileRoutingModule } from './profile-routing.module';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProfileComponent } from './profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { PasswordModule } from 'primeng/password';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { AccordionModule } from 'primeng/accordion';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { FieldsetModule } from 'primeng/fieldset';
+import { SharedModule } from '@/app/shared/shared.module';
 
 @NgModule({
     declarations: [ProfileComponent],
@@ -25,17 +26,18 @@ import { FieldsetModule } from 'primeng/fieldset';
         FileUploadModule,
         FormsModule,
         ReactiveFormsModule,
-        CalendarModule,
+        DatePickerModule,
         InputTextModule,
         ButtonModule,
         ConfirmDialogModule,
         DialogModule,
         PasswordModule,
-        DropdownModule,
+        SelectModule,
         AccordionModule,
         PanelModule,
         CardModule,
         FieldsetModule,
+        SharedModule
     ],
 })
 export class ProfileModule {}

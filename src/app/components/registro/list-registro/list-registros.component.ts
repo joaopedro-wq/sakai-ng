@@ -11,7 +11,7 @@ import {
 import { Router } from '@angular/router';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Galleria } from 'primeng/galleria';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { Popover } from 'primeng/popover';
 
 import { Table } from 'primeng/table';
 import { Subject, takeUntil } from 'rxjs';
@@ -30,7 +30,7 @@ import { RegisterService } from 'src/app/service/registro.service';
 })
 export class ListRegistrosComponent implements OnInit, OnDestroy {
     @ViewChild('filter') filter!: ElementRef;
-    @ViewChild('op') overlayPanel!: OverlayPanel;
+    @ViewChild('op') overlayPanel!: Popover;
     private unsubscribe = new Subject<void>();
     food: Alimento[] = [];
     register: Registro[] = [];

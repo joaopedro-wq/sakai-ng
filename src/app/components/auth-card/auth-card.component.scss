@@ -1,0 +1,73 @@
+:host {
+    display: contents;
+}
+
+// Fundo da página
+.auth-screen {
+    background-color: var(--surface-100);
+
+    [data-p-theme='dark'] & {
+        background-color: var(--surface-950);
+    }
+}
+
+// Anel de borda 1 px: primary sutil no topo, surface-border no resto
+.auth-card-outer {
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--primary-color) 45%, var(--surface-border)) 0%,
+        var(--surface-border) 45%
+    );
+    box-shadow:
+        0 1px 3px 0    color-mix(in srgb, var(--surface-900) 6%, transparent),
+        0 4px 20px -4px color-mix(in srgb, var(--surface-900) 10%, transparent);
+    transition: box-shadow 0.3s ease;
+
+    &:focus-within {
+        box-shadow:
+            0 1px 3px 0    color-mix(in srgb, var(--surface-900) 6%, transparent),
+            0 6px 28px -4px color-mix(in srgb, var(--primary-color) 22%, transparent);
+    }
+}
+
+// Superfície interna do card com toque de primary no topo
+.auth-card-inner {
+    background:
+        radial-gradient(
+            ellipse 90% 28% at 50% 0%,
+            color-mix(in srgb, var(--primary-color) 6%, transparent) 0%,
+            transparent 100%
+        ),
+        var(--surface-0);
+
+    [data-p-theme='dark'] & {
+        background:
+            radial-gradient(
+                ellipse 90% 28% at 50% 0%,
+                color-mix(in srgb, var(--primary-color) 13%, transparent) 0%,
+                transparent 100%
+            ),
+            var(--surface-900);
+    }
+}
+
+// Badge squircle — fundo surface com gradiente primary, sombra colorida
+.auth-logo {
+    background: linear-gradient(
+        145deg,
+        var(--primary-color) 0%,
+        color-mix(in srgb, var(--primary-color) 65%, black) 100%
+    );
+    box-shadow:
+        0 4px 14px -3px color-mix(in srgb, var(--primary-color) 50%, transparent),
+        inset 0 1px 0 color-mix(in srgb, white 18%, transparent);
+}
+
+// Título
+.auth-title {
+    color: var(--surface-900);
+
+    [data-p-theme='dark'] & {
+        color: var(--surface-0);
+    }
+}

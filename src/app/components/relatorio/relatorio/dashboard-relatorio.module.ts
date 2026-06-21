@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DashboardRelatorioComponent } from './dashboard-relatorio.component';
 import { DashboardRelatoriooRoutingModule } from './dashboard-relatorio-routing.module';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -17,7 +17,7 @@ import { CardModule } from 'primeng/card';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ChartModule } from 'primeng/chart';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 @NgModule({
     declarations: [DashboardRelatorioComponent],
     imports: [
@@ -26,11 +26,11 @@ import { InputSwitchModule } from 'primeng/inputswitch';
         FormsModule,
         ButtonModule,
         InputTextModule,
-        DropdownModule,
+        SelectModule,
         BreadcrumbModule,
         DialogModule,
         InputMaskModule,
-        CalendarModule,
+        DatePickerModule,
         ReactiveFormsModule,
         ConfirmDialogModule,
         InputNumberModule,
@@ -40,7 +40,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
         ChartModule,
         
         RadioButtonModule,
-        InputSwitchModule
+        ToggleSwitchModule
         
     ],
 })

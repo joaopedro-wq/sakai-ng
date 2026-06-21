@@ -5,11 +5,11 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ListDietaComponent } from './list-dieta.component';
 import { ListDietaRoutingModule } from './list-dieta-routing.module';
 import { DialogModule } from 'primeng/dialog';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { CardModule } from 'primeng/card';
 
 @NgModule({
@@ -22,9 +22,9 @@ import { CardModule } from 'primeng/card';
         ButtonModule,
         InputTextModule,
         RippleModule,
-        DropdownModule,
+        SelectModule,
         DialogModule,
-        CalendarModule,
+        DatePickerModule,
         CardModule
     ]
 })

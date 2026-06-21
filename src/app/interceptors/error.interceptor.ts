@@ -17,17 +17,23 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
         catchError((error: HttpErrorResponse) => {
+            const isLoginRequest = req.url.includes('login');
 
             switch(error.status){
                 case 401:
-                    this.router.navigate(['auth/login'])
+                    // Não redirecionar se o próprio request de login retornou 401
+                    // (credenciais inválidas), senão entraria em loop.
+                    if (!isLoginRequest) {
+                        this.router.navigate(['auth/login']);
+                    }
                     break;
                 case 302:
                     this.router.navigate(['/'])
                     break;
             }
 
-            return throwError(() => new Error(error.error.message || error.message));
+            const message = error.error?.message || error.message || 'Erro desconhecido.';
+            return throwError(() => new Error(message));
         })
         );
     }

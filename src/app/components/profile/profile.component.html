@@ -1,202 +1,256 @@
-<div class="col-12">
-  <div class="card">
-    <form class="p-fluid p-formgrid grid" [formGroup]="formProfile">
-      <div class="col-12 md:col-4">
-        @if (formProfile) {
-          <div class="card" >
-            <form (ngSubmit)="onSubmit()" [formGroup]="formProfile">
-              <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-              <div style="display: flex; justify-content: center; margin-top: 5%;"  >
-                @if (formProfile.get('avatar')?.value) {
-                  <img [src]="formProfile.get('avatar')?.value" alt="Avatar"
-                    class="avatar-img" style="align-items: center; max-width: 100%;">
-                }
-                @if (!formProfile.get('avatar')?.value) {
-                  <img src="assets/default-profile.png" alt="Avatar" class="avatar-img"
-                    style="align-items: center; max-width: 100%;">
-                }
-              </div>
-              <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+<p-toast position="top-right"></p-toast>
+
+<div class="profile-page" style="background: var(--surface-ground)">
+
+    <div class="profile-card">
+
+        <header class="profile-card__header flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight" style="color: var(--text-color)">Meu Perfil</h1>
+                <p class="mt-1 text-sm" style="color: var(--text-color-secondary)">
+                    Gerencie suas informações pessoais e preferências de saúde.
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <app-bar-buttons></app-bar-buttons>
+            </div>
+        </header>
+
+        <hr class="profile-card__divider" />
+
+        @if (loadingProfile()) {
+            <output class="profile-card__state" aria-live="polite" aria-label="Carregando perfil">
+                <p-progressspinner styleClass="w-14 h-14" strokeWidth="3" />
+                <span class="text-sm font-medium" style="color: var(--text-color-secondary)">Carregando perfil…</span>
+            </output>
+        } @else if (loadError()) {
+            <div class="profile-card__state" role="alert">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full"
+                     style="background: color-mix(in srgb, var(--red-500) 12%, transparent)">
+                    <i class="pi pi-exclamation-triangle text-3xl" style="color: var(--red-400)" aria-hidden="true"></i>
+                </div>
+                <div class="text-center">
+                    <p class="text-base font-semibold" style="color: var(--text-color)">Erro ao carregar</p>
+                    <p class="mt-1 text-sm" style="color: var(--text-color-secondary)">{{ loadError() }}</p>
+                </div>
+                <button pButton type="button" label="Tentar novamente" icon="pi pi-refresh"
+                        severity="secondary" outlined (click)="loadProfile()"></button>
+            </div>
+        } @else {
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate aria-label="Formulário de perfil">
+
+                <div class="profile-layout">
+
+                    <aside class="profile-sidebar" aria-label="Foto e resumo do perfil">
+
+                        <div class="sidebar-section">
+                            <app-input-imagem
+                                [currentUrl]="profile()?.avatar"
+                                [size]="112"
+                                label="Foto do perfil"
+                                (fileSelected)="onAvatarSelected($event)"
+                                aria-label="Alterar foto do perfil"
+                            />
+                            <div class="flex flex-col items-center gap-0.5 w-full">
+                                <span class="text-lg font-bold" style="color: var(--text-color)">
+                                    {{ profile()?.name ?? '—' }}
+                                </span>
+                                <span class="text-sm" style="color: var(--text-color-secondary)">
+                                    {{ profile()?.email ?? '—' }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-center leading-relaxed"
+                               style="color: var(--text-color-secondary); opacity: 0.6">
+                                Clique na imagem para trocar a foto
+                            </p>
+                        </div>
+
+                        @if (imc() !== null) {
+                            <hr class="profile-card__divider" />
+
+                            <section class="sidebar-section" aria-label="Índice de Massa Corporal">
+                                <div class="section-header">
+                                    <div class="section-icon"
+                                         style="background: color-mix(in srgb, var(--cyan-500) 12%, transparent)">
+                                        <i class="pi pi-calculator" style="color: var(--cyan-500)" aria-hidden="true"></i>
+                                    </div>
+                                    <h2 class="section-title">IMC</h2>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex flex-col gap-0.5">
+                                        <span class="text-3xl font-extrabold" style="color: var(--text-color)">{{ imc() }}</span>
+                                        <span class="text-xs" style="color: var(--text-color-secondary)">kg/m²</span>
+                                    </div>
+                                    <span class="rounded-full px-3 py-1 text-sm font-semibold"
+                                          [style]="imcBadgeStyle()"
+                                          [attr.aria-label]="'Classificação: ' + imcLabel()">
+                                        {{ imcLabel() }}
+                                    </span>
+                                </div>
+
+                                <div class="w-full overflow-hidden rounded-full"
+                                     style="height: 6px; background: var(--surface-border)">
+                                    <progress class="imc-progress"
+                                              [value]="imc() ?? 0" [max]="50"
+                                              [attr.aria-label]="'IMC: ' + (imc() ?? 0)"
+                                              [style]="'accent-color:' + imcColor()">
+                                    </progress>
+                                </div>
+
+                                <dl class="grid grid-cols-2 gap-x-4 gap-y-3">
+                                    @for (stat of bodyStats(); track stat.label) {
+                                        <div class="flex flex-col gap-0.5">
+                                            <dt class="stat-label">{{ stat.label }}</dt>
+                                            <dd class="stat-value">{{ stat.value }}</dd>
+                                        </div>
+                                    }
+                                </dl>
+                            </section>
+                        }
+
+                    </aside>
+
+                    <div class="profile-main">
+
+                        <section class="main-section" aria-labelledby="section-dados-pessoais">
+                            <div class="section-header">
+                                <div class="section-icon"
+                                     style="background: color-mix(in srgb, var(--primary-color) 12%, transparent)">
+                                    <i class="pi pi-user" style="color: var(--primary-color)" aria-hidden="true"></i>
+                                </div>
+                                <h2 id="section-dados-pessoais" class="section-title">Dados pessoais</h2>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label class="field-label" for="name">
+                                        Nome completo
+                                        <span aria-hidden="true" style="color: var(--red-400)"> *</span>
+                                        <span class="sr-only">(obrigatório)</span>
+                                    </label>
+                                    <input pInputText id="name" formControlName="name"
+                                           placeholder="Seu nome completo" class="w-full"
+                                           autocomplete="name"
+                                           [attr.aria-invalid]="isInvalid('name')"
+                                           [attr.aria-describedby]="isInvalid('name') ? 'name-error' : null"
+                                           [class.ng-invalid]="isInvalid('name')"
+                                           [class.ng-dirty]="isInvalid('name')" />
+                                    @if (isInvalid('name')) {
+                                        <span id="name-error" class="field-error" role="alert">
+                                            <i class="pi pi-times-circle" aria-hidden="true"></i>
+                                            Nome é obrigatório.
+                                        </span>
+                                    }
+                                </div>
+
+                                <div class="field">
+                                    <label class="field-label" for="email">
+                                        E-mail
+                                        <span aria-hidden="true" style="color: var(--red-400)"> *</span>
+                                        <span class="sr-only">(obrigatório)</span>
+                                    </label>
+                                    <input pInputText id="email" type="email" formControlName="email"
+                                           placeholder="seu@email.com" class="w-full"
+                                           autocomplete="email"
+                                           [attr.aria-invalid]="isInvalid('email')"
+                                           [attr.aria-describedby]="isInvalid('email') ? 'email-error' : null"
+                                           [class.ng-invalid]="isInvalid('email')"
+                                           [class.ng-dirty]="isInvalid('email')" />
+                                    @if (isInvalid('email')) {
+                                        <span id="email-error" class="field-error" role="alert">
+                                            <i class="pi pi-times-circle" aria-hidden="true"></i>
+                                            E-mail inválido.
+                                        </span>
+                                    }
+                                </div>
+
+                                <div class="field">
+                                    <label class="field-label" for="genero">Gênero</label>
+                                    <p-select inputId="genero" formControlName="genero"
+                                              [options]="generoOptions" optionLabel="label" optionValue="value"
+                                              placeholder="Selecione" styleClass="w-full" />
+                                </div>
+
+                                <div class="field">
+                                    <label class="field-label" for="data_nascimento">Data de nascimento</label>
+                                    <p-datepicker inputId="data_nascimento" formControlName="data_nascimento"
+                                                  dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa"
+                                                  [showIcon]="true" styleClass="w-full" />
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr class="profile-card__divider" />
+
+                        <section class="main-section" aria-labelledby="section-metricas">
+                            <div class="section-header">
+                                <div class="section-icon"
+                                     style="background: color-mix(in srgb, var(--primary-color) 12%, transparent)">
+                                    <i class="pi pi-chart-bar" style="color: var(--primary-color)" aria-hidden="true"></i>
+                                </div>
+                                <h2 id="section-metricas" class="section-title">Métricas corporais</h2>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label class="field-label" for="peso">Peso</label>
+                                    <div class="input-unit-wrap">
+                                        <input pInputText id="peso" type="number" step="0.1" min="20" max="500"
+                                               formControlName="peso" placeholder="Ex: 70.5" class="w-full"
+                                               aria-describedby="peso-unit" />
+                                        <span id="peso-unit" class="input-unit" aria-hidden="true">kg</span>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="field-label" for="altura">Altura</label>
+                                    <div class="input-unit-wrap">
+                                        <input pInputText id="altura" type="number" step="1" min="50" max="300"
+                                               formControlName="altura" placeholder="Ex: 175" class="w-full"
+                                               aria-describedby="altura-unit" />
+                                        <span id="altura-unit" class="input-unit" aria-hidden="true">cm</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr class="profile-card__divider" />
+
+                        <section class="main-section" aria-labelledby="section-saude">
+                            <div class="section-header">
+                                <div class="section-icon"
+                                     style="background: color-mix(in srgb, var(--primary-color) 12%, transparent)">
+                                    <i class="pi pi-heart" style="color: var(--primary-color)" aria-hidden="true"></i>
+                                </div>
+                                <h2 id="section-saude" class="section-title">Saúde &amp; objetivos</h2>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label class="field-label" for="nivel_atividade">Nível de atividade</label>
+                                    <p-select inputId="nivel_atividade" formControlName="nivel_atividade"
+                                              [options]="nivelAtividadeOptions" optionLabel="label" optionValue="value"
+                                              placeholder="Selecione" styleClass="w-full" />
+                                </div>
+
+                                <div class="field">
+                                    <label class="field-label" for="objetivo">Objetivo principal</label>
+                                    <p-select inputId="objetivo" formControlName="objetivo"
+                                              [options]="objetivoOptions" optionLabel="label" optionValue="value"
+                                              placeholder="Selecione" styleClass="w-full" />
+                                </div>
+                            </div>
+                        </section>
+
+
+
+                    </div>
+
+                </div>
+
             </form>
-          </div>
         }
-      </div>
 
-      <ng-template #headerTemplate >
-        <ng-container *ngTemplateOutlet="headerContent"></ng-container>
-      </ng-template>
-      <ng-template #headerContent>
-        <p-panel header="{{ formProfile.get('name')?.value }}">
-          <input pInputText type="email" [value]="formProfile.get('email')?.value" disabled>
-        </p-panel>
-      </ng-template>
-
-
-
-      <ng-template #footerTemplate>
-        <div style="display: flex; justify-content: center; margin-top: 10%;">
-          @if (!uploadMode) {
-            <p-button [outlined]="true" (click)="fileInput.click()" icon="pi pi-image"
-            label="Carregar" class="mr-2"></p-button>
-          }
-          <input #fileInput style="display: none" type="file" (change)="onFileSelected($event)" accept="image/*" required>
-          @if (uploadMode) {
-            <p-button label="Upload" [outlined]="true" severity="contrast" icon="pi pi-upload" type="submit"
-            class="mr-2"></p-button>
-          }
-          @if (formProfile.get('avatar')?.value) {
-            <p-button label="Excluir" [outlined]="false" severity="danger" icon="pi pi-trash"
-            (click)="confirmDeleteUserProfilePic()" class="mr-2"></p-button>
-          }
-        </div>
-      </ng-template>
-
-
-
-
-      <div class="col-12 md:col-8">
-        <div class="p-fluid grid">
-          <div class="field col-12 md:col-6">
-            <label for="data_nascimento">Data de nascimento</label>
-            <p-calendar [showIcon]="true" inputId="data_nascimento" formControlName="data_nascimento" dateFormat="dd/mm/yy"></p-calendar>
-          </div>
-          <div class="field col-12 md:col-6">
-            <label for="genero">Gênero</label>
-            <p-dropdown id="genero" formControlName="genero" [options]="generoOptions"></p-dropdown>
-          </div>
-          <div class="field col-12 md:col-6">
-            <label for="peso">Peso (kg)</label>
-            <input pInputText id="peso" type="number" formControlName="peso" />
-          </div>
-          <div class="field col-12 md:col-6">
-            <label for="altura">Altura (cm)</label>
-            <input pInputText id="altura" type="number" formControlName="altura" />
-          </div>
-          <div class="field col-12 md:col-6">
-            <label for="atividade_fisica">Nível de Atividade Física</label>
-            <p-dropdown id="atividade_fisica" formControlName="nivel_atividade" [options]="atividadeFisicaOptions"></p-dropdown>
-          </div>
-
-          <div class="field col-12 md:col-6">
-            <label for="atividade_fisica">Objetivo</label>
-            <p-dropdown id="objetivo" formControlName="objetivo" [options]="objetivoOptions"></p-dropdown>
-          </div>
-        </div>
-      </div>
-      <div>
-
-      </div>
-
-    </form>
-    @if (nutrition.length  > 0) {
-      <div>
-        @for (item of nutrition; track item) {
-          <p-accordion >
-            <p-accordionTab header="Recomendações Nutricionais">
-              <p-fieldset legend="Taxa Metabólica Basal (TMB)"
-                [style]="{'border-color': '#4CAF50', 'border-width': '2px', 'border-style': 'solid'}">
-                <div class="p-d-flex p-ai-center justify-content-between">
-                  <span>{{ item.tmb }} kcal/dia</span>
-                  <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
-                  (click)="showHelp('TMB')"></button>
-                </div>
-              </p-fieldset>
-              <p-fieldset legend="Gasto Energético Total (GET)"
-                [style]="{'border-color': '#2196F3', 'border-width': '2px', 'border-style': 'solid'}">
-                <div class="p-d-flex p-ai-center justify-content-between">
-                  <span>{{ item.get }} kcal/dia</span>
-                  <button pButton type="button" icon="pi pi-question-circle" class="p-button-text"
-                  (click)="showHelp('GET')"></button>
-                </div>
-              </p-fieldset>
-              <p-fieldset legend="Calorias Recomendadas"
-                [style]="{'border-color': '#8BC34A', 'border-width': '2px', 'border-style': 'solid'}">
-                <div class="p-d-flex p-ai-center justify-content-between">
-                  <span>{{ item.caloria }} kcal/dia</span>
-                </div>
-              </p-fieldset>
-              <p-fieldset legend="Proteínas Recomendadas"
-                [style]="{'border-color': '#FFC107', 'border-width': '2px', 'border-style': 'solid'}">
-                <div class="p-d-flex p-ai-center justify-content-between">
-                  <span>{{ item.proteina }} g/dia</span>
-                </div>
-              </p-fieldset>
-              <p-fieldset legend="Gorduras Recomendadas"
-                [style]="{'border-color': '#F44336', 'border-width': '2px', 'border-style': 'solid'}">
-                <div class="p-d-flex p-ai-center justify-content-between">
-                  <span>{{ item.gordura }} g/dia</span>
-                </div>
-              </p-fieldset>
-              <p-fieldset legend="Carboidratos Recomendados"
-                [style]="{'border-color': '#9C27B0', 'border-width': '2px', 'border-style': 'solid'}">
-                <div class="p-d-flex p-ai-center justify-content-between">
-                  <span>{{ item.carbo }} g/dia</span>
-                </div>
-              </p-fieldset>
-            </p-accordionTab>
-          </p-accordion>
-        }
-      </div>
-    }
-
-
-
-
-
-
-
-  </div>
+    </div>
 </div>
-
-<p-dialog [(visible)]="profileService.showModalChangePassword" (onHide)="formUserPassword.reset()" [style]="{width: '450px'}" header="Alteração de senha" [modal]="true" class="p-fluid">
-  <ng-template pTemplate="content">
-    <form [formGroup]="formUserPassword">
-      <div class="field">
-        <label htmlFor="password">Nova senha</label>
-        <p-password id="password" placeholder="Senha" [toggleMask]="true" [feedback]="true" promptLabel="Digite uma senha" weakLabel="Fraca" mediumLabel="Média" strongLabel="Forte" formControlName="password"></p-password>
-      </div>
-      <div class="field">
-        <label htmlFor="password_confirmation">Confirmação de nova senha</label>
-        <p-password id="password_confirmation" placeholder="Confirme a senha" [toggleMask]="true" [feedback]="false" formControlName="password_confirmation"></p-password>
-      </div>
-    </form>
-  </ng-template>
-
-  <ng-template pTemplate="footer">
-    <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-outlined" (click)="profileService.toggleModalChangePassword()"></button>
-    <button pButton pRipple label="Salvar" icon="pi pi-save" class="p-button-success" (click)="saveUserPassword()" [disabled]="!formUserPassword.valid"></button>
-  </ng-template>
-</p-dialog>
-
-<p-dialog header="Ajuda" [(visible)]="displayHelpDialog" [modal]="true" [closable]="true" [responsive]="true"
-  styleClass="help-dialog">
-  <p>{{ helpText }}</p>
-</p-dialog>
-<p-confirmDialog></p-confirmDialog>
-
-<style>
-  .avatar-img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-
-
-.profile-actions {
-display: flex;
-justify-content: space-between;
-}
-
-
-#avatar-upload {
-position: absolute;
-font-size: 100px;
-right: 0;
-top: 0;
-opacity: 0;
-cursor: pointer;
-}
-
-</style>

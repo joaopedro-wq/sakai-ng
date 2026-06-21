@@ -1,7 +1,7 @@
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
-import { AppLayoutComponent } from './layout/app.layout.component';
+import { AppLayout } from './layout/component/app.layout';
 
 
 @NgModule({
@@ -10,7 +10,7 @@ import { AppLayoutComponent } from './layout/app.layout.component';
             [
                 {
                     path: '',
-                    component: AppLayoutComponent,
+                    component: AppLayout,
                     children: [
                         {
                             path: '',
