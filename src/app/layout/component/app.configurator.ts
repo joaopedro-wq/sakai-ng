@@ -42,26 +42,43 @@ declare type SurfacesType = {
     imports: [CommonModule, FormsModule, SelectButtonModule],
     template: `
         <div class="flex flex-col gap-4">
+
+            <!-- Cor Primária -->
             <div>
-                <span class="text-sm text-muted-color font-semibold">Primary</span>
-                <div class="pt-2 flex gap-2 flex-wrap justify-start">
-                    @for (primaryColor of primaryColors(); track primaryColor.name) {
+                <span class="text-sm text-muted-color font-semibold">Cor Primária</span>
+
+                <!-- Cores do Projeto -->
+                <p class="text-xs text-muted-color mt-2 mb-1 font-medium uppercase tracking-wide opacity-60">Paleta NutriAI</p>
+                <div class="flex gap-2 flex-wrap">
+                    @for (color of projectColors; track color.name) {
+                        <button
+                            type="button"
+                            [title]="color.label"
+                            (click)="updateColors($event, 'primary', color)"
+                            [ngClass]="{ 'outline outline-2 outline-offset-2 outline-primary': color.name === selectedPrimaryColor() }"
+                            class="cursor-pointer w-6 h-6 rounded-full flex shrink-0 items-center justify-center shadow-sm transition-transform hover:scale-110"
+                            [style]="{ 'background-color': color.palette?.['500'] }"
+                        ></button>
+                    }
+                </div>
+
+                <!-- Outras cores -->
+                <p class="text-xs text-muted-color mt-3 mb-1 font-medium uppercase tracking-wide opacity-60">Mais Cores</p>
+                <div class="flex gap-2 flex-wrap">
+                    @for (primaryColor of extraColors(); track primaryColor.name) {
                         <button
                             type="button"
                             [title]="primaryColor.name"
                             (click)="updateColors($event, 'primary', primaryColor)"
-                            [ngClass]="{
-                                    'outline outline-primary': primaryColor.name === selectedPrimaryColor()
-                                }"
-                            class="cursor-pointer w-5 h-5 rounded-full flex shrink-0 items-center justify-center outline-offset-1 shadow"
-                            [style]="{
-                                    'background-color': primaryColor?.name === 'noir' ? 'var(--text-color)' : primaryColor?.palette?.['500']
-                                }"
-                        >
-                        </button>
+                            [ngClass]="{ 'outline outline-2 outline-offset-2 outline-primary': primaryColor.name === selectedPrimaryColor() }"
+                            class="cursor-pointer w-5 h-5 rounded-full flex shrink-0 items-center justify-center shadow-sm transition-transform hover:scale-110"
+                            [style]="{ 'background-color': primaryColor?.name === 'noir' ? 'var(--text-color)' : primaryColor?.palette?.['500'] }"
+                        ></button>
                     }
                 </div>
             </div>
+
+            <!-- Surface -->
             <div>
                 <span class="text-sm text-muted-color font-semibold">Surface</span>
                 <div class="pt-2 flex gap-2 flex-wrap justify-start">
@@ -70,23 +87,23 @@ declare type SurfacesType = {
                             type="button"
                             [title]="surface.name"
                             (click)="updateColors($event, 'surface', surface)"
-                            class="cursor-pointer w-5 h-5 rounded-full flex shrink-0 items-center justify-center p-0 outline-offset-1"
-                            [ngClass]="{
-                                    'outline outline-primary': selectedSurfaceColor() ? selectedSurfaceColor() === surface.name : layoutService.layoutConfig().darkTheme ? surface.name === 'zinc' : surface.name === 'slate'
-                                }"
-                            [style]="{
-                                    'background-color': surface?.palette?.['500']
-                                }"
+                            class="cursor-pointer w-5 h-5 rounded-full flex shrink-0 items-center justify-center p-0 outline-offset-1 transition-transform hover:scale-110"
+                            [ngClass]="{ 'outline outline-primary': selectedSurfaceColor() ? selectedSurfaceColor() === surface.name : layoutService.layoutConfig().darkTheme ? surface.name === 'zinc' : surface.name === 'slate' }"
+                            [style]="{ 'background-color': surface?.palette?.['500'] }"
                         ></button>
                     }
                 </div>
             </div>
+
+            <!-- Presets -->
             <div class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Presets</span>
+                <span class="text-sm text-muted-color font-semibold">Preset</span>
                 <p-selectbutton [options]="presets" [ngModel]="selectedPreset()" (ngModelChange)="onPresetChange($event)" [allowEmpty]="false" size="small" />
             </div>
+
+            <!-- Menu Mode -->
             <div *ngIf="showMenuModeButton()" class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
+                <span class="text-sm text-muted-color font-semibold">Menu</span>
                 <p-selectbutton [ngModel]="menuMode()" (ngModelChange)="onMenuModeChange($event)" [options]="menuModeOptions" [allowEmpty]="false" size="small" />
             </div>
         </div>
@@ -270,6 +287,31 @@ export class AppConfigurator {
 
     menuMode = computed(() => this.layoutService.layoutConfig().menuMode);
 
+    // Cores principais do projeto NutriAI — exibidas em destaque no configurador
+    projectColors: (SurfacesType & { label: string })[] = [
+        {
+            name: 'emerald', label: 'NutriVerde (Padrão)',
+            palette: { 50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b',950:'#022c22' }
+        },
+        {
+            name: 'teal', label: 'Teal — Energia Ativa',
+            palette: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#14b8a6',600:'#0d9488',700:'#0f766e',800:'#115e59',900:'#134e4a',950:'#042f2e' }
+        },
+        {
+            name: 'orange', label: 'Laranja — Calorias',
+            palette: { 50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c',800:'#9a3412',900:'#7c2d12',950:'#431407' }
+        },
+        {
+            name: 'violet', label: 'Violeta — Proteína',
+            palette: { 50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',300:'#c4b5fd',400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9',800:'#5b21b6',900:'#4c1d95',950:'#2e1065' }
+        },
+        {
+            name: 'amber', label: 'Âmbar — Carboidratos',
+            palette: { 50:'#fffbeb',100:'#fef3c7',200:'#fde68a',300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309',800:'#92400e',900:'#78350f',950:'#451a03' }
+        }
+    ];
+
+    // Demais cores PrimeNG disponíveis para personalização extra
     primaryColors = computed<SurfacesType[]>(() => {
         const presetPalette = presets[this.layoutService.layoutConfig().preset as KeyOfType<typeof presets>].primitive;
         const colors = ['emerald', 'green', 'lime', 'orange', 'amber', 'yellow', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
@@ -283,6 +325,15 @@ export class AppConfigurator {
         });
 
         return palettes;
+    });
+
+    // Cores extras (exclui as que já aparecem na paleta do projeto)
+    extraColors = computed<SurfacesType[]>(() => {
+        const projectNames = new Set(this.projectColors.map(c => c.name));
+        return [
+            { name: 'noir', palette: {} },
+            ...this.primaryColors().filter(c => c.name !== 'noir' && !projectNames.has(c.name))
+        ];
     });
 
     getPresetExt() {

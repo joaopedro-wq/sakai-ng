@@ -7,7 +7,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../../service/auth.service';
-import { AuthCardComponent } from '../../../components/auth-card/auth-card.component';
+import { AuthCardComponent } from '../components/auth-card.component';
+
 
 const passwordMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
     const password = group.get('password')?.value;

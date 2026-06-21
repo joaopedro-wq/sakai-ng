@@ -1,0 +1,244 @@
+// ============================================================
+// Classes Globais — NutriAI
+// Utilitários semânticos para o sistema de dietas
+// ============================================================
+
+// ── Badges de Nutrientes ─────────────────────────────────────
+.badge-nutrient {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.badge-protein { background: var(--nutrient-protein-bg); color: var(--nutrient-protein); }
+.badge-carb    { background: var(--nutrient-carb-bg);    color: var(--nutrient-carb);    }
+.badge-fat     { background: var(--nutrient-fat-bg);     color: var(--nutrient-fat);     }
+.badge-fiber   { background: var(--nutrient-fiber-bg);   color: var(--nutrient-fiber);   }
+.badge-calorie { background: var(--nutrient-calorie-bg); color: var(--nutrient-calorie); }
+
+// ── Badges de IMC ─────────────────────────────────────────────
+.badge-imc-low    { @extend .badge-nutrient; background: #dbeafe; color: var(--imc-low);    }
+.badge-imc-normal { @extend .badge-nutrient; background: #d1fae5; color: var(--imc-normal); }
+.badge-imc-high   { @extend .badge-nutrient; background: #fef3c7; color: var(--imc-high);   }
+.badge-imc-obese  { @extend .badge-nutrient; background: #fee2e2; color: var(--imc-obese);  }
+
+// ── Badge IA ─────────────────────────────────────────────────
+.badge-ai {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: linear-gradient(90deg, var(--ai-from), var(--ai-to));
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+// ── Fundos de Marca ───────────────────────────────────────────
+.bg-brand        { background-color: var(--brand-500) !important; color: #fff; }
+.bg-brand-subtle { background-color: var(--brand-50)  !important; }
+.bg-energy       { background-color: var(--energy-500) !important; color: #fff; }
+.bg-energy-subtle{ background-color: var(--energy-50)  !important; }
+
+// ── Texto de Marca ────────────────────────────────────────────
+.text-brand  { color: var(--brand-500)  !important; }
+.text-energy { color: var(--energy-500) !important; }
+
+// ── Gradientes ───────────────────────────────────────────────
+.gradient-brand {
+    background: linear-gradient(135deg, var(--brand-700), var(--brand-400));
+    color: #ffffff;
+}
+
+.gradient-energy {
+    background: linear-gradient(135deg, var(--energy-700), var(--energy-400));
+    color: #ffffff;
+}
+
+.gradient-ai {
+    background: linear-gradient(135deg, var(--ai-from), var(--ai-to));
+    color: #ffffff;
+}
+
+.gradient-health {
+    background: linear-gradient(135deg, var(--brand-700) 0%, var(--brand-500) 60%, var(--energy-500) 100%);
+    color: #ffffff;
+}
+
+// ── Cards de Métricas ─────────────────────────────────────────
+.metric-card {
+    border-radius: 0.875rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    transition: box-shadow 0.22s ease, transform 0.22s ease;
+
+    &:hover {
+        box-shadow: 0 6px 24px rgba(5, 150, 105, 0.13);
+        transform: translateY(-2px);
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--brand-600);
+        letter-spacing: -0.03em;
+    }
+
+    .metric-label {
+        font-size: 0.72rem;
+        color: var(--text-color-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        font-weight: 600;
+        margin-top: 0.25rem;
+    }
+
+    .metric-unit {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-color-secondary);
+    }
+}
+
+// ── Barra de Progresso de Nutrientes ─────────────────────────
+.nutrient-bar {
+    height: 6px;
+    border-radius: 9999px;
+    overflow: hidden;
+    background: var(--surface-border);
+
+    &__fill {
+        height: 100%;
+        border-radius: 9999px;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &--protein .nutrient-bar__fill { background: var(--nutrient-protein); }
+    &--carb    .nutrient-bar__fill { background: var(--nutrient-carb);    }
+    &--fat     .nutrient-bar__fill { background: var(--nutrient-fat);     }
+    &--calorie .nutrient-bar__fill { background: var(--nutrient-calorie); }
+    &--fiber   .nutrient-bar__fill { background: var(--nutrient-fiber);   }
+}
+
+// ── Título de Seção ───────────────────────────────────────────
+.section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+        content: '';
+        display: inline-block;
+        width: 3px;
+        height: 1.1em;
+        background: var(--brand-500);
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+}
+
+// ── Card de Dieta Gerada por IA ───────────────────────────────
+.ai-diet-card {
+    border-radius: 1rem;
+    border: 1px solid transparent;
+    background:
+        linear-gradient(var(--surface-card), var(--surface-card)) padding-box,
+        linear-gradient(135deg, var(--ai-from), var(--ai-to)) border-box;
+    padding: 1.25rem;
+
+    .ai-diet-card__header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+}
+
+// ── Chip de Alimento ──────────────────────────────────────────
+.food-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    background: var(--brand-50);
+    color: var(--brand-700);
+    border: 1px solid var(--brand-100);
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: background 0.15s;
+
+    &:hover {
+        background: var(--brand-100);
+    }
+}
+
+.app-dark .food-chip {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--brand-300);
+    border-color: rgba(16, 185, 129, 0.25);
+
+    &:hover {
+        background: rgba(16, 185, 129, 0.2);
+    }
+}
+
+// ── Panel de Refeição ─────────────────────────────────────────
+.meal-panel {
+    border-radius: 0.875rem;
+    border: 1px solid var(--surface-border);
+    overflow: hidden;
+
+    .meal-panel__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.875rem 1.25rem;
+        background: var(--brand-50);
+        border-bottom: 1px solid var(--brand-100);
+        font-weight: 600;
+        color: var(--brand-700);
+        font-size: 0.9rem;
+    }
+
+    .meal-panel__body {
+        padding: 1rem 1.25rem;
+        background: var(--surface-card);
+    }
+}
+
+.app-dark .meal-panel {
+    .meal-panel__header {
+        background: rgba(16, 185, 129, 0.08);
+        border-bottom-color: rgba(16, 185, 129, 0.2);
+        color: var(--brand-300);
+    }
+}
+
+// ── Responsividade Utilitária ─────────────────────────────────
+.hide-mobile  { @media (max-width: 767px) { display: none !important; } }
+.hide-desktop { @media (min-width: 768px) { display: none !important; } }
+
+.grid-nutrients {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+
+    @media (min-width: 576px) { grid-template-columns: repeat(4, 1fr); }
+    @media (min-width: 992px) { grid-template-columns: repeat(5, 1fr); }
+}

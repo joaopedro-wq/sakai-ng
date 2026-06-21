@@ -1,0 +1,68 @@
+// ============================================================
+// Sistema de Cores — NutriAI
+// Paleta centralizada para o projeto de dietas com IA
+// ============================================================
+
+:root {
+    // ── Primary (Emerald — Saúde & Vitalidade) ───────────────
+    --brand-50:  #ecfdf5;
+    --brand-100: #d1fae5;
+    --brand-200: #a7f3d0;
+    --brand-300: #6ee7b7;
+    --brand-400: #34d399;
+    --brand-500: #10b981;
+    --brand-600: #059669;
+    --brand-700: #047857;
+    --brand-800: #065f46;
+    --brand-900: #064e3b;
+
+    // ── Energy (Laranja — Calorias & Motivação) ──────────────
+    --energy-50:  #fff7ed;
+    --energy-100: #ffedd5;
+    --energy-400: #fb923c;
+    --energy-500: #f97316;
+    --energy-600: #ea580c;
+    --energy-700: #c2410c;
+
+    // ── Nutrientes ───────────────────────────────────────────
+    --nutrient-protein-bg:  #ede9fe;
+    --nutrient-protein:     #7c3aed;
+    --nutrient-carb-bg:     #fef3c7;
+    --nutrient-carb:        #d97706;
+    --nutrient-fat-bg:      #fee2e2;
+    --nutrient-fat:         #dc2626;
+    --nutrient-fiber-bg:    #f0fdf4;
+    --nutrient-fiber:       #16a34a;
+    --nutrient-calorie-bg:  #fff7ed;
+    --nutrient-calorie:     #ea580c;
+
+    // ── IMC / Status Corporal ────────────────────────────────
+    --imc-low:      #3b82f6;   // Abaixo do peso
+    --imc-normal:   #10b981;   // Peso normal
+    --imc-high:     #f59e0b;   // Sobrepeso
+    --imc-obese:    #ef4444;   // Obesidade
+
+    // ── IA / Gemini ──────────────────────────────────────────
+    --ai-from:   #7c3aed;
+    --ai-to:     #059669;
+
+    // ── Topbar — Light ───────────────────────────────────────
+    --topbar-bg-from:       #047857;
+    --topbar-bg-to:         #059669;
+    --topbar-text-color:    #ffffff;
+    --topbar-action-hover:  rgba(255, 255, 255, 0.14);
+    --topbar-border-bottom: transparent;
+    --topbar-logo-color:    #ffffff;
+    --topbar-ring-color:    rgba(255, 255, 255, 0.5);
+}
+
+// ── Topbar — Dark Mode ───────────────────────────────────────
+.app-dark {
+    --topbar-bg-from:       #020617;
+    --topbar-bg-to:         #0f172a;
+    --topbar-text-color:    #f1f5f9;
+    --topbar-action-hover:  rgba(255, 255, 255, 0.08);
+    --topbar-border-bottom: rgba(16, 185, 129, 0.35);
+    --topbar-logo-color:    #34d399;
+    --topbar-ring-color:    rgba(52, 211, 153, 0.5);
+}
