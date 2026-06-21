@@ -1,0 +1,40 @@
+<div class="card">
+    <app-page-header title="Alimentos"></app-page-header>
+
+    <p-table [value]="items()" [loading]="loading()" [paginator]="true" [rows]="15"
+             styleClass="p-datatable-sm" [rowHover]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Descrição</th>
+                <th class="text-center w-28">Proteína (g)</th>
+                <th class="text-center w-28">Gordura (g)</th>
+                <th class="text-center w-28">Carbo (g)</th>
+                <th class="text-center w-32">Calorias (kcal)</th>
+                <th class="text-center w-24">Qtd (g)</th>
+                <th class="text-center w-20">Ações</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+            <tr>
+                <td>{{ item.descricao }}</td>
+                <td class="text-center"><span class="badge-nutrient badge-protein">{{ item.proteina }}</span></td>
+                <td class="text-center"><span class="badge-nutrient badge-fat">{{ item.gordura }}</span></td>
+                <td class="text-center"><span class="badge-nutrient badge-carb">{{ item.carbo }}</span></td>
+                <td class="text-center"><span class="badge-nutrient badge-calorie">{{ item.caloria }}</span></td>
+                <td class="text-center">{{ item.qtd }}</td>
+                <td class="text-center">
+                    <button pButton icon="pi pi-pencil"
+                            class="p-button-sm p-button-text p-button-rounded"
+                            [routerLink]="['/alimentos/registro', item.id]"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="text-center py-8 text-muted-color">
+                    Nenhum alimento cadastrado.
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

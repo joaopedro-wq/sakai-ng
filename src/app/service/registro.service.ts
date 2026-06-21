@@ -231,7 +231,7 @@ export class RegisterService {
             Data: this.formatDate(item.data),
             'Descrição da Refeição': item.descricao_refeicao,
             Alimentos: item.alimentos
-                .map((alimento) => alimento.descricao)
+                .map((alimento: any) => alimento.descricao)
                 .join(', '),
             'Proteínas (g)': item.nutrientes_totais.proteina,
             'Gorduras (g)': item.nutrientes_totais.gordura,

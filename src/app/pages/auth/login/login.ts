@@ -8,12 +8,14 @@ import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { AuthService } from '../../../service/auth.service';
+import { AuthCardComponent } from '../components/auth-card.component';
 
 
 @Component({
     selector: 'app-login',
     standalone: true,
     imports: [
+        AuthCardComponent,
         ButtonModule,
         CheckboxModule,
         InputTextModule,
@@ -23,9 +25,7 @@ import { AuthService } from '../../../service/auth.service';
         RouterModule,
         RippleModule
     ],
-    template: `
-       
-    `
+    templateUrl: './login.html'
 })
 export class Login {
     private readonly fb = inject(FormBuilder);

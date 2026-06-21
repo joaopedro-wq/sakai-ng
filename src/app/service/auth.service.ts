@@ -15,6 +15,14 @@ export class AuthService {
     public loggedUser?: User;
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
+    get isAuthenticated(): boolean {
+        return this.isAuthenticatedSubject.value;
+    }
+
+    setAuthenticated(value: boolean): void {
+        this.isAuthenticatedSubject.next(value);
+    }
+
     obsGetLoggedUser: EventEmitter<User> = new EventEmitter();
 
     constructor(private router: Router, private http: HttpPersonService, private userService: UserService) {}

@@ -1,0 +1,54 @@
+.alimento-qtd-list {
+    margin-top: 1.5rem;
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+
+        @media (min-width: 768px) {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--surface-200);
+        background-color: var(--surface-50);
+
+        .app-dark & {
+            border-color: var(--surface-700);
+            background-color: var(--surface-800);
+        }
+    }
+
+    &__info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__name {
+        font-weight: 500;
+        font-size: 0.875rem;
+        margin: 0 0 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    &__ref {
+        font-size: 0.75rem;
+        color: var(--text-color-secondary);
+    }
+}

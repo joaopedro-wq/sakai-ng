@@ -1,0 +1,60 @@
+<div class="card">
+    <app-page-header [title]="isEdit() ? 'Editar Registro' : 'Novo Registro'"></app-page-header>
+
+    <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1">
+            <label class="font-medium text-sm">Data *</label>
+            <p-datepicker formControlName="data" dateFormat="dd/mm/yy"
+                          placeholder="Selecione a data" styleClass="w-full" />
+            @if (form.get('data')?.invalid && form.get('data')?.touched) {
+                <small class="text-red-500">Data é obrigatória.</small>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label class="font-medium text-sm">Refeição *</label>
+            <p-select formControlName="id_refeicao"
+                      [options]="refeicoes()"
+                      optionLabel="descricao"
+                      optionValue="id"
+                      placeholder="Selecione a refeição"
+                      styleClass="w-full" />
+            @if (form.get('id_refeicao')?.invalid && form.get('id_refeicao')?.touched) {
+                <small class="text-red-500">Refeição é obrigatória.</small>
+            }
+        </div>
+
+        <div class="col-span-1 md:col-span-2 flex flex-col gap-1">
+            <label class="font-medium text-sm">Dieta (opcional — pré-preenche os alimentos)</label>
+            <p-select formControlName="id_dieta"
+                      [options]="dietas()"
+                      optionLabel="descricao"
+                      optionValue="id"
+                      placeholder="Selecione uma dieta"
+                      [showClear]="true"
+                      (onChange)="onDietaChange($event.value)"
+                      styleClass="w-full" />
+        </div>
+
+        <div class="col-span-1 md:col-span-2 flex flex-col gap-1">
+            <label class="font-medium text-sm">Alimentos</label>
+            <p-multiselect [options]="todosAlimentos()"
+                           [(ngModel)]="selectedAlimentos"
+                           [ngModelOptions]="{ standalone: true }"
+                           optionLabel="descricao"
+                           placeholder="Selecione os alimentos"
+                           [filter]="true"
+                           filterPlaceholder="Buscar alimento..."
+                           (onChange)="onAlimentoChange()"
+                           styleClass="w-full" />
+        </div>
+    </form>
+
+    <app-alimento-qtd-list
+        [alimentos]="selectedAlimentos"
+        [qtdFn]="getQtd"
+        (qtdChange)="onQtdChange($event)">
+    </app-alimento-qtd-list>
+</div>
+
+<p-confirmDialog></p-confirmDialog>

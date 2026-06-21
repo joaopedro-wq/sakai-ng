@@ -1,0 +1,28 @@
+@if (alimentos.length > 0) {
+    <div class="alimento-qtd-list">
+        <h3 class="section-title text-base mb-3">Quantidade por Alimento</h3>
+        <div class="alimento-qtd-list__grid">
+            @for (alimento of alimentos; track alimento.id) {
+                <div class="alimento-qtd-list__item">
+                    <div class="alimento-qtd-list__info">
+                        <p class="alimento-qtd-list__name">{{ alimento.descricao }}</p>
+                        <div class="alimento-qtd-list__badges">
+                            <span class="badge-nutrient badge-protein">P: {{ alimento.proteina }}g</span>
+                            <span class="badge-nutrient badge-fat">G: {{ alimento.gordura }}g</span>
+                            <span class="badge-nutrient badge-carb">C: {{ alimento.carbo }}g</span>
+                            <span class="badge-nutrient badge-calorie">{{ alimento.caloria }} kcal</span>
+                            <em class="alimento-qtd-list__ref">por {{ alimento.qtd }}g</em>
+                        </div>
+                    </div>
+                    <p-inputnumber
+                        [ngModel]="qtdFn(alimento.id!)"
+                        (ngModelChange)="onQtdChange(alimento.id!, $event)"
+                        [min]="1"
+                        [max]="9999"
+                        suffix=" g"
+                        [style]="{ width: '120px' }" />
+                </div>
+            }
+        </div>
+    </div>
+}
