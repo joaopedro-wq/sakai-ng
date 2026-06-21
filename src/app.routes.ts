@@ -13,7 +13,7 @@ export const appRoutes: Routes = [
         canActivate: [authGuard],
         children: [
             { path: '', component: Dashboard },
-            { path: 'profile', loadComponent: () => import('./app/components/profile/profile.component').then(m => m.ProfileComponent) },
+            { path: 'profile', loadComponent: () => import('./app/pages/profile/profile.component').then(m => m.ProfileComponent) },
             { path: 'alimentos', loadChildren: () => import('./app/pages/alimentos/alimentos.routes') },
             { path: 'refeicoes', loadChildren: () => import('./app/pages/refeicoes/refeicoes.routes') },
             { path: 'metas', loadChildren: () => import('./app/pages/metas/metas.routes') },

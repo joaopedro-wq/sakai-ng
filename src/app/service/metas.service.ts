@@ -99,6 +99,7 @@ export class GoalService {
                 });
                 break;
         }
+        this.barButtonsService.startBarraButtons(this.barButton);
     }
 
     public goalsList!: Metas[];

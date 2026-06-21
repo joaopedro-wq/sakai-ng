@@ -78,13 +78,13 @@ export class SnackService {
                 break;
             case 'visible':
                 this.barButton.buttons.filter((button) => {
-                    console.log('button', button);
                     if (button.title == nmButton) {
                         button.visible = value;
                     }
                 });
                 break;
         }
+        this.barButtonsService.startBarraButtons(this.barButton);
     }
 
     public snacksList!: Refeicao[];

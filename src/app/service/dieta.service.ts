@@ -86,6 +86,7 @@ export class DietService {
                 });
                 break;
         }
+        this.barButtonsService.startBarraButtons(this.barButton);
     }
 
     public dietsList!: Dieta[];

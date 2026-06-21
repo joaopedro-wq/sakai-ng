@@ -86,6 +86,7 @@ export class FoodService {
                 });
                 break;
         }
+        this.barButtonsService.startBarraButtons(this.barButton);
     }
 
     public foodsList!: Alimento[];

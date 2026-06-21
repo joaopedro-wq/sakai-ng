@@ -135,6 +135,7 @@ export class RegisterService {
                 });
                 break;
         }
+        this.barButtonsService.startBarraButtons(this.barButton);
     }
     modalOptions: boolean = false;
     modalFIlter: boolean = false;
