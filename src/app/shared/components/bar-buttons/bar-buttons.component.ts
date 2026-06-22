@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Button } from '../api/button';
@@ -21,17 +21,18 @@ export class BarButtonsComponent implements OnInit {
     @Input() tamPag: number = 0;
 
     set buttons(values: Button[]) {
-        this._buttons = values;
-        this.items = values;
+        this._buttons = [...values];
+        this.items = [...values];
     }
     get buttons() {
         return this._buttons;
     }
 
-    constructor(private service: BarButtonsService, private router: Router) {
+    constructor(private service: BarButtonsService, private router: Router, private cdr: ChangeDetectorRef) {
         this.service.loadButtons.subscribe((res: BarButton) => {
             this.keyService = res.keyService;
             this.buttons = res.buttons;
+            this.cdr.detectChanges();
         });
     }
 
@@ -43,6 +44,7 @@ export class BarButtonsComponent implements OnInit {
             .subscribe(() => {
                 this.keyService = '';
                 this.buttons = [];
+                this.cdr.detectChanges();
             });
     }
 
